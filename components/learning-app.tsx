@@ -351,19 +351,6 @@ export default function LearningApp() {
             {topic && <span className="nav-count">{answered}/10</span>}
           </button>
           <button
-            aria-label="Estudar"
-            title="Estudar — explicações e exercícios"
-            aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
-            className={screen === "learn" && view === "teacher" ? "active" : ""}
-            onClick={() => {
-              navigate("learn");
-              setView("teacher");
-            }}
-          >
-            <BookOpen size={19} />
-            <span className="nav-label">Estudar</span>
-          </button>
-          <button
             aria-label="Plano de estudo"
             title="Plano de estudo — suas aulas e seu progresso"
             aria-current={screen === "learn" && view === "trail" ? "page" : undefined}
@@ -375,6 +362,19 @@ export default function LearningApp() {
           >
             <Route size={19} />
             <span className="nav-label">Plano de estudo</span>
+          </button>
+          <button
+            aria-label="Aulas"
+            title="Aulas — explicações e exercícios"
+            aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
+            className={screen === "learn" && view === "teacher" ? "active" : ""}
+            onClick={() => {
+              navigate("learn");
+              setView("teacher");
+            }}
+          >
+            <BookOpen size={19} />
+            <span className="nav-label">Aulas</span>
           </button>
         </nav>
         <div className="sidebar-bottom">
@@ -417,7 +417,7 @@ export default function LearningApp() {
                   : screen === "diagnostic"
                     ? "Teste inicial"
                     : view === "teacher"
-                      ? "Estudar"
+                      ? "Aulas"
                       : "Plano de estudo"}
               </strong>
             </div>

@@ -5,7 +5,7 @@
 - Paleta escura inspirada no Dracula: fundo #282a36, texto #f8f8f2 e destaque roxo #bd93f9. Ciano identifica ajuda e exemplos; verde indica progresso salvo. Sem gradientes, cartões inclinados ou mensagens motivacionais decorativas.
 - Cantos de 2 a 3 px, linhas simples e tipografia maior para o conteúdo de aula.
 - Menu lateral recolhível de 236 px para 72 px no computador. A preferência fica no armazenamento local do navegador. Os botões continuam com nomes acessíveis e dicas ao passar o mouse. Em telas pequenas, o menu vira navegação horizontal e também pode ser compactado.
-- Navegação com nomes diretos: Assuntos, Teste inicial, Estudar e Plano de estudo.
+- Navegação com nomes diretos: Assuntos, Teste inicial, Aulas e Plano de estudo.
 
 ## Caminho para quem está começando
 

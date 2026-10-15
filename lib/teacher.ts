@@ -138,7 +138,7 @@ export async function teach(action: TeacherAction) {
     });
     const evaluation =
       action.kind === "grade"
-        ? validateEvaluation(JSON.parse(response.text), topic, response.model)
+        ? validateEvaluation(JSON.parse(response.text), topic, response.model, session.answers)
         : null;
     if (action.kind === "chat" && response.text.length > 10000)
       throw new Error("Resposta longa demais");
@@ -180,7 +180,7 @@ export async function teach(action: TeacherAction) {
     return await workspace();
   } catch (error) {
     if (error instanceof UserError) throw error;
-    if (error instanceof TeacherProviderError) throw new UserError(error.message, 503);
+    if (error instanceof TeacherProviderError) throw new UserError(error.message, error.status);
     throw new UserError(
       "O professor não conseguiu concluir este pedido. Suas respostas continuam salvas. Tente novamente depois.",
       502,

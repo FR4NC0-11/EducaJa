@@ -6,7 +6,7 @@ Este protocolo é uma condição para considerar o professor pronto para estudan
 
 1. Siga CONFIGURAR-GEMINI.md para obter a chave. No plano gratuito, confirme as cotas; se já houver faturamento ativo, configure também controles de gasto. A assinatura de um aplicativo de chat não é usada automaticamente como credencial desta aplicação.
 2. No arquivo .env local, que é ignorado pelo Git, adicione GEMINI_API_KEY com a chave. Não envie a chave pelo chat, não a coloque no código e não a copie para .env.example.
-3. Configure GEMINI_MODEL=gemini-3.8-flash, AI_DAILY_LIMIT=20, AI_GLOBAL_DAILY_LIMIT=200 e AI_ENABLED=true. Use limites menores para uma primeira experiência, se preferir.
+3. Configure GEMINI_MODEL=gemini-3.5-flash-lite, AI_DAILY_LIMIT=20, AI_GLOBAL_DAILY_LIMIT=200 e AI_ENABLED=true. Use limites menores para uma primeira experiência, se preferir.
 4. Reinicie o servidor. Crie uma conta de teste no EducaJá e escolha um assunto.
 5. Use Conversar com o professor na aula. Para a avaliação, responda às dez questões, finalize o teste e use Pedir avaliação ao professor.
 

@@ -11,7 +11,7 @@ O professor usa a API Gemini do Google. A conta Google que gera a chave é a con
 
 ```dotenv
 AI_ENABLED=true
-GEMINI_MODEL=gemini-3.8-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 AI_DAILY_LIMIT=20
 AI_GLOBAL_DAILY_LIMIT=200
 ```

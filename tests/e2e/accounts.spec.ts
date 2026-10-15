@@ -62,7 +62,7 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
   await other.getByLabel("Código de confirmação").fill(lastCode(email));
   await other.getByRole("button", { name: "Confirmar e entrar" }).click();
   await expect(other.getByRole("button", { name: "Sua conta", exact: true })).toBeVisible();
-  await other.getByRole("button", { name: "Estudar", exact: true }).click();
+  await other.getByRole("button", { name: "Aulas", exact: true }).click();
   await expect(other.getByLabel("Suas anotações")).toHaveValue(
     "Sensor mede; atuador realiza uma ação.",
   );
