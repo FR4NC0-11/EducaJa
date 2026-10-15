@@ -2,6 +2,8 @@ import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import type { PoolClient } from "pg";
 import { getDb } from "./db";
+import { accountCookie, currentAccount } from "./session";
+import { aiConfigured } from "./openai-teacher";
 import {
   type Action,
   type StudySession,
@@ -20,8 +22,16 @@ export class UserError extends Error {
   }
 }
 
-export async function visitor(client: PoolClient) {
+export async function visitor(client: PoolClient, rejectExpired = false) {
+  const account = await currentAccount(client, true);
+  if (account) return account.profile_id;
   const jar = await cookies();
+  if (rejectExpired && jar.has(accountCookie))
+    throw new UserError(
+      "Sua sessão expirou. Copie o texto que ainda não salvou e recarregue a página para entrar novamente.",
+      401,
+    );
+  if (jar.has(accountCookie)) jar.delete(accountCookie);
   const token = jar.get(cookieName)?.value;
   if (token && /^[a-f0-9]{64}$/.test(token)) {
     const hash = createHash("sha256").update(token).digest("hex");
@@ -39,7 +49,9 @@ export async function visitor(client: PoolClient) {
   jar.set(cookieName, newToken, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.COOKIE_SECURE === "true",
+    secure:
+      process.env.COOKIE_SECURE === "true" ||
+      process.env.APP_ORIGIN?.startsWith("https://") === true,
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });
@@ -48,7 +60,7 @@ export async function visitor(client: PoolClient) {
 
 async function readWorkspace(client: PoolClient, visitorId: string): Promise<Workspace> {
   const current = await client.query<StudySession>(
-    `SELECT s.topic_id, s.goal, s.answers, s.completed_lessons, s.notes, s.submitted_at, s.updated_at
+    `SELECT s.topic_id, s.goal, s.answers, s.completed_lessons, s.notes, s.submitted_at, s.updated_at, s.evaluation, s.conversation
     FROM study_sessions s JOIN visitors v ON v.id = s.visitor_id
     WHERE s.visitor_id = $1 AND s.topic_id = v.active_topic`,
     [visitorId],
@@ -58,13 +70,16 @@ async function readWorkspace(client: PoolClient, visitorId: string): Promise<Wor
     [visitorId],
   );
   return {
+    user: await currentAccount(client).then((account) =>
+      account ? { name: account.name, email: account.email } : null,
+    ),
     session: current.rows[0] ?? null,
     summaries: all.rows.map((row) => ({
       topic_id: row.topic_id,
       answered: answerCount(row.answers),
       completed: row.completed_lessons.length,
     })),
-    aiReady: false,
+    aiReady: aiConfigured(),
   };
 }
 
@@ -72,7 +87,7 @@ export async function workspace(action?: Action) {
   const client = await getDb().connect();
   try {
     await client.query("BEGIN");
-    const id = await visitor(client);
+    const id = await visitor(client, !!action);
     if (action?.kind === "start") {
       await client.query(
         `INSERT INTO study_sessions (visitor_id, topic_id, goal) VALUES ($1, $2, $3)
@@ -93,7 +108,7 @@ export async function workspace(action?: Action) {
       if (action.kind === "answer") {
         session.answers[String(action.index)] = action.text;
         await client.query(
-          "UPDATE study_sessions SET answers = $3, submitted_at = NULL, updated_at = now() WHERE visitor_id = $1 AND topic_id = $2",
+          "UPDATE study_sessions SET answers = $3, submitted_at = NULL, evaluation = NULL, updated_at = now() WHERE visitor_id = $1 AND topic_id = $2",
           [id, action.topicId, JSON.stringify(session.answers)],
         );
       } else if (action.kind === "submit") {

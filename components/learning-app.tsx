@@ -22,12 +22,16 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   HelpCircle,
+  UserRound,
   X,
 } from "lucide-react";
 import { getTopic, type Topic } from "@/lib/catalog";
 import { answerCount, type Action, type Workspace } from "@/lib/learning";
 
 import CourseHome from "./course-home";
+import AccountPanel from "./account-panel";
+import TeacherChat from "./teacher-chat";
+import EvaluationSummary from "./evaluation-summary";
 
 type Screen = "home" | "diagnostic" | "learn";
 type View = "teacher" | "trail";
@@ -40,6 +44,7 @@ export default function LearningApp() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [collapsed, setCollapsed] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [screen, setScreen] = useState<Screen>("home");
   const [view, setView] = useState<View>("teacher");
@@ -61,7 +66,12 @@ export default function LearningApp() {
   const topic = session ? getTopic(session.topic_id) : undefined;
   const answered = session ? answerCount(session.answers) : 0;
   const completed = session?.completed_lessons.length ?? 0;
-  const lesson = topic?.lessons[lessonIndex] ?? topic?.lessons[0];
+  const orderedLessons = topic
+    ? (session?.evaluation?.lessonOrder.map((id) =>
+        topic.lessons.find((item) => item.id === id)!,
+      ) ?? topic.lessons)
+    : [];
+  const lesson = orderedLessons[lessonIndex] ?? orderedLessons[0];
   const currentDrafts = topic ? (drafts[topic.id] ?? {}) : {};
   const dirtyAnswer =
     !!session &&
@@ -202,7 +212,9 @@ export default function LearningApp() {
         }));
       setNotice(
         action.kind === "submit"
-          ? "Teste registrado. A avaliação ficará disponível quando a IA for conectada."
+          ? result.aiReady
+            ? "Teste registrado. Você já pode pedir sua avaliação."
+            : "Teste registrado. A avaliação ficará disponível quando a IA for conectada."
           : "Progresso salvo.",
       );
       return true;
@@ -218,6 +230,24 @@ export default function LearningApp() {
     }
   }
 
+  function openAccount() {
+    if (unsaved) {
+      setError("Salve sua resposta ou anotação antes de acessar a conta.");
+      return;
+    }
+    setAccountOpen(true);
+  }
+  async function accountChanged() {
+    setData(null);
+    setDrafts({});
+    setSavedAnswers({});
+    setSavedNotes({});
+    setNoteDrafts({});
+    setNotice("");
+    setError("");
+    setScreen("home");
+    await load();
+  }
   function navigate(next: Screen) {
     if (busy) return;
     setNotice("");
@@ -248,6 +278,29 @@ export default function LearningApp() {
       setScreen(destination);
     }
   }
+  async function requestEvaluation() {
+    if (busy || !topic) return;
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch("/api/teacher", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "grade", topicId: topic.id }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+      setData(result);
+      rememberSaved(result);
+      setLessonIndex(0);
+      setNotice("Avaliação salva. Veja as justificativas e a ordem sugerida das aulas.");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Não foi possível avaliar agora.");
+    } finally {
+      setBusy(false);
+    }
+  }
   async function saveAnswer(value?: string) {
     if (!topic) return;
     const text =
@@ -262,7 +315,7 @@ export default function LearningApp() {
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo
       </a>
-      <aside className="sidebar" id="learning-sidebar" inert={!!selected}>
+      <aside className="sidebar" id="learning-sidebar" inert={!!selected || accountOpen}>
         <button
           className="brand"
           onClick={() => navigate("home")}
@@ -343,7 +396,7 @@ export default function LearningApp() {
           </button>
         </div>
       </aside>
-      <div className="workspace" inert={!!selected}>
+      <div className="workspace" inert={!!selected || accountOpen}>
         <header className="topbar">
           <div className="topbar-left">
             <button
@@ -369,6 +422,10 @@ export default function LearningApp() {
               </strong>
             </div>
           </div>
+          <button className="account-button" onClick={openAccount} disabled={loading || busy}>
+            <UserRound size={17} />
+            {data?.user ? "Sua conta" : "Entrar ou criar conta"}
+          </button>
           <button
             className="help-button"
             aria-expanded={helpOpen}
@@ -481,6 +538,7 @@ export default function LearningApp() {
                     </div>
                     <span className="quiet-badge">{answered} de 10 salvas</span>
                   </div>
+                  {session.evaluation && <EvaluationSummary evaluation={session.evaluation} />}
                   <div className="diagnostic-layout">
                     <section className="question-card">
                       <div className="question-top">
@@ -597,12 +655,16 @@ export default function LearningApp() {
                       </div>
                       <div className="evaluation-note">
                         <strong>
-                          {session.submitted_at ? "Aguardando avaliação" : "Sobre a avaliação"}
+                          {session.evaluation
+                            ? "Avaliação disponível acima"
+                            : session.submitted_at
+                              ? "Aguardando avaliação"
+                              : "Sobre a avaliação"}
                         </strong>
                         <p>
-                          A IA ainda não está conectada nesta versão. Suas respostas serão
-                          guardadas; as notas de 0 a 10 e a recomendação personalizada virão com a
-                          integração.
+                          {data?.aiReady
+                            ? "Finalize o teste e peça sua avaliação. O professor usará suas respostas para explicar cada nota e sugerir uma ordem de estudo. As respostas serão enviadas à OpenAI."
+                            : "A avaliação automática ainda não foi ativada neste EducaJá. Suas respostas ficam salvas, e você pode continuar estudando."}
                         </p>
                       </div>
                       <button
@@ -613,6 +675,22 @@ export default function LearningApp() {
                         {session.submitted_at ? <CheckCircle2 size={17} /> : <Check size={17} />}{" "}
                         {session.submitted_at ? "Teste registrado" : "Finalizar teste"}
                       </button>
+                      {session.submitted_at && !session.evaluation && (
+                        <button
+                          className="button secondary full evaluate-button"
+                          disabled={busy || dirtyAnswer || !data?.aiReady}
+                          onClick={() => (data?.user ? requestEvaluation() : openAccount())}
+                        >
+                          {busy ? (
+                            <LoaderCircle size={16} className="spin" />
+                          ) : (
+                            <CheckCircle2 size={16} />
+                          )}{" "}
+                          {data?.user
+                            ? "Pedir avaliação ao professor"
+                            : "Entrar para avaliar respostas"}
+                        </button>
+                      )}
                       <button className="text-button full" onClick={() => navigate("learn")}>
                         Ir para as aulas <ArrowRight size={15} />
                       </button>
@@ -654,15 +732,16 @@ export default function LearningApp() {
                         <div>
                           <h2>Aulas deste assunto</h2>
                           <p>
-                            Comece pela aula 1 e avance na ordem. Você também pode voltar para
-                            revisar qualquer aula.
+                            {session.evaluation
+                              ? "A avaliação sugeriu esta ordem para suas aulas. Você pode revisar qualquer conteúdo ou escolher outra aula."
+                              : "Comece pela aula 1 e avance na ordem. Você também pode voltar para revisar qualquer aula."}
                           </p>
                         </div>
                         <span className="quiet-badge">
                           {completed}/{topic.lessons.length} concluídas
                         </span>
                       </div>
-                      {topic.lessons.map((item, index) => (
+                      {orderedLessons.map((item, index) => (
                         <div className="trail-step" key={item.id}>
                           <span
                             className={`step-number ${session.completed_lessons.includes(item.id) ? "done" : ""}`}
@@ -700,7 +779,7 @@ export default function LearningApp() {
                     <div className="study-layout">
                       <aside className="lesson-nav">
                         <span className="eyebrow">AULAS DO ASSUNTO</span>
-                        {topic.lessons.map((item, index) => (
+                        {orderedLessons.map((item, index) => (
                           <button
                             key={item.id}
                             className={lessonIndex === index ? "selected" : ""}
@@ -815,6 +894,20 @@ export default function LearningApp() {
                               ))}
                             </dl>
                           </details>
+                          {data && (
+                            <TeacherChat
+                              key={topic.id}
+                              data={data}
+                              lessonId={lesson.id}
+                              busy={busy}
+                              setBusy={setBusy}
+                              onUpdate={(result) => {
+                                setData(result);
+                                rememberSaved(result);
+                              }}
+                              onAccount={openAccount}
+                            />
+                          )}
                           <div className="notes-area">
                             <label htmlFor="study-note">
                               <NotebookPen size={16} /> Suas anotações
@@ -889,7 +982,7 @@ export default function LearningApp() {
                                   setTeacherTab("explanation");
                                 }}
                               >
-                                Próxima aula: {topic.lessons[lessonIndex + 1].title}
+                                Próxima aula: {orderedLessons[lessonIndex + 1].title}
                                 <ArrowRight size={17} />
                               </button>
                             )}
@@ -902,14 +995,22 @@ export default function LearningApp() {
               <footer className="page-footer">
                 <span>EducaJá · Programação e tecnologia</span>
                 <span>
-                  Seu progresso é associado a este navegador por 30 dias. Contas e sincronização
-                  entre dispositivos virão depois.
+                  {data?.user
+                    ? "Progresso salvo na sua conta. Entre com a mesma conta para retomá-lo em outro navegador."
+                    : "Você está como visitante. Crie uma conta para guardar seu progresso e acessá-lo em outros navegadores."}
                 </span>
               </footer>
             </>
           )}
         </main>
       </div>
+      {accountOpen && (
+        <AccountPanel
+          user={data?.user ?? null}
+          onClose={() => setAccountOpen(false)}
+          onChanged={accountChanged}
+        />
+      )}
       {selected && (
         <div className="modal-backdrop">
           <section
