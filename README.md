@@ -4,11 +4,13 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 
 ## O que já funciona
 
-- Escolha entre Java/POO, fundamentos da web e SQL/PostgreSQL.
-- Definição do objetivo de estudo e diagnóstico com dez questões dissertativas por tema.
+- Escolha entre programação com Java, criação de sites, banco de dados e IoT (Internet das Coisas).
+- Início direto pela aula 1, com objetivo opcional ou sugestões prontas.
+- Teste inicial opcional com dez questões por assunto e opção “Ainda não sei”.
 - Gravação e retomada das respostas, anotações e etapas concluídas no PostgreSQL.
-- Professor em modo guiado, com explicações, analogias, exemplos e exercícios preparados.
-- Alternância entre professor e trilha, mantendo o progresso.
+- Aulas guiadas com explicações, exemplos do dia a dia, glossários e exercícios preparados.
+- Alternância entre aulas e plano de estudo, mantendo o progresso.
+- Interface escura, menu lateral recolhível e preferência salva no navegador.
 
 **IA ainda não conectada:** respostas ficam aguardando avaliação. Não há notas automáticas, diagnóstico adaptativo ou conversa livre nesta versão. A trilha é fixa. O progresso é associado a um cookie deste navegador por 30 dias; login e sincronização entre dispositivos ainda não estão implementados.
 
@@ -47,6 +49,7 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Interface e primeiro acesso](docs/INTERFACE-E-PRIMEIRO-ACESSO.md)
 - [Arquitetura e limites da primeira versão](docs/ARQUITETURA.md)
 - [Requisitos](docs/REQUISITOS.md)
 - [Plano de publicação](docs/PUBLICACAO.md)

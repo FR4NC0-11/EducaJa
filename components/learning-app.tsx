@@ -10,23 +10,24 @@ import {
   CheckCircle2,
   ChevronRight,
   Circle,
-  Clock3,
   Code2,
   Compass,
   GraduationCap,
   LayoutDashboard,
   Lightbulb,
   LoaderCircle,
-  MessageCircle,
   NotebookPen,
   Route,
   Save,
-  Sparkles,
-  Target,
+  PanelLeftClose,
+  PanelLeftOpen,
+  HelpCircle,
   X,
 } from "lucide-react";
-import { topics, getTopic, type Topic } from "@/lib/catalog";
+import { getTopic, type Topic } from "@/lib/catalog";
 import { answerCount, type Action, type Workspace } from "@/lib/learning";
+
+import CourseHome from "./course-home";
 
 type Screen = "home" | "diagnostic" | "learn";
 type View = "teacher" | "trail";
@@ -38,6 +39,8 @@ export default function LearningApp() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [collapsed, setCollapsed] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [screen, setScreen] = useState<Screen>("home");
   const [view, setView] = useState<View>("teacher");
   const [category, setCategory] = useState("Todos");
@@ -53,6 +56,7 @@ export default function LearningApp() {
     "explanation",
   );
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const previousScreen = useRef(screen);
   const session = data?.session;
   const topic = session ? getTopic(session.topic_id) : undefined;
   const answered = session ? answerCount(session.answers) : 0;
@@ -86,6 +90,25 @@ export default function LearningApp() {
     }));
   }
 
+  useEffect(() => {
+    try {
+      setCollapsed(localStorage.getItem("educaja.sidebar.collapsed") === "true");
+    } catch {
+      /* Storage can be unavailable in private browsers. */
+    }
+  }, []);
+  function toggleSidebar() {
+    setCollapsed((previous) => {
+      const next = !previous;
+      try {
+        localStorage.setItem("educaja.sidebar.collapsed", String(next));
+      } catch {
+        /* Keep the choice for this visit. */
+      }
+      return next;
+    });
+  }
+
   async function load() {
     setLoading(true);
     setError("");
@@ -105,6 +128,13 @@ export default function LearningApp() {
   useEffect(() => {
     void load();
   }, []);
+  useEffect(() => {
+    if (previousScreen.current !== screen) {
+      document.getElementById("main-content")?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "instant" });
+      previousScreen.current = screen;
+    }
+  }, [screen]);
   useEffect(() => {
     if (!unsaved) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -172,7 +202,7 @@ export default function LearningApp() {
         }));
       setNotice(
         action.kind === "submit"
-          ? "Diagnóstico registrado. A avaliação ficará disponível quando a IA for conectada."
+          ? "Teste registrado. A avaliação ficará disponível quando a IA for conectada."
           : "Progresso salvo.",
       );
       return true;
@@ -201,107 +231,186 @@ export default function LearningApp() {
     setSelected(candidate);
     setGoal(candidate.id === topic?.id ? (session?.goal ?? "") : "");
   }
-  async function start() {
+  async function start(destination: Screen) {
     if (!selected) return;
-    if (await act({ kind: "start", topicId: selected.id, goal })) {
+    if (
+      await act({
+        kind: "start",
+        topicId: selected.id,
+        goal: goal.trim() || selected.goalExamples[0],
+      })
+    ) {
       setSelected(null);
       setQuestion(0);
       setLessonIndex(0);
       setTeacherTab("explanation");
-      setScreen("diagnostic");
+      setView("teacher");
+      setScreen(destination);
     }
   }
-  async function saveAnswer() {
+  async function saveAnswer(value?: string) {
     if (!topic) return;
-    const text = currentDrafts[String(question)] ?? session?.answers[String(question)] ?? "";
+    const text =
+      value ?? currentDrafts[String(question)] ?? session?.answers[String(question)] ?? "";
     if (await act({ kind: "answer", topicId: topic.id, index: question, text })) {
       if (question < 9) setQuestion(question + 1);
     }
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${collapsed ? "sidebar-collapsed" : ""}`}>
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo
       </a>
-      <aside className="sidebar" inert={!!selected}>
-        <button className="brand" onClick={() => navigate("home")} aria-label="EducaJá, início">
+      <aside className="sidebar" id="learning-sidebar" inert={!!selected}>
+        <button
+          className="brand"
+          onClick={() => navigate("home")}
+          aria-label="EducaJá, início"
+          title="EducaJá"
+        >
           <span className="brand-mark">
             <BookOpen size={22} />
           </span>
-          <span>
-            Educa<span className="brand-accent">Já</span>
-            <span className="brand-dot">.</span>
-          </span>
+          <span className="brand-name">EducaJá</span>
         </button>
-        <div className="sidebar-label">SEU ESPAÇO DE APRENDIZADO</div>
+        <div className="sidebar-label">APRENDER</div>
         <nav aria-label="Principal" className="main-nav">
-          <button className={screen === "home" ? "active" : ""} onClick={() => navigate("home")}>
-            <LayoutDashboard size={19} /> Visão geral
+          <button
+            aria-label="Assuntos"
+            title="Assuntos"
+            aria-current={screen === "home" ? "page" : undefined}
+            className={screen === "home" ? "active" : ""}
+            onClick={() => navigate("home")}
+          >
+            <LayoutDashboard size={19} />
+            <span className="nav-label">Assuntos</span>
           </button>
           <button
+            aria-label="Teste inicial"
+            title="Teste inicial — descubra o que já sabe"
+            aria-current={screen === "diagnostic" ? "page" : undefined}
             className={screen === "diagnostic" ? "active" : ""}
             onClick={() => navigate("diagnostic")}
           >
-            <Compass size={19} /> Meu diagnóstico <span className="nav-count">{answered}/10</span>
+            <Compass size={19} />
+            <span className="nav-label">Teste inicial</span>
+            {topic && <span className="nav-count">{answered}/10</span>}
           </button>
           <button
+            aria-label="Estudar"
+            title="Estudar — explicações e exercícios"
+            aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
             className={screen === "learn" && view === "teacher" ? "active" : ""}
             onClick={() => {
               navigate("learn");
               setView("teacher");
             }}
           >
-            <MessageCircle size={19} /> Professor virtual
+            <BookOpen size={19} />
+            <span className="nav-label">Estudar</span>
           </button>
           <button
+            aria-label="Plano de estudo"
+            title="Plano de estudo — suas aulas e seu progresso"
+            aria-current={screen === "learn" && view === "trail" ? "page" : undefined}
             className={screen === "learn" && view === "trail" ? "active" : ""}
             onClick={() => {
               navigate("learn");
               setView("trail");
             }}
           >
-            <Route size={19} /> Minha trilha
+            <Route size={19} />
+            <span className="nav-label">Plano de estudo</span>
           </button>
         </nav>
         <div className="sidebar-bottom">
-          <div className="small-orbit">
-            <Sparkles size={22} />
-          </div>
-          <h3>Aprender é construir.</h3>
-          <p>Um conceito, uma dúvida e uma descoberta de cada vez.</p>
-          <span className="sidebar-line" />
-          <div className="profile">
-            <span className="avatar">
-              <GraduationCap size={20} />
-            </span>
+          <div className="sidebar-note">
+            <GraduationCap size={20} />
             <div>
-              <strong>Seu espaço pessoal</strong>
-              <small>Progresso neste navegador</small>
+              <strong>Seu aprendizado</strong>
+              <p>As aulas começam pelo básico.</p>
             </div>
-            <span className="online-dot" />
           </div>
+          <button
+            className="sidebar-help"
+            aria-label="Como usar o EducaJá"
+            title="Como usar o EducaJá"
+            onClick={() => setHelpOpen((value) => !value)}
+          >
+            <HelpCircle size={18} />
+            <span className="nav-label">Como usar</span>
+          </button>
         </div>
       </aside>
       <div className="workspace" inert={!!selected}>
         <header className="topbar">
-          <div className="breadcrumb">
-            Meu aprendizado <ChevronRight size={14} />
-            <strong>
-              {screen === "home"
-                ? "Visão geral"
-                : screen === "diagnostic"
-                  ? "Diagnóstico"
-                  : view === "teacher"
-                    ? "Professor virtual"
-                    : "Minha trilha"}
-            </strong>
+          <div className="topbar-left">
+            <button
+              className="sidebar-toggle"
+              aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+              title={collapsed ? "Expandir menu" : "Recolher menu"}
+              aria-expanded={!collapsed}
+              aria-controls="learning-sidebar"
+              onClick={toggleSidebar}
+            >
+              {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+            </button>
+            <div className="breadcrumb">
+              EducaJá <ChevronRight size={14} />
+              <strong>
+                {screen === "home"
+                  ? "Assuntos"
+                  : screen === "diagnostic"
+                    ? "Teste inicial"
+                    : view === "teacher"
+                      ? "Estudar"
+                      : "Plano de estudo"}
+              </strong>
+            </div>
           </div>
-          <span className="preview-pill">
-            <span /> Primeira versão
-          </span>
+          <button
+            className="help-button"
+            aria-expanded={helpOpen}
+            aria-controls="usage-help"
+            onClick={() => setHelpOpen((value) => !value)}
+          >
+            <HelpCircle size={17} /> Como usar
+          </button>
         </header>
         <main id="main-content" tabIndex={-1}>
+          {helpOpen && (
+            <section className="usage-help" id="usage-help" aria-labelledby="help-title">
+              <div>
+                <h2 id="help-title">Como usar o EducaJá</h2>
+                <button
+                  className="close-button"
+                  aria-label="Fechar ajuda"
+                  onClick={() => setHelpOpen(false)}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+              <ol>
+                <li>
+                  <strong>Escolha um assunto.</strong> Leia as descrições e clique no que quer
+                  aprender.
+                </li>
+                <li>
+                  <strong>Comece a estudar.</strong> A primeira aula explica o básico. Veja o
+                  exemplo do dia a dia e tente o exercício.
+                </li>
+                <li>
+                  <strong>Anote e salve.</strong> Escreva suas dúvidas e marque a aula como
+                  concluída quando estiver pronto.
+                </li>
+              </ol>
+              <p>
+                O teste inicial é opcional. Se não souber uma resposta, use “Ainda não sei”. Em
+                “Plano de estudo”, você vê todas as aulas do assunto.
+              </p>
+            </section>
+          )}
           <div className="feedback" aria-live="polite">
             {error && (
               <div className="error-banner" role="alert">
@@ -327,255 +436,45 @@ export default function LearningApp() {
           ) : (
             <>
               {screen === "home" && (
-                <>
-                  <div className="page-heading">
-                    <div>
-                      <div className="eyebrow">CURIOSIDADE É UM ÓTIMO COMEÇO</div>
-                      <h1>
-                        Seu próximo passo começa aqui<span>.</span>
-                      </h1>
-                      <p>O que você quer entender hoje? Vamos construir esse caminho juntos.</p>
-                    </div>
-                    <span className="heading-symbol">
-                      <Code2 size={31} />
-                    </span>
-                  </div>
-                  <section className="hero-card" aria-labelledby="hero-title">
-                    <div className="hero-copy">
-                      <span className="hero-eyebrow">
-                        <span /> DO SEU JEITO. NO SEU RITMO.
-                      </span>
-                      <h2 id="hero-title">
-                        Menos conteúdo perdido.
-                        <br />
-                        Mais aprendizado que faz sentido.
-                      </h2>
-                      <p>
-                        Conte o que você precisa aprender, explore o que já sabe e avance com
-                        explicações, exemplos e prática.
-                      </p>
-                      <button
-                        className="button mint"
-                        disabled={!data}
-                        onClick={() =>
-                          topic
-                            ? navigate("diagnostic")
-                            : document
-                                .getElementById("explore")
-                                ?.scrollIntoView({ behavior: "smooth" })
-                        }
-                      >
-                        {topic ? "Continuar meu diagnóstico" : "Encontrar meu ponto de partida"}
-                        <ArrowRight size={18} />
-                      </button>
-                    </div>
-                    <div className="hero-art" aria-hidden="true">
-                      <div className="orbit orbit-one" />
-                      <div className="orbit orbit-two" />
-                      <div className="floating-tag tag-top">
-                        <span className="tag-dot" /> um passo de cada vez
-                      </div>
-                      <div className="code-card">
-                        <div className="code-dots">
-                          <i />
-                          <i />
-                          <i />
-                          <span>seu-futuro.js</span>
-                        </div>
-                        <div className="code-lines">
-                          <span className="muted-code">// aprender também é tentar</span>
-                          <br />
-                          <span className="purple-code">const</span> próximoPasso = {"{"}
-                          <br />
-                          &nbsp; curiosidade: <span className="mint-code">true</span>,<br />
-                          &nbsp; ritmo: <span className="yellow-code">"o seu"</span>,<br />
-                          &nbsp; possibilidades: <span className="mint-code">Infinity</span>
-                          <br />
-                          {"}"};
-                        </div>
-                      </div>
-                      <div className="floating-tag tag-bottom">
-                        <span className="tag-icon">
-                          <Check size={15} />
-                        </span>{" "}
-                        Você não precisa saber tudo para começar.
-                      </div>
-                    </div>
-                  </section>
-                  <section className="stats-grid" aria-label="Seu progresso">
-                    <div className="stat">
-                      <span className="stat-icon green">
-                        <Target size={22} />
-                      </span>
-                      <div>
-                        <span>Seu ponto de partida</span>
-                        <strong>
-                          {answered}
-                          <small> / 10 questões respondidas</small>
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-icon violet">
-                        <Route size={22} />
-                      </span>
-                      <div>
-                        <span>Passos na trilha atual</span>
-                        <strong>
-                          {completed}
-                          <small> / {topic?.lessons.length ?? 3} etapas concluídas</small>
-                        </strong>
-                      </div>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-icon peach">
-                        <BookOpen size={22} />
-                      </span>
-                      <div>
-                        <span>Seu foco de agora</span>
-                        <strong className="focus-stat">{topic?.category ?? "Você escolhe"}</strong>
-                      </div>
-                    </div>
-                  </section>
-                  <div className="home-columns">
-                    <section id="explore" className="explore-section">
-                      <div className="section-heading">
-                        <div>
-                          <h2>O que vamos aprender?</h2>
-                          <p>Escolha uma área e transforme uma dúvida em descoberta.</p>
-                        </div>
-                        <span className="quiet-badge">3 temas iniciais</span>
-                      </div>
-                      <div className="filters" aria-label="Filtrar temas">
-                        {["Todos", "Front-end", "Back-end", "Banco de dados"].map((value) => (
-                          <button
-                            key={value}
-                            aria-pressed={category === value}
-                            className={category === value ? "selected" : ""}
-                            onClick={() => setCategory(value)}
-                          >
-                            {value}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="topic-list">
-                        {topics
-                          .filter((item) => category === "Todos" || item.category === category)
-                          .map((item) => {
-                            const summary = data?.summaries.find(
-                              (summary) => summary.topic_id === item.id,
-                            );
-                            return (
-                              <button
-                                key={item.id}
-                                className="topic-card"
-                                disabled={!data || busy}
-                                onClick={() => choose(item)}
-                              >
-                                <span className={`topic-symbol ${item.color}`}>{item.symbol}</span>
-                                <span className="topic-details">
-                                  <span className="topic-category">{item.category}</span>
-                                  <strong>{item.title}</strong>
-                                  <span className="topic-description">{item.description}</span>
-                                  <span className="topic-meta">
-                                    <Clock3 size={13} />{" "}
-                                    {item.lessons.reduce(
-                                      (total, lesson) => total + lesson.minutes,
-                                      0,
-                                    )}{" "}
-                                    min de conteúdo <span>·</span>{" "}
-                                    {summary
-                                      ? `${summary.completed}/${item.lessons.length} etapas concluídas`
-                                      : "3 etapas para explorar"}
-                                  </span>
-                                </span>
-                                <ArrowRight className="topic-arrow" size={20} />
-                              </button>
-                            );
-                          })}
-                      </div>
-                    </section>
-                    <aside className="how-card">
-                      <span className="quiet-badge">
-                        <Sparkles size={13} /> APRENDER COM DIREÇÃO
-                      </span>
-                      <h2>
-                        Um caminho que
-                        <br />
-                        começa em você.
-                      </h2>
-                      <ol>
-                        <li>
-                          <span>01</span>
-                          <div>
-                            <strong>Defina seu objetivo</strong>
-                            <p>Uma prova, um projeto ou aquela dúvida que não sai da cabeça.</p>
-                          </div>
-                        </li>
-                        <li>
-                          <span>02</span>
-                          <div>
-                            <strong>Explore o que já sabe</strong>
-                            <p>Dez questões abertas para registrar seu raciocínio.</p>
-                          </div>
-                        </li>
-                        <li>
-                          <span>03</span>
-                          <div>
-                            <strong>Aprenda e experimente</strong>
-                            <p>Alterne entre explicações guiadas e uma trilha de prática.</p>
-                          </div>
-                        </li>
-                      </ol>
-                      <div className="how-footer">
-                        <Lightbulb size={18} />
-                        <p>Não saber ainda também é um ponto de partida.</p>
-                      </div>
-                    </aside>
-                  </div>
-                  {topic && (
-                    <section className="resume-card">
-                      <span className="stat-icon green">
-                        <NotebookPen size={22} />
-                      </span>
-                      <div>
-                        <span className="eyebrow">CONTINUE DE ONDE PAROU</span>
-                        <h3>{topic.title}</h3>
-                        <p>{session?.goal}</p>
-                      </div>
-                      <button className="button secondary" onClick={() => navigate("learn")}>
-                        Retomar estudo <ArrowRight size={17} />
-                      </button>
-                    </section>
-                  )}
-                </>
+                <CourseHome
+                  data={data}
+                  topic={topic}
+                  category={category}
+                  setCategory={setCategory}
+                  choose={choose}
+                  busy={busy}
+                  resume={() => {
+                    navigate("learn");
+                    setView("teacher");
+                  }}
+                />
               )}
               {screen !== "home" && !topic && (
                 <section className="empty-state">
                   <Compass size={42} />
-                  <h1>Todo caminho tem um começo.</h1>
+                  <h1>Primeiro, escolha um assunto.</h1>
                   <p>
-                    Escolha um tema e conte o que você quer aprender. Seu diagnóstico e sua trilha
-                    vão aparecer aqui.
+                    Volte para Assuntos e escolha o que quer aprender. Depois, você pode estudar ou
+                    fazer o teste inicial.
                   </p>
                   <button
                     className="button primary"
                     disabled={!data}
                     onClick={() => navigate("home")}
                   >
-                    Explorar temas <ArrowRight size={18} />
+                    Escolher um assunto <ArrowRight size={18} />
                   </button>
                 </section>
               )}
               {screen === "diagnostic" && topic && session && (
                 <>
                   <button className="text-button" onClick={() => navigate("home")}>
-                    <ArrowLeft size={16} /> Voltar para visão geral
+                    <ArrowLeft size={16} /> Voltar para os assuntos
                   </button>
                   <div className="page-heading">
                     <div>
-                      <div className="eyebrow">SEU PONTO DE PARTIDA</div>
-                      <h1>O que você já sabe?</h1>
+                      <div className="eyebrow">TESTE INICIAL · OPCIONAL</div>
+                      <h1>Vamos ver o que você já sabe</h1>
                       <p>
                         {topic.title} · {session.goal}
                       </p>
@@ -604,7 +503,7 @@ export default function LearningApp() {
                         Explique com suas palavras. Se ainda não souber, conte o que você entende ou
                         onde ficou a dúvida.
                       </p>
-                      <label htmlFor="answer">Seu raciocínio</label>
+                      <label htmlFor="answer">Sua resposta</label>
                       <textarea
                         id="answer"
                         value={
@@ -638,6 +537,10 @@ export default function LearningApp() {
                             : "Respostas salvas no seu espaço"}
                         </span>
                       </div>
+                      <p className="beginner-note">
+                        Não é uma prova e você não precisa acertar. Se nunca viu esse assunto, pode
+                        responder “Ainda não sei” e continuar.
+                      </p>
                       <div className="question-actions">
                         <button
                           className="button secondary"
@@ -656,15 +559,22 @@ export default function LearningApp() {
                               ""
                             ).trim()
                           }
-                          onClick={saveAnswer}
+                          onClick={() => saveAnswer()}
                         >
                           {busy ? <LoaderCircle size={17} className="spin" /> : <Save size={17} />}{" "}
                           {question < 9 ? "Salvar e continuar" : "Salvar resposta"}
                         </button>
                       </div>
+                      <button
+                        className="text-button skip-answer"
+                        disabled={busy}
+                        onClick={() => saveAnswer("Ainda não sei.")}
+                      >
+                        Ainda não sei — salvar e continuar <ArrowRight size={15} />
+                      </button>
                     </section>
                     <aside className="diagnostic-aside">
-                      <h3>Seu mapa de questões</h3>
+                      <h3>Perguntas do teste</h3>
                       <div className="question-map">
                         {topic.questions.map((_, index) => (
                           <button
@@ -701,10 +611,10 @@ export default function LearningApp() {
                         onClick={() => act({ kind: "submit", topicId: topic.id })}
                       >
                         {session.submitted_at ? <CheckCircle2 size={17} /> : <Check size={17} />}{" "}
-                        {session.submitted_at ? "Diagnóstico registrado" : "Concluir diagnóstico"}
+                        {session.submitted_at ? "Teste registrado" : "Finalizar teste"}
                       </button>
                       <button className="text-button full" onClick={() => navigate("learn")}>
-                        Já quero começar a estudar <ArrowRight size={15} />
+                        Ir para as aulas <ArrowRight size={15} />
                       </button>
                     </aside>
                   </div>
@@ -714,12 +624,8 @@ export default function LearningApp() {
                 <>
                   <div className="page-heading">
                     <div>
-                      <div className="eyebrow">UM CONCEITO DE CADA VEZ</div>
-                      <h1>
-                        {view === "teacher"
-                          ? "Vamos entender juntos."
-                          : "Seu caminho de aprendizado."}
-                      </h1>
+                      <div className="eyebrow">AULAS</div>
+                      <h1>{view === "teacher" ? topic.shortTitle : "Seu plano de estudo"}</h1>
                       <p>
                         {topic.title} · {session.goal}
                       </p>
@@ -732,24 +638,24 @@ export default function LearningApp() {
                       onClick={() => setView("teacher")}
                       className={view === "teacher" ? "selected" : ""}
                     >
-                      <MessageCircle size={17} /> Professor virtual
+                      <BookOpen size={17} /> Aula e exercícios
                     </button>
                     <button
                       aria-pressed={view === "trail"}
                       onClick={() => setView("trail")}
                       className={view === "trail" ? "selected" : ""}
                     >
-                      <Route size={17} /> Minha trilha
+                      <Route size={17} /> Todas as aulas
                     </button>
                   </div>
                   {view === "trail" ? (
                     <section className="trail-panel">
                       <div className="section-heading">
                         <div>
-                          <h2>Uma base para ir além</h2>
+                          <h2>Aulas deste assunto</h2>
                           <p>
-                            Esta trilha inicial é fixa. A personalização virá depois da avaliação
-                            por IA.
+                            Comece pela aula 1 e avance na ordem. Você também pode voltar para
+                            revisar qualquer aula.
                           </p>
                         </div>
                         <span className="quiet-badge">
@@ -769,7 +675,7 @@ export default function LearningApp() {
                           </span>
                           <div>
                             <span className="eyebrow">
-                              ETAPA {index + 1} · {item.minutes} MIN
+                              AULA {index + 1} · {item.minutes} MIN
                             </span>
                             <h3>{item.title}</h3>
                             <p>{item.explanation.split(". ")[0]}.</p>
@@ -782,7 +688,9 @@ export default function LearningApp() {
                               setView("teacher");
                             }}
                           >
-                            {session.completed_lessons.includes(item.id) ? "Revisar" : "Explorar"}
+                            {session.completed_lessons.includes(item.id)
+                              ? "Revisar aula"
+                              : "Abrir aula"}
                             <ArrowRight size={16} />
                           </button>
                         </div>
@@ -791,14 +699,14 @@ export default function LearningApp() {
                   ) : (
                     <div className="study-layout">
                       <aside className="lesson-nav">
-                        <span className="eyebrow">SUA TRILHA</span>
+                        <span className="eyebrow">AULAS DO ASSUNTO</span>
                         {topic.lessons.map((item, index) => (
                           <button
                             key={item.id}
                             className={lessonIndex === index ? "selected" : ""}
                             onClick={() => {
                               if (dirtyNote) {
-                                setError("Salve sua anotação antes de mudar de etapa.");
+                                setError("Salve sua anotação antes de mudar de aula.");
                                 return;
                               }
                               setLessonIndex(index);
@@ -819,8 +727,8 @@ export default function LearningApp() {
                         <div className="info-note">
                           <BookOpen size={19} />
                           <p>
-                            Por enquanto, as explicações são conteúdo preparado. A conversa livre
-                            com IA será conectada em uma próxima etapa.
+                            Leia a explicação, veja um exemplo do dia a dia e tente o exercício. Use
+                            suas anotações para registrar dúvidas.
                           </p>
                         </div>
                       </aside>
@@ -830,14 +738,19 @@ export default function LearningApp() {
                             <GraduationCap size={23} />
                           </span>
                           <div>
-                            <strong>Professor EducaJá</strong>
-                            <span>Explicação, analogia e prática</span>
+                            <strong>Material de estudo</strong>
+                            <span>Explicação, exemplos e exercício</span>
                           </div>
-                          <span className="quiet-badge">Modo guiado</span>
+                          <span className="quiet-badge">Aula guiada</span>
                         </div>
                         <div className="teacher-body">
-                          <span className="eyebrow">ETAPA {lessonIndex + 1}</span>
+                          <span className="eyebrow">
+                            AULA {lessonIndex + 1} DE {topic.lessons.length}
+                          </span>
                           <h2>{lesson.title}</h2>
+                          {lessonIndex === 0 && (
+                            <p className="lesson-orientation">{topic.introduction}</p>
+                          )}
                           <div className="teacher-tabs">
                             <button
                               className={teacherTab === "explanation" ? "selected" : ""}
@@ -849,13 +762,13 @@ export default function LearningApp() {
                               className={teacherTab === "analogy" ? "selected" : ""}
                               onClick={() => setTeacherTab("analogy")}
                             >
-                              <Lightbulb size={15} /> Uma analogia
+                              <Lightbulb size={15} /> Exemplo do dia a dia
                             </button>
                             <button
                               className={teacherTab === "exercise" ? "selected" : ""}
                               onClick={() => setTeacherTab("exercise")}
                             >
-                              <Code2 size={15} /> Quero praticar
+                              <Code2 size={15} /> Exercício
                             </button>
                           </div>
                           <div className="lesson-content" aria-live="polite">
@@ -867,9 +780,18 @@ export default function LearningApp() {
                                   : lesson.exercise}
                             </p>
                             {teacherTab === "explanation" && (
-                              <pre>
-                                <code>{lesson.code}</code>
-                              </pre>
+                              <details className="code-example">
+                                <summary>
+                                  Ver exemplo em código <Code2 size={16} />
+                                </summary>
+                                <p>
+                                  O código é uma forma de escrever instruções. Você pode ler
+                                  primeiro a explicação e voltar a este exemplo depois.
+                                </p>
+                                <pre>
+                                  <code>{lesson.code}</code>
+                                </pre>
+                              </details>
                             )}
                             {teacherTab === "exercise" && (
                               <details>
@@ -880,9 +802,22 @@ export default function LearningApp() {
                               </details>
                             )}
                           </div>
+                          <details className="glossary">
+                            <summary>
+                              O que significam essas palavras? <BookOpen size={16} />
+                            </summary>
+                            <dl>
+                              {topic.glossary.map((item) => (
+                                <div key={item.term}>
+                                  <dt>{item.term}</dt>
+                                  <dd>{item.meaning}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          </details>
                           <div className="notes-area">
                             <label htmlFor="study-note">
-                              <NotebookPen size={16} /> Seu caderno de raciocínio
+                              <NotebookPen size={16} /> Suas anotações
                             </label>
                             <p>
                               Escreva sua solução ou o que você entendeu. Suas anotações não recebem
@@ -923,8 +858,8 @@ export default function LearningApp() {
                           <div className="lesson-footer">
                             <span>
                               {session.completed_lessons.includes(lesson.id)
-                                ? "Você concluiu esta etapa. Pode revisitar quando quiser."
-                                : "Siga no seu ritmo. Você decide quando avançar."}
+                                ? "Aula concluída. Você pode voltar a ela quando quiser."
+                                : "Terminou de ler e praticar? Marque esta aula como concluída."}
                             </span>
                             <button
                               className="button primary"
@@ -940,10 +875,24 @@ export default function LearningApp() {
                             >
                               <Check size={17} />
                               {session.completed_lessons.includes(lesson.id)
-                                ? "Marcar para revisar"
-                                : "Concluir etapa"}
+                                ? "Marcar como não concluída"
+                                : "Concluir aula"}
                             </button>
                           </div>
+                          {session.completed_lessons.includes(lesson.id) &&
+                            lessonIndex < topic.lessons.length - 1 && (
+                              <button
+                                className="button next-lesson"
+                                disabled={busy || dirtyNote}
+                                onClick={() => {
+                                  setLessonIndex(lessonIndex + 1);
+                                  setTeacherTab("explanation");
+                                }}
+                              >
+                                Próxima aula: {topic.lessons[lessonIndex + 1].title}
+                                <ArrowRight size={17} />
+                              </button>
+                            )}
                         </div>
                       </section>
                     </div>
@@ -951,7 +900,7 @@ export default function LearningApp() {
                 </>
               )}
               <footer className="page-footer">
-                <span>EducaJá · Aprender para ir além.</span>
+                <span>EducaJá · Programação e tecnologia</span>
                 <span>
                   Seu progresso é associado a este navegador por 30 dias. Contas e sincronização
                   entre dispositivos virão depois.
@@ -982,30 +931,56 @@ export default function LearningApp() {
               <X size={20} />
             </button>
             <span className={`topic-symbol ${selected.color}`}>{selected.symbol}</span>
-            <span className="eyebrow">VAMOS DAR UM PRIMEIRO PASSO</span>
-            <h2 id="goal-title">O que trouxe você até aqui?</h2>
+            <span className="eyebrow">COMEÇAR UM ASSUNTO</span>
+            <h2 id="goal-title">Como você quer começar?</h2>
             <p>
-              Seu tema: <strong>{selected.title}</strong>. Conte uma necessidade real para dar
-              sentido ao seu estudo.
+              Você escolheu <strong>{selected.shortTitle}</strong>. Pode começar pela primeira aula,
+              mesmo sem experiência.
             </p>
-            <label htmlFor="goal">O que você quer aprender ou resolver?</label>
+            <div className="goal-presets" aria-label="Sugestões de objetivo">
+              {selected.goalExamples.map((example) => (
+                <button
+                  key={example}
+                  aria-pressed={goal === example}
+                  onClick={() => setGoal(example)}
+                  disabled={busy}
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+            <label htmlFor="goal">Quer nos contar seu objetivo? (opcional)</label>
             <textarea
               id="goal"
               maxLength={600}
               rows={4}
               value={goal}
               onChange={(event) => setGoal(event.target.value)}
-              placeholder="Ex.: tenho uma prova de orientação a objetos e quero entender polimorfismo."
+              placeholder="Ex.: estou começando do zero, tenho uma prova ou quero fazer um projeto."
               disabled={busy}
             />
             <div className="field-meta">
-              <span>Você pode mudar esse objetivo depois.</span>
+              <span>Pode deixar em branco e começar do básico.</span>
               <span>{goal.length}/600</span>
             </div>
-            <button className="button primary full" disabled={!goal.trim() || busy} onClick={start}>
-              {busy ? <LoaderCircle className="spin" size={17} /> : <Compass size={17} />}Começar
-              meu diagnóstico <ArrowRight size={17} />
-            </button>
+            <div className="start-options">
+              <button
+                className="button primary full"
+                disabled={busy}
+                onClick={() => start("learn")}
+              >
+                {busy ? <LoaderCircle className="spin" size={17} /> : <BookOpen size={17} />}Começar
+                a estudar <ArrowRight size={17} />
+              </button>
+              <button
+                className="button secondary full"
+                disabled={busy}
+                onClick={() => start("diagnostic")}
+              >
+                <Compass size={17} />
+                Fazer teste inicial (opcional)
+              </button>
+            </div>
             <small>Seu progresso anterior neste tema será preservado.</small>
           </section>
         </div>

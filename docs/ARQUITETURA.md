@@ -8,7 +8,7 @@ Decisão registrada em 15/10/2026, após autorização para prosseguir com o pro
 - TypeScript para os contratos de dados e Zod para validação das requisições.
 - PostgreSQL 17 e node-postgres, com pool limitado a cinco conexões por processo. Uso de SQL parametrizado, chaves primárias identity e unicidade por visitante/tema.
 - Migrações SQL versionadas, transacionais e com checksum. Nenhuma dependência de Supabase.
-- Conteúdo inicial em `lib/catalog.ts`: três temas, dez questões por tema e três etapas por trilha.
+- Conteúdo inicial em `lib/catalog.ts`: quatro assuntos (incluindo IoT), dez questões por assunto e três aulas por plano de estudo. Veja INTERFACE-E-PRIMEIRO-ACESSO.md para o fluxo simplificado e a revisão visual.
 
 ## Persistência e isolamento
 
