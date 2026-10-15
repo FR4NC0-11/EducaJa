@@ -40,6 +40,12 @@ test("avaliação soma critérios e rejeita notas, índices e aulas inválidas",
   const badPlan = result();
   badPlan.lessonOrder[0] = "aula-que-nao-existe";
   assert.throws(() => validateEvaluation(badPlan, topics[0], "fixture"));
+  const oldPlan = result();
+  oldPlan.lessonOrder = oldPlan.lessonOrder.slice(0, 3);
+  assert.throws(() => validateEvaluation(oldPlan, topics[0], "fixture"));
+  const repeatedPlan = result();
+  repeatedPlan.lessonOrder.push(repeatedPlan.lessonOrder[0]);
+  assert.throws(() => validateEvaluation(repeatedPlan, topics[0], "fixture"));
 });
 
 test("Ainda não sei recebe zero em todos os critérios sem zerar respostas parciais", () => {

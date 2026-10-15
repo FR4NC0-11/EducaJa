@@ -1986,6 +1986,209 @@ textarea::placeholder {
 .evaluate-button {
   margin-top: 11px;
 }
+
+/* Guided curriculum and self-contained teaching demonstrations. */
+.lesson-meta {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.lesson-objectives {
+  border-left: 2px solid var(--accent);
+  padding: 12px 18px;
+  margin: 18px 0 24px;
+  background: #bd93f908;
+}
+.lesson-objectives h3,
+.lesson-section h3,
+.lesson-lab h3 {
+  font-size: 16px;
+  margin: 14px 0 9px;
+  color: var(--ink);
+}
+.lesson-objectives ul,
+.lesson-lab ol,
+.lesson-resources ul {
+  padding-left: 22px;
+}
+.lesson-objectives li,
+.lesson-lab li {
+  font-size: 14px;
+  line-height: 1.9;
+  margin-bottom: 7px;
+}
+.lesson-section {
+  margin: 24px 0;
+}
+.lesson-section p,
+.lesson-lab p {
+  line-height: 1.9;
+  color: #cbd0e3;
+  font-size: 14px;
+}
+.lesson-lab,
+.lesson-resources {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+  margin-top: 20px;
+}
+.lesson-lab summary,
+.lesson-resources summary {
+  cursor: pointer;
+  line-height: 1.8;
+  font-size: 14px;
+  color: var(--accent);
+}
+.lesson-resources a {
+  color: var(--accent);
+  line-height: 1.9;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.lesson-demo {
+  border: 1px solid #626780;
+  padding: 22px;
+  margin: 25px 0;
+  background: var(--sidebar);
+  min-width: 0;
+}
+.lesson-demo h4 {
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.lesson-demo h5 {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 5px 0;
+}
+.lesson-demo p {
+  font-size: 13px;
+  color: #cbd0e3;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.lesson-demo label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink);
+  margin: 17px 0 8px;
+  line-height: 1.7;
+}
+.lesson-demo input:not([type="checkbox"]):not([type="range"]),
+.lesson-demo select {
+  width: 100%;
+  max-width: 100%;
+  min-height: 42px;
+  padding: 10px;
+  border: 1px solid #626780;
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: 2px;
+  font: inherit;
+  font-size: 14px;
+}
+.lesson-demo input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+.lesson-demo input:focus-visible,
+.lesson-demo select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.lesson-demo .demo-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.demo-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+.demo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+.lesson-demo .button {
+  font-size: 12px;
+  white-space: normal;
+  text-align: center;
+  min-height: 40px;
+}
+.demo-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+.demo-cards article {
+  min-width: 0;
+  border: 1px solid var(--line);
+  padding: 15px;
+  background: #282a36;
+}
+.demo-cards small {
+  font-size: 11px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.demo-viewport {
+  max-width: 100%;
+  border: 1px dashed #626780;
+  padding: 14px;
+  margin-top: 18px;
+}
+.demo-table {
+  overflow-x: auto;
+}
+.demo-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+.demo-table th,
+.demo-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.demo-table caption {
+  text-align: left;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 12px 0;
+}
+.lesson-demo pre {
+  max-width: 100%;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.8;
+  padding: 14px;
+  background: #282a36;
+}
+.lesson-nav {
+  max-height: 75dvh;
+  overflow-y: auto;
+}
+@media (max-width: 700px) {
+  .lesson-demo {
+    padding: 15px;
+  }
+  .lesson-demo h4 {
+    font-size: 18px;
+  }
+  .lesson-nav {
+    max-height: 320px;
+  }
+  .demo-actions .button {
+    flex: 1 1 140px;
+  }
+}
 @media (max-width: 700px) {
   .topbar {
     gap: 10px;

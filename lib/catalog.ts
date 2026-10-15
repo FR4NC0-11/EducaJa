@@ -1,3 +1,5 @@
+import { additionalLessons } from "./curriculum";
+
 export type Lesson = {
   id: string;
   title: string;
@@ -7,6 +9,12 @@ export type Lesson = {
   code: string;
   exercise: string;
   hint: string;
+  level?: "Fundamentos" | "Intermediário" | "Avançado";
+  objectives?: string[];
+  sections?: { title: string; body: string }[];
+  lab?: { tool: string; setup: string; steps: string[]; expected: string; troubleshooting: string };
+  demo?: "form" | "catalog" | "dashboard" | "responsive" | "objects" | "sql" | "iot";
+  resources?: { title: string; url: string }[];
 };
 export type Topic = {
   id: string;
@@ -23,7 +31,7 @@ export type Topic = {
   lessons: Lesson[];
 };
 
-export const topics: Topic[] = [
+const coreTopics: Topic[] = [
   {
     id: "java-poo",
     category: "Back-end",
@@ -364,6 +372,38 @@ export const topics: Topic[] = [
     ],
   },
 ];
+
+export const topics: Topic[] = coreTopics.map((topic) => ({
+  ...topic,
+  lessons: [
+    ...topic.lessons.map((lesson) => ({
+      ...lesson,
+      level: "Fundamentos" as const,
+      ...(topic.id === "java-poo" && lesson.id === "encapsulamento"
+        ? { demo: "objects" as const }
+        : {}),
+      ...(topic.id === "web-fundamentos"
+        ? {
+            demo: (lesson.id === "semantica"
+              ? "form"
+              : lesson.id === "layout"
+                ? "responsive"
+                : "dashboard") as Lesson["demo"],
+          }
+        : {}),
+      ...(topic.id === "postgresql" && lesson.id === "consultas" ? { demo: "sql" as const } : {}),
+      ...(topic.id === "iot-fundamentos" && lesson.id === "objetos-conectados"
+        ? { demo: "iot" as const }
+        : {}),
+    })),
+    ...(additionalLessons[topic.id] ?? []),
+  ],
+}));
+
+export function orderedTopicLessons(topic: Topic, recommended: string[] = []): Lesson[] {
+  const ids = [...new Set([...recommended, ...topic.lessons.map((lesson) => lesson.id)])];
+  return ids.flatMap((id) => topic.lessons.find((lesson) => lesson.id === id) ?? []);
+}
 
 export function getTopic(id: string) {
   return topics.find((topic) => topic.id === id);
