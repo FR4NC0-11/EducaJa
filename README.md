@@ -1,51 +1,57 @@
 # EducaJá
 
-Ambiente inicial do projeto educacional de programação. Aplicação ainda não implementada.
+Primeira versão do site educacional de programação, com Next.js, TypeScript e PostgreSQL, sem Supabase.
 
-## Trabalhar neste computador
+## O que já funciona
 
-Pasta: `C:\Users\coron\OneDrive\Documentos\ProjetosVSCODE\Sites\EducaJa\EducaJa`.
+- Escolha entre Java/POO, fundamentos da web e SQL/PostgreSQL.
+- Definição do objetivo de estudo e diagnóstico com dez questões dissertativas por tema.
+- Gravação e retomada das respostas, anotações e etapas concluídas no PostgreSQL.
+- Professor em modo guiado, com explicações, analogias, exemplos e exercícios preparados.
+- Alternância entre professor e trilha, mantendo o progresso.
 
-1. Abra esta pasta no VS Code.
-2. Inicie o Docker Desktop e aguarde o mecanismo Linux ficar pronto.
-3. O arquivo `.env` local já foi criado com uma senha aleatória. Em outro computador, copie `.env.example` para `.env`, defina uma senha e atualize a mesma senha em `DATABASE_URL`.
-4. Execute `docker compose up -d db`.
-5. Verifique o banco com `docker compose exec db pg_isready -U educaja -d educaja`.
-6. Para acessar o PostgreSQL: `docker compose exec db psql -U educaja -d educaja`.
-7. Para parar: `docker compose down`. O volume conserva os dados. Não use a opção `-v` se quiser preservá-los.
+**IA ainda não conectada:** respostas ficam aguardando avaliação. Não há notas automáticas, diagnóstico adaptativo ou conversa livre nesta versão. A trilha é fixa. O progresso é associado a um cookie deste navegador por 30 dias; login e sincronização entre dispositivos ainda não estão implementados.
 
-Node.js 24 é a base disponível para uma futura aplicação JavaScript/TypeScript. Framework e dependências ainda não foram escolhidos.
+## Executar neste computador
 
-## Trabalhar pelo navegador em outro computador
+Abra no VS Code a pasta `C:\Users\coron\OneDrive\Documentos\ProjetosVSCODE\Sites\EducaJa\EducaJa`.
 
-Após revisar e enviar estes arquivos ao GitHub:
+1. Abra Docker Desktop e aguarde iniciar.
+2. Na primeira instalação de outra máquina, copie `.env.example` para `.env`, configure uma senha em `POSTGRES_PASSWORD` e use a mesma senha na `DATABASE_URL`. Neste computador, o `.env` local já está configurado. Prefira senha aleatória com letras e números para evitar problemas de codificação na URL.
+3. No terminal da pasta, execute:
 
-1. Abra https://github.com/FR4NC0-11/EducaJa.
-2. Selecione **Code > Codespaces > Create codespace on main** (ou a branch que recebeu os arquivos).
-3. A configuração `.devcontainer` prepara Node.js 24 e PostgreSQL 17 em serviços separados.
-4. A variável `DATABASE_URL` já aponta para o banco `db` dentro desse ambiente.
+```text
+npm ci
+docker compose up -d --wait db
+npm run db:migrate
+npm run dev
+```
 
-O Codespaces depende da disponibilidade e da cota da conta; confira eventuais custos antes de criá-lo. A senha fixa da configuração é exclusiva para esse banco descartável de desenvolvimento, que não publica a porta do PostgreSQL. Nunca reutilize essa senha em produção.
+Abra http://localhost:3000. O comando dev permanece rodando enquanto você usa o site; Ctrl+C o encerra. O banco continua ligado até você pará-lo.
 
-Os bancos local e do Codespaces são independentes. Git sincroniza código; não sincroniza dados, arquivos `.env` nem alterações ainda não enviadas. Faça commit e push ao encerrar o trabalho e atualize a cópia local antes de retomá-lo. Mantenha a porta da aplicação privada durante o desenvolvimento.
+Para verificar: `npm test`, `npm run typecheck` e `npm run build`. Para testar a versão compilada, execute `npm run start`. `npm run test:e2e` usa Microsoft Edge instalado no Windows e inicia a versão compilada quando necessário; no CI, usa Chromium.
 
-Não há servidor web neste estágio. A porta 3000 está reservada para a futura aplicação. O Codespaces é um ambiente de desenvolvimento; a publicação do site será uma etapa separada.
+## Trabalhar em outro computador pelo navegador
 
-## Próximos passos
+No GitHub, abra **Code > Codespaces** e escolha a branch deste PR enquanto ela não estiver integrada à main. Crie um Codespace. A configuração instala as dependências e aplica as migrações ao banco próprio do ambiente.
 
-- [Requisitos recuperados](docs/REQUISITOS.md)
+Depois, execute `npm run dev:cloud`. Abra a porta 3000 encaminhada pelo Codespaces e mantenha sua visibilidade **privada**. Se o ambiente for exposto por HTTPS, configure `COOKIE_SECURE=true`. O Codespaces depende da cota e das condições da conta; sua criação não foi executada nesta tarefa.
+
+Código enviado ao GitHub pode ser retomado em outro computador. Os bancos local e do Codespaces são independentes. Acesso ao mesmo histórico de aprendizagem em diferentes navegadores depende da futura implementação de contas e de um banco compartilhado.
+
+## Banco e migrações
+
+As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica apenas migrações novas, dentro de uma transação, com bloqueio para evitar execução concorrente. O histórico inclui um checksum: não altere uma migração já aplicada; crie outra.
+
+`DATABASE_URL` é lida somente no servidor e nas ferramentas de banco. Não use prefixo NEXT_PUBLIC para senhas. Configure TLS pela URL de conexão conforme o provedor escolhido; não desabilite a verificação de certificado.
+
+## Documentação
+
+- [Arquitetura e limites da primeira versão](docs/ARQUITETURA.md)
+- [Requisitos](docs/REQUISITOS.md)
 - [Plano de publicação](docs/PUBLICACAO.md)
-- Confirmar o framework antes de criar o código da aplicação.
-
-## Referências
-
-- https://docs.github.com/en/codespaces/setting-up-your-project-for-codespaces/adding-a-dev-container-configuration/introduction-to-dev-containers
-- https://hub.docker.com/_/postgres
-- https://hub.docker.com/_/node
-
-## Organização e aprendizado
-
-- [Fluxo de branches e pull requests](CONTRIBUTING.md)
 - [Docker para começar](docs/DOCKER.md)
+- [Fluxo de contribuição e PRs](CONTRIBUTING.md)
+- [Verificações da primeira versão](docs/VERIFICACAO-APLICACAO.md)
 
-As alterações entram na main por PR revisado. O primeiro commit da preparação fica em `chore/ambiente-inicial`.
+A primeira versão destina-se a uso privado de desenvolvimento. Publicação para alunos depende de autenticação, política de retenção, controle de consumo da IA e revisão do ambiente de produção.

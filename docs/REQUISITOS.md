@@ -15,6 +15,6 @@ Origem: mensagens do usuário na conversa “Projeto Site-Educacional-Programaç
 
 ## Decisões pendentes
 
-Framework, autenticação, provedor de IA, esquema do banco, hospedagem, orçamento e política de armazenamento de conversas ainda precisam ser consolidados. Next.js com TypeScript foi proposto nesta conversa, mas não foi confirmado como decisão anterior.
+A primeira versão adota Next.js com TypeScript e PostgreSQL, com a decisão e os limites registrados em ARQUITETURA.md. Autenticação por conta, provedor de IA, hospedagem, orçamento e política de retenção ainda precisam ser consolidados.
 
-A configuração inicial entrega somente a base de desenvolvimento, sem implementar as funcionalidades acima.
+A primeira versão implementa o registro das dez respostas e o estudo por conteúdos guiados e trilha fixa. Correção por IA, adaptação e conversa livre continuam pendentes. Os requisitos acima permanecem como direção do produto, e não como uma lista de funcionalidades já concluídas.

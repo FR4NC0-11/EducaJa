@@ -2,7 +2,7 @@
 
 ## Estado atual
 
-Repositório local na branch main, com origin apontando para https://github.com/FR4NC0-11/EducaJa.git. Base de desenvolvimento preparada para Node.js e PostgreSQL, sem aplicação ou serviço público criado.
+Repositório de referência com base na branch main, com origin apontando para https://github.com/FR4NC0-11/EducaJa.git. Primeira aplicação Next.js/TypeScript com PostgreSQL preparada em feat/primeira-experiencia para revisão por PR. Nenhum serviço público criado.
 
 ## Etapas
 

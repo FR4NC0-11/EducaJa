@@ -25,15 +25,15 @@ A disponibilidade e os nomes dos controles podem variar entre versões. O grupo 
 
 Execute no terminal do VS Code, aberto na pasta do projeto:
 
-| Comando | Para que serve |
-| --- | --- |
-| `docker compose up -d --wait db` | Cria ou inicia o banco e aguarda sua prontidão |
-| `docker compose ps` | Mostra o estado do banco |
-| `docker compose logs --tail 50 db` | Mostra as últimas mensagens do banco |
-| `docker compose stop db` | Para o banco e conserva o container e os dados |
-| `docker compose start db` | Liga novamente o container existente |
-| `docker compose exec db psql -U educaja -d educaja` | Abre o console do PostgreSQL |
-| `docker compose down` | Remove os containers e a rede deste projeto, conservando o volume |
+| Comando                                             | Para que serve                                                    |
+| --------------------------------------------------- | ----------------------------------------------------------------- |
+| `docker compose up -d --wait db`                    | Cria ou inicia o banco e aguarda sua prontidão                    |
+| `docker compose ps`                                 | Mostra o estado do banco                                          |
+| `docker compose logs --tail 50 db`                  | Mostra as últimas mensagens do banco                              |
+| `docker compose stop db`                            | Para o banco e conserva o container e os dados                    |
+| `docker compose start db`                           | Liga novamente o container existente                              |
+| `docker compose exec db psql -U educaja -d educaja` | Abre o console do PostgreSQL                                      |
+| `docker compose down`                               | Remove os containers e a rede deste projeto, conservando o volume |
 
 No console do PostgreSQL, `SELECT current_database();` mostra o banco atual. Use `\q` para sair.
 
