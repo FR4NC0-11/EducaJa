@@ -1,0 +1,27 @@
+services:
+  workspace:
+    image: node:24-bookworm
+    init: true
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/EducaJa:cached
+    environment:
+      DATABASE_URL: postgresql://educaja:educaja_dev_only@db:5432/educaja
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_USER: educaja
+      POSTGRES_DB: educaja
+      POSTGRES_PASSWORD: educaja_dev_only
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+volumes:
+  postgres_data:
