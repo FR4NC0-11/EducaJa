@@ -12,7 +12,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Alternância entre aulas e plano de estudo, mantendo o progresso.
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
 
-**Contas:** cadastro, login e saída já estão implementados. Criar uma conta preserva o progresso de visitante. Ao entrar com a mesma conta em outros navegadores que acessam esta instalação, você recupera o mesmo histórico. Bancos locais independentes continuam separados.
+**Contas:** cadastro, login com código por e-mail e saída estão implementados. A senha aceita de 8 a 255 caracteres e pode ser mostrada/ocultada. O envio exige configuração privada de Resend e remetente autorizado; sem isso, cadastro e login permanecem bloqueados. Criar uma conta preserva o progresso de visitante. Ao entrar com a mesma conta em outros navegadores que acessam esta instalação, você recupera o mesmo histórico. Bancos locais independentes continuam separados.
 
 **Professor por IA:** a integração de conversa e avaliação está implementada, mas começa desligada. Depende de uma chave configurada somente no servidor e de validação pedagógica com o modelo real. Com a IA ativa, as notas têm justificativas e o plano de estudo pode receber uma ordem sugerida. Uma amostra real de conversa e avaliação em IoT foi verificada; a validação pedagógica completa continua pendente.
 
@@ -51,6 +51,7 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Senha e confirmação por e-mail](docs/CONFIRMACAO-EMAIL.md)
 - [Configurar o professor com Gemini](docs/CONFIGURAR-GEMINI.md)
 - [Contas e professor por IA](docs/CONTAS-E-PROFESSOR.md)
 - [Ativação e avaliação pedagógica](docs/AVALIACAO-PEDAGOGICA.md)
@@ -62,6 +63,6 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 - [Fluxo de contribuição e PRs](CONTRIBUTING.md)
 - [Verificações da primeira versão](docs/VERIFICACAO-APLICACAO.md)
 
-Esta versão destina-se a uso privado de desenvolvimento. Antes de publicar para alunos: confirmação e recuperação por e-mail, política de retenção, revisão pedagógica da IA, limites financeiros, HTTPS, backups e revisão operacional. As chaves devem ficar no ambiente do servidor, nunca no código.
+Esta versão destina-se a uso privado de desenvolvimento. Antes de publicar para alunos: ativação e validação da entrega real de códigos, recuperação de senha, política de retenção, revisão pedagógica da IA, limites financeiros, HTTPS, backups e revisão operacional. As chaves devem ficar no ambiente do servidor, nunca no código.
 
 Para testes adicionais: `npm run test:ai-integration` usa um provedor simulado, sem chamadas reais ou custos de IA.

@@ -1,18 +1,21 @@
 import { test, expect, type APIRequestContext } from "@playwright/test";
 import { randomUUID } from "node:crypto";
+import { verifyEmail } from "../helpers/email";
 const headers = { Origin: "http://localhost:3001" };
 async function account(request: APIRequestContext) {
   await request.get("/api/workspace");
+  const email = `ai-${randomUUID()}@example.test`;
   const response = await request.post("/api/auth", {
     headers,
     data: {
       kind: "register",
       name: "Teste sintético",
-      email: `ai-${randomUUID()}@example.test`,
+      email,
       password: "frase sintética de teste 123",
     },
   });
   expect(response.ok()).toBeTruthy();
+  await verifyEmail(request, email, headers.Origin);
   await request.post("/api/workspace", {
     headers,
     data: {

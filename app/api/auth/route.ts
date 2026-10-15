@@ -9,10 +9,10 @@ export async function POST(request: NextRequest) {
     const parsed = authSchema.safeParse(await readJson(request, 5000));
     if (!parsed.success)
       throw new UserError(
-        "Confira o e-mail e os campos. Para criar uma conta, a senha precisa ter de 12 a 128 caracteres.",
+        "Confira o e-mail e os campos. A senha precisa ter de 8 a 255 caracteres e o código deve conter seis dígitos.",
       );
-    await authenticate(parsed.data);
-    return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+    const result = await authenticate(parsed.data);
+    return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     return NextResponse.json(
       {
