@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { hashPassword, verifyPassword } from "../lib/password";
-import { modelResponse } from "../lib/openai-teacher";
+import { modelResponse } from "../lib/gemini-teacher";
 import { validateEvaluation, evaluationJsonSchema } from "../lib/teacher-contract";
 import { topics } from "../lib/catalog";
 
@@ -42,19 +42,33 @@ test("avaliação soma critérios e rejeita notas, índices e aulas inválidas",
   assert.throws(() => validateEvaluation(badPlan, topics[0], "fixture"));
 });
 
-test("adaptador envia Responses sem armazenamento e com esquema estrito, sem chamadas reais", async () => {
+test("adaptador Gemini envia contexto, histórico e esquema JSON sem expor a chave na URL", async () => {
   let sent: Record<string, unknown> = {};
   const config = {
     apiKey: "test-not-a-real-key",
     model: "fixture-model",
     fetcher: (async (url, init) => {
-      assert.equal(url, "https://api.openai.com/v1/responses");
+      assert.equal(
+        url,
+        "https://generativelanguage.googleapis.com/v1beta/models/fixture-model:generateContent",
+      );
+      assert.equal(
+        (init?.headers as Record<string, string>)["x-goog-api-key"],
+        "test-not-a-real-key",
+      );
       sent = JSON.parse(String(init?.body));
       return Response.json({
-        status: "completed",
-        model: "fixture-model",
-        output: [
-          { type: "message", content: [{ type: "output_text", text: JSON.stringify(result()) }] },
+        modelVersion: "fixture-model",
+        candidates: [
+          {
+            finishReason: "STOP",
+            content: {
+              parts: [
+                { thought: true, text: "Raciocínio interno" },
+                { text: JSON.stringify(result()) },
+              ],
+            },
+          },
         ],
       });
     }) as typeof fetch,
@@ -62,25 +76,42 @@ test("adaptador envia Responses sem armazenamento e com esquema estrito, sem cha
   const response = await modelResponse(
     {
       instructions: "Regras de teste",
-      messages: [{ role: "user", content: "Dados sintéticos" }],
+      messages: [
+        { role: "user", content: "Dados sintéticos" },
+        { role: "assistant", content: "Histórico" },
+        { role: "user", content: "Dúvida" },
+      ],
       schema: evaluationJsonSchema(topics[0]),
     },
     config,
   );
-  assert.equal(sent.store, false);
-  assert.equal((sent.text as { format: { strict: boolean } }).format.strict, true);
+  assert.deepEqual(
+    (sent.contents as { role: string }[]).map((item) => item.role),
+    ["user", "model", "user"],
+  );
+  assert.equal(
+    (sent.generationConfig as { responseMimeType: string }).responseMimeType,
+    "application/json",
+  );
+  assert.deepEqual(
+    (sent.generationConfig as { responseJsonSchema: object }).responseJsonSchema,
+    evaluationJsonSchema(topics[0]),
+  );
   assert.equal(validateEvaluation(JSON.parse(response.text), topics[0], response.model).average, 7);
 });
 
 test("adaptador rejeita falha, recusa e resposta incompleta sem inventar conteúdo", async () => {
   for (const body of [
-    { status: "incomplete", model: "fixture", output: [] },
+    { candidates: [{ finishReason: "MAX_TOKENS" }] },
+    { promptFeedback: { blockReason: "SAFETY" } },
+    { candidates: [{ finishReason: "SAFETY", content: { parts: [{ text: "parcial" }] } }] },
+    { candidates: [{ finishReason: "STOP", content: { parts: [] } }] },
     {
-      status: "completed",
-      model: "fixture",
-      output: [{ type: "message", content: [{ type: "refusal" }] }],
+      candidates: [
+        { finishReason: "STOP", content: { parts: [{ thought: true, text: "interno" }] } },
+      ],
     },
-    { status: "completed", model: "fixture", output: [] },
+    { candidates: [] },
   ])
     await assert.rejects(() =>
       modelResponse(

@@ -21,4 +21,4 @@ Repositório de referência com base na branch main, com origin apontando para h
 - PostgreSQL local iniciado e saudável. Conexão TCP autenticada validada no banco educaja com usuário educaja.
 - GitHub Codespaces ainda não foi criado.
 - Preparação organizada na branch chore/ambiente-inicial para revisão por PR antes de integrar à main. Nenhuma contratação ou publicação do site foi realizada.
-- OpenAI escolhida como integração inicial do professor, com modelo configurável. Chave da API, validação pedagógica real, hospedagem e orçamento continuam pendentes; nenhuma contratação foi executada.
+- Google Gemini escolhido como integração inicial do professor, com modelo configurável. Chave configurada somente no ambiente local e amostra real de IoT verificada. Validação pedagógica completa, hospedagem e orçamento continuam pendentes; nenhuma contratação foi executada.

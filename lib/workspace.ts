@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import type { PoolClient } from "pg";
 import { getDb } from "./db";
 import { accountCookie, currentAccount } from "./session";
-import { aiConfigured } from "./openai-teacher";
+import { aiConfigured } from "./gemini-teacher";
 import {
   type Action,
   type StudySession,
