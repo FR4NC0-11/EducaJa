@@ -55,7 +55,7 @@ test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page 
   );
   await expect(page.getByRole("button", { name: "Marcar como não concluída" })).toBeVisible();
   await page.getByRole("button", { name: "Todas as aulas", exact: true }).last().click();
-  await expect(page.getByText("1/3 concluídas")).toBeVisible();
+  await expect(page.getByText("1/9 concluídas")).toBeVisible();
 });
 
 test("API isola navegadores, bloqueia origem externa e não conclui diagnóstico incompleto", async ({
@@ -183,5 +183,5 @@ test("menu recolhido persiste e iniciante estuda IoT sem objetivo ou teste obrig
   await page.getByRole("button", { name: "Teste inicial", exact: true }).click();
   await expect(page.getByLabel("Sua resposta", { exact: true })).toHaveValue("Ainda não sei.");
   await page.getByRole("button", { name: "Plano de estudo", exact: true }).click();
-  await expect(page.getByText("1/3 concluídas", { exact: true })).toBeVisible();
+  await expect(page.getByText("1/9 concluídas", { exact: true })).toBeVisible();
 });

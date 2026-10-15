@@ -26,7 +26,7 @@ As instruções pedagógicas pedem explicações em português, definição de t
 
 Cada questão recebe quatro critérios inteiros: conceitos 0–4, aplicação 0–3, raciocínio 0–2 e clareza 0–1. A soma forma a nota de 0 a 10; o servidor calcula a média das dez respostas. Cada resposta exige feedback. Há pontos de referência específicos para as quarenta questões em lib/diagnostic-reference.ts, aceitando respostas equivalentes tecnicamente corretas.
 
-A API recebe o esquema JSON da avaliação. O servidor também valida faixas, presença dos dez índices sem duplicação e IDs das três aulas sem repetição. O modelo, a versão da rubrica e o momento da avaliação ficam no registro. A ordem sugerida reorganiza as aulas, mas não é uma certificação nem altera as perguntas do teste atual.
+A API recebe o esquema JSON da avaliação. O servidor também valida faixas, presença dos dez índices sem duplicação e IDs de todas as aulas atuais da categoria sem repetição. O modelo, a versão da rubrica e o momento da avaliação ficam no registro. A ordem sugerida reorganiza as aulas, mas não é uma certificação nem altera as perguntas do teste atual.
 
 Editar uma resposta invalida a avaliação e retira o estado de teste finalizado. Uma resposta recebida da IA não pode sobrescrever progresso que mudou durante a chamada: a atualização exige a mesma versão de updated_at. Falhas, recusas e saídas incompletas não viram notas ou mensagens fictícias.
 

@@ -61,7 +61,10 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
   await expect(page.locator(".evaluation-heading>strong")).toContainText("7,0");
   await page.getByRole("button", { name: "Aulas", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Troca de mensagens e cuidados básicos", exact: true }),
+    page.getByRole("heading", {
+      name: "Projeto: monitorar uma sala com plano de falhas",
+      exact: true,
+    }),
   ).toBeVisible();
   const chat = {
     kind: "chat",

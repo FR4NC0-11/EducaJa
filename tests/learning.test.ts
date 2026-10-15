@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { topics } from "../lib/catalog";
+import { topics, orderedTopicLessons } from "../lib/catalog";
 import { actionSchema, answerCount, validateLesson } from "../lib/learning";
 import { diagnosticReference } from "../lib/diagnostic-reference";
 
@@ -14,6 +14,24 @@ test("cada diagnóstico contém dez questões e etapas com identificadores únic
     assert.ok(topic.shortTitle && topic.introduction);
     assert.ok(topic.goalExamples.length > 0 && topic.glossary.length > 0);
   }
+});
+
+test("recomendações antigas preservam a ordem e não ocultam aulas acrescentadas", () => {
+  const topic = topics.find((topic) => topic.id === "iot-fundamentos")!;
+  const order = orderedTopicLessons(topic, [
+    "mensagens-e-cuidados",
+    "objetos-conectados",
+    "caminho-dos-dados",
+    "id-removido",
+    "objetos-conectados",
+  ]);
+  assert.equal(order.length, topic.lessons.length);
+  assert.deepEqual(
+    order.slice(0, 3).map((lesson) => lesson.id),
+    ["mensagens-e-cuidados", "objetos-conectados", "caminho-dos-dados"],
+  );
+  assert.equal(new Set(order.map((lesson) => lesson.id)).size, topic.lessons.length);
+  assert.ok(order.some((lesson) => lesson.id === "packet-tracer-casa"));
 });
 
 test("rejeita tema desconhecido, respostas vazias e índices fora do diagnóstico", () => {

@@ -113,7 +113,7 @@ export default function CourseHome({
                   <span className="topic-meta">
                     <Clock3 size={14} />
                     {item.lessons.reduce((total, lesson) => total + lesson.minutes, 0)} min de
-                    leitura <span>·</span> {item.lessons.length} aulas
+                    estudo <span>·</span> {item.lessons.length} aulas
                     {summary && summary.completed > 0 && (
                       <span className="saved-progress">
                         <Check size={13} />

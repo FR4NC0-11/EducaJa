@@ -9,6 +9,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Teste inicial opcional com dez questões por assunto e opção “Ainda não sei”.
 - Gravação e retomada das respostas, anotações e etapas concluídas no PostgreSQL.
 - Aulas guiadas com explicações, exemplos do dia a dia, glossários e exercícios preparados.
+- 36 aulas em quatro trilhas, com aprofundamento, projetos e práticas guiadas; exemplos Web interativos e roteiros de Cisco Packet Tracer em IoT.
 - Alternância entre aulas e plano de estudo, mantendo o progresso.
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
 
@@ -51,6 +52,7 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Aulas e laboratórios por categoria](docs/AULAS-E-LABORATORIOS.md)
 - [Senha e confirmação por e-mail](docs/CONFIRMACAO-EMAIL.md)
 - [Configurar o professor com Gemini](docs/CONFIGURAR-GEMINI.md)
 - [Contas e professor por IA](docs/CONTAS-E-PROFESSOR.md)

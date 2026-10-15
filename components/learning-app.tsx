@@ -25,13 +25,14 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { getTopic, type Topic } from "@/lib/catalog";
+import { getTopic, orderedTopicLessons, type Topic } from "@/lib/catalog";
 import { answerCount, type Action, type Workspace } from "@/lib/learning";
 
 import CourseHome from "./course-home";
 import AccountPanel from "./account-panel";
 import TeacherChat from "./teacher-chat";
 import EvaluationSummary from "./evaluation-summary";
+import LessonDemo from "./lesson-demo";
 
 type Screen = "home" | "diagnostic" | "learn";
 type View = "teacher" | "trail";
@@ -66,11 +67,7 @@ export default function LearningApp() {
   const topic = session ? getTopic(session.topic_id) : undefined;
   const answered = session ? answerCount(session.answers) : 0;
   const completed = session?.completed_lessons.length ?? 0;
-  const orderedLessons = topic
-    ? (session?.evaluation?.lessonOrder.map((id) =>
-        topic.lessons.find((item) => item.id === id)!,
-      ) ?? topic.lessons)
-    : [];
+  const orderedLessons = topic ? orderedTopicLessons(topic, session?.evaluation?.lessonOrder) : [];
   const lesson = orderedLessons[lessonIndex] ?? orderedLessons[0];
   const currentDrafts = topic ? (drafts[topic.id] ?? {}) : {};
   const dirtyAnswer =
@@ -749,12 +746,12 @@ export default function LearningApp() {
                             {session.completed_lessons.includes(item.id) ? (
                               <Check size={21} />
                             ) : (
-                              `0${index + 1}`
+                              String(index + 1).padStart(2, "0")
                             )}
                           </span>
                           <div>
                             <span className="eyebrow">
-                              AULA {index + 1} · {item.minutes} MIN
+                              AULA {index + 1} · {item.level} · {item.minutes} MIN
                             </span>
                             <h3>{item.title}</h3>
                             <p>{item.explanation.split(". ")[0]}.</p>
@@ -827,6 +824,19 @@ export default function LearningApp() {
                             AULA {lessonIndex + 1} DE {topic.lessons.length}
                           </span>
                           <h2>{lesson.title}</h2>
+                          <p className="lesson-meta">
+                            {lesson.level} · {lesson.minutes} minutos estimados, incluindo a prática
+                          </p>
+                          {lesson.objectives && (
+                            <div className="lesson-objectives">
+                              <h3>O que você vai aprender</h3>
+                              <ul>
+                                {lesson.objectives.map((objective) => (
+                                  <li key={objective}>{objective}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                           {lessonIndex === 0 && (
                             <p className="lesson-orientation">{topic.introduction}</p>
                           )}
@@ -850,7 +860,7 @@ export default function LearningApp() {
                               <Code2 size={15} /> Exercício
                             </button>
                           </div>
-                          <div className="lesson-content" aria-live="polite">
+                          <div className="lesson-content">
                             <p>
                               {teacherTab === "explanation"
                                 ? lesson.explanation
@@ -859,18 +869,56 @@ export default function LearningApp() {
                                   : lesson.exercise}
                             </p>
                             {teacherTab === "explanation" && (
-                              <details className="code-example">
-                                <summary>
-                                  Ver exemplo em código <Code2 size={16} />
-                                </summary>
-                                <p>
-                                  O código é uma forma de escrever instruções. Você pode ler
-                                  primeiro a explicação e voltar a este exemplo depois.
-                                </p>
-                                <pre>
-                                  <code>{lesson.code}</code>
-                                </pre>
-                              </details>
+                              <>
+                                {lesson.sections?.map((section) => (
+                                  <section className="lesson-section" key={section.title}>
+                                    <h3>{section.title}</h3>
+                                    <p>{section.body}</p>
+                                  </section>
+                                ))}
+                                <details className="code-example">
+                                  <summary>
+                                    Ver exemplo em código <Code2 size={16} />
+                                  </summary>
+                                  <p>
+                                    O código é uma forma de escrever instruções. Você pode ler
+                                    primeiro a explicação e voltar a este exemplo depois.
+                                  </p>
+                                  <pre>
+                                    <code>{lesson.code}</code>
+                                  </pre>
+                                </details>
+                                {lesson.lab && (
+                                  <details className="lesson-lab">
+                                    <summary>Prática guiada: {lesson.lab.tool}</summary>
+                                    <p>{lesson.lab.setup}</p>
+                                    <ol>
+                                      {lesson.lab.steps.map((step) => (
+                                        <li key={step}>{step}</li>
+                                      ))}
+                                    </ol>
+                                    <h3>Como conferir o resultado</h3>
+                                    <p>{lesson.lab.expected}</p>
+                                    <h3>Se não funcionar</h3>
+                                    <p>{lesson.lab.troubleshooting}</p>
+                                  </details>
+                                )}
+                                {lesson.demo && <LessonDemo key={lesson.id} kind={lesson.demo} />}
+                                {lesson.resources && (
+                                  <details className="lesson-resources">
+                                    <summary>Consultar as fontes desta aula</summary>
+                                    <ul>
+                                      {lesson.resources.map((resource) => (
+                                        <li key={resource.url}>
+                                          <a href={resource.url} target="_blank" rel="noreferrer">
+                                            {resource.title} ↗
+                                          </a>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </details>
+                                )}
+                              </>
                             )}
                             {teacherTab === "exercise" && (
                               <details>
