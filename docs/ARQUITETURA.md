@@ -20,7 +20,11 @@ A API bloqueia a linha do visitante durante uma transação, serializando altera
 
 O conteúdo é apresentado como texto e exemplos; nenhum código enviado pelo estudante é executado.
 
-## Limites explícitos
+## Evolução de contas e professor
+
+A etapa seguinte implementa contas, sessões e os contratos de conversa/avaliação por IA. Veja [Contas e professor](CONTAS-E-PROFESSOR.md) para o comportamento atual, limites e verificações. As descrições abaixo registram a situação da primeira versão e não devem ser tomadas como estado atual.
+
+## Limites da primeira versão (histórico)
 
 O professor atual apresenta conteúdo editorial e não simula uma IA conectada. Não há provedor, chave, chamadas externas, notas por aproximação ou classificação automática de nível. As respostas ficam pendentes. A avaliação de 0 a 10 e a adaptação da trilha dependem de uma integração futura, com critérios explícitos e revisão das falhas do modelo.
 

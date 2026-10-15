@@ -138,8 +138,9 @@ export default function CourseHome({
           bloqueia o estudo.
         </p>
         <p>
-          Nesta versão, as aulas e os exercícios já estão preparados. A correção automática das
-          respostas ainda não está disponível.
+          {data?.aiReady
+            ? "As aulas e exercícios já estão preparados. Você também pode conversar com o professor e pedir uma avaliação por IA ao finalizar o teste. Confira as justificativas: a IA pode errar."
+            : "As aulas e exercícios já estão preparados. A correção automática das respostas ainda não foi ativada neste EducaJá."}
         </p>
       </details>
     </>

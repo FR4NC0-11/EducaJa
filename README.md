@@ -12,7 +12,9 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Alternância entre aulas e plano de estudo, mantendo o progresso.
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
 
-**IA ainda não conectada:** respostas ficam aguardando avaliação. Não há notas automáticas, diagnóstico adaptativo ou conversa livre nesta versão. A trilha é fixa. O progresso é associado a um cookie deste navegador por 30 dias; login e sincronização entre dispositivos ainda não estão implementados.
+**Contas:** cadastro, login e saída já estão implementados. Criar uma conta preserva o progresso de visitante. Ao entrar com a mesma conta em outros navegadores que acessam esta instalação, você recupera o mesmo histórico. Bancos locais independentes continuam separados.
+
+**Professor por IA:** a integração de conversa e avaliação está implementada, mas começa desligada. Depende de uma chave configurada somente no servidor e de validação pedagógica com o modelo real. Com a IA ativa, as notas têm justificativas e o plano de estudo pode receber uma ordem sugerida. Nenhuma chamada real foi feita nesta preparação.
 
 ## Executar neste computador
 
@@ -49,6 +51,8 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Contas e professor por IA](docs/CONTAS-E-PROFESSOR.md)
+- [Ativação e avaliação pedagógica](docs/AVALIACAO-PEDAGOGICA.md)
 - [Interface e primeiro acesso](docs/INTERFACE-E-PRIMEIRO-ACESSO.md)
 - [Arquitetura e limites da primeira versão](docs/ARQUITETURA.md)
 - [Requisitos](docs/REQUISITOS.md)
@@ -57,4 +61,6 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 - [Fluxo de contribuição e PRs](CONTRIBUTING.md)
 - [Verificações da primeira versão](docs/VERIFICACAO-APLICACAO.md)
 
-A primeira versão destina-se a uso privado de desenvolvimento. Publicação para alunos depende de autenticação, política de retenção, controle de consumo da IA e revisão do ambiente de produção.
+Esta versão destina-se a uso privado de desenvolvimento. Antes de publicar para alunos: confirmação e recuperação por e-mail, política de retenção, revisão pedagógica da IA, limites financeiros, HTTPS, backups e revisão operacional. As chaves devem ficar no ambiente do servidor, nunca no código.
+
+Para testes adicionais: `npm run test:ai-integration` usa um provedor simulado, sem chamadas reais ou custos de IA.

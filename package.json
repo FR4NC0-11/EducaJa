@@ -12,7 +12,8 @@
     "format:check": "prettier --check .",
     "test": "tsx --test tests/*.test.ts",
     "db:migrate": "node --env-file-if-exists=.env scripts/migrate.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:ai-integration": "playwright test --config playwright.ai.config.ts"
   },
   "engines": {
     "node": ">=24 <25"

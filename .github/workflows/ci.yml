@@ -39,3 +39,5 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - name: Verificar integração da IA com provedor simulado (sem chamadas pagas)
+        run: npm run test:ai-integration

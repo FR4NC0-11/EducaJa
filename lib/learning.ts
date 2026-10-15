@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getTopic } from "./catalog";
+import type { ChatMessage, Evaluation } from "./teacher-contract";
 
 const topicId = z.string().refine((id) => !!getTopic(id), "Tema inválido");
 export const actionSchema = z.discriminatedUnion("kind", [
@@ -28,11 +29,14 @@ export type StudySession = {
   notes: Record<string, string>;
   submitted_at: string | null;
   updated_at: string;
+  evaluation: Evaluation | null;
+  conversation: ChatMessage[];
 };
 export type Workspace = {
+  user: { name: string; email: string } | null;
   session: StudySession | null;
   summaries: { topic_id: string; answered: number; completed: number }[];
-  aiReady: false;
+  aiReady: boolean;
 };
 
 export function answerCount(answers: Record<string, string>) {

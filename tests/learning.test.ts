@@ -2,11 +2,13 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { topics } from "../lib/catalog";
 import { actionSchema, answerCount, validateLesson } from "../lib/learning";
+import { diagnosticReference } from "../lib/diagnostic-reference";
 
 test("cada diagnóstico contém dez questões e etapas com identificadores únicos", () => {
   assert.equal(new Set(topics.map((t) => t.id)).size, topics.length);
   for (const topic of topics) {
     assert.equal(topic.questions.length, 10);
+    assert.equal(diagnosticReference[topic.id].length, 10);
     assert.equal(new Set(topic.lessons.map((l) => l.id)).size, topic.lessons.length);
     assert.ok(topic.lessons.every((l) => l.explanation && l.exercise && l.hint));
     assert.ok(topic.shortTitle && topic.introduction);

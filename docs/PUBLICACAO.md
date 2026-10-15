@@ -2,7 +2,7 @@
 
 ## Estado atual
 
-Repositório de referência com base na branch main, com origin apontando para https://github.com/FR4NC0-11/EducaJa.git. Primeira aplicação Next.js/TypeScript com PostgreSQL preparada em feat/primeira-experiencia para revisão por PR. Nenhum serviço público criado.
+Repositório de referência com base na branch main, com origin apontando para https://github.com/FR4NC0-11/EducaJa.git. Aplicação Next.js/TypeScript com PostgreSQL, interface escura e IoT integrados. Contas e professor por IA preparados em feat/contas-e-progresso para revisão por PR. Nenhum serviço público criado.
 
 ## Etapas
 
@@ -21,4 +21,4 @@ Repositório de referência com base na branch main, com origin apontando para h
 - PostgreSQL local iniciado e saudável. Conexão TCP autenticada validada no banco educaja com usuário educaja.
 - GitHub Codespaces ainda não foi criado.
 - Preparação organizada na branch chore/ambiente-inicial para revisão por PR antes de integrar à main. Nenhuma contratação ou publicação do site foi realizada.
-- Provedor e orçamento dependem de escolha do usuário; a execução não deve criar recursos pagos sem autorização.
+- OpenAI escolhida como integração inicial do professor, com modelo configurável. Chave da API, validação pedagógica real, hospedagem e orçamento continuam pendentes; nenhuma contratação foi executada.
