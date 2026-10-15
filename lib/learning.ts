@@ -1,0 +1,43 @@
+import { z } from "zod";
+import { getTopic } from "./catalog";
+
+const topicId = z.string().refine((id) => !!getTopic(id), "Tema inválido");
+export const actionSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("start"), topicId, goal: z.string().trim().min(1).max(600) }),
+  z.object({
+    kind: z.literal("answer"),
+    topicId,
+    index: z.number().int().min(0).max(9),
+    text: z.string().trim().min(1).max(4000),
+  }),
+  z.object({ kind: z.literal("submit"), topicId }),
+  z.object({ kind: z.literal("lesson"), topicId, lessonId: z.string().max(80), done: z.boolean() }),
+  z.object({
+    kind: z.literal("note"),
+    topicId,
+    lessonId: z.string().max(80),
+    text: z.string().trim().max(4000),
+  }),
+]);
+export type Action = z.infer<typeof actionSchema>;
+export type StudySession = {
+  topic_id: string;
+  goal: string;
+  answers: Record<string, string>;
+  completed_lessons: string[];
+  notes: Record<string, string>;
+  submitted_at: string | null;
+  updated_at: string;
+};
+export type Workspace = {
+  session: StudySession | null;
+  summaries: { topic_id: string; answered: number; completed: number }[];
+  aiReady: false;
+};
+
+export function answerCount(answers: Record<string, string>) {
+  return Array.from({ length: 10 }, (_, i) => answers[String(i)]?.trim()).filter(Boolean).length;
+}
+export function validateLesson(topicId: string, lessonId: string) {
+  return !!getTopic(topicId)?.lessons.some((lesson) => lesson.id === lessonId);
+}

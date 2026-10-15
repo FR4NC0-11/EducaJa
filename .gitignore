@@ -12,3 +12,8 @@ coverage/
 # Editor and OS
 .DS_Store
 Thumbs.db
+
+.cache/
+*.tsbuildinfo
+playwright-report/
+test-results/
