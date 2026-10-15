@@ -48,7 +48,7 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
   await account(page.request);
   await diagnostic(page.request);
   await page.goto("/");
-  await page.getByRole("button", { name: "Estudar", exact: true }).click();
+  await page.getByRole("button", { name: "Aulas", exact: true }).click();
   await page.getByLabel("Sua dúvida", { exact: true }).fill("Qual é a função de um sensor?");
   await page.getByRole("button", { name: "Perguntar ao professor" }).click();
   await expect(page.getByText(/Resposta sintética de teste:/)).toBeVisible();
@@ -59,7 +59,7 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
     page.getByRole("heading", { name: "Seu ponto de partida", exact: true }),
   ).toBeVisible();
   await expect(page.locator(".evaluation-heading>strong")).toContainText("7,0");
-  await page.getByRole("button", { name: "Estudar", exact: true }).click();
+  await page.getByRole("button", { name: "Aulas", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Troca de mensagens e cuidados básicos", exact: true }),
   ).toBeVisible();

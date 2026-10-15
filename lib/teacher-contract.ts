@@ -34,7 +34,12 @@ export type Evaluation = z.infer<typeof evaluationSchema> & {
   rubricVersion: "1";
 };
 
-export function validateEvaluation(value: unknown, topic: Topic, model: string): Evaluation {
+export function validateEvaluation(
+  value: unknown,
+  topic: Topic,
+  model: string,
+  answers?: Record<string, string>,
+): Evaluation {
   const evaluation = evaluationSchema.parse(value);
   if (new Set(evaluation.grades.map((row) => row.index)).size !== 10)
     throw new Error("Questões duplicadas na avaliação");
@@ -44,6 +49,15 @@ export function validateEvaluation(value: unknown, topic: Topic, model: string):
   )
     throw new Error("Aulas inválidas na recomendação");
   evaluation.grades.sort((a, b) => a.index - b.index);
+  // The explicit "Ainda não sei" action contains no evidence of mastery, including clarity.
+  for (const row of evaluation.grades) {
+    if (/^ainda não sei[.!?]?$/iu.test(answers?.[String(row.index)]?.trim() ?? "")) {
+      row.concepts = 0;
+      row.application = 0;
+      row.reasoning = 0;
+      row.clarity = 0;
+    }
+  }
   const total = evaluation.grades.reduce(
     (sum, row) => sum + row.concepts + row.application + row.reasoning + row.clarity,
     0,

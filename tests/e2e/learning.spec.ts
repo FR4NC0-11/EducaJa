@@ -2,6 +2,12 @@ import { test, expect } from "@playwright/test";
 
 test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByRole("navigation", { name: "Principal" }).getByRole("button")).toHaveText([
+    "Assuntos",
+    "Teste inicial",
+    "Plano de estudo",
+    "Aulas",
+  ]);
   await expect(page.getByRole("heading", { name: "O que você quer aprender?" })).toBeVisible();
   await page.getByRole("button", { name: "Escolher Programação com Java" }).click();
   await page
@@ -30,7 +36,7 @@ test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page 
   );
   await page
     .getByRole("navigation", { name: "Principal" })
-    .getByRole("button", { name: "Estudar" })
+    .getByRole("button", { name: "Aulas" })
     .click();
   await page.getByRole("button", { name: "Exemplo do dia a dia" }).click();
   await expect(page.getByText(/A classe é como a planta/)).toBeVisible();
@@ -42,7 +48,7 @@ test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page 
   await page.reload();
   await page
     .getByRole("navigation", { name: "Principal" })
-    .getByRole("button", { name: "Estudar" })
+    .getByRole("button", { name: "Aulas" })
     .click();
   await expect(page.getByLabel("Suas anotações")).toHaveValue(
     "Uma classe descreve a estrutura; o objeto é uma instância.",
