@@ -124,8 +124,8 @@ export default function TeacherChat({
               </button>
             </div>
             <small>
-              Sua pergunta e o contexto de estudo serão enviados à OpenAI. Não inclua senhas ou
-              outros dados sensíveis.
+              Sua pergunta e o contexto de estudo serão enviados ao Google Gemini. Não inclua senhas
+              ou outros dados sensíveis.
             </small>
           </form>
         </>

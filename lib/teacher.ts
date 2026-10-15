@@ -3,7 +3,7 @@ import { getDb } from "./db";
 import { currentAccount } from "./session";
 import { getTopic } from "./catalog";
 import { UserError, workspace } from "./workspace";
-import { aiConfigured, modelResponse } from "./openai-teacher";
+import { aiConfigured, modelResponse, TeacherProviderError } from "./gemini-teacher";
 import { consumeLimit } from "./rate-limit";
 import {
   type TeacherAction,
@@ -180,6 +180,7 @@ export async function teach(action: TeacherAction) {
     return await workspace();
   } catch (error) {
     if (error instanceof UserError) throw error;
+    if (error instanceof TeacherProviderError) throw new UserError(error.message, 503);
     throw new UserError(
       "O professor não conseguiu concluir este pedido. Suas respostas continuam salvas. Tente novamente depois.",
       502,

@@ -663,7 +663,7 @@ export default function LearningApp() {
                         </strong>
                         <p>
                           {data?.aiReady
-                            ? "Finalize o teste e peça sua avaliação. O professor usará suas respostas para explicar cada nota e sugerir uma ordem de estudo. As respostas serão enviadas à OpenAI."
+                            ? "Finalize o teste e peça sua avaliação. O professor usará suas respostas para explicar cada nota e sugerir uma ordem de estudo. As respostas serão enviadas ao Google Gemini."
                             : "A avaliação automática ainda não foi ativada neste EducaJá. Suas respostas ficam salvas, e você pode continuar estudando."}
                         </p>
                       </div>

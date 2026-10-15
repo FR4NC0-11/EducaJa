@@ -14,7 +14,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 
 **Contas:** cadastro, login e saída já estão implementados. Criar uma conta preserva o progresso de visitante. Ao entrar com a mesma conta em outros navegadores que acessam esta instalação, você recupera o mesmo histórico. Bancos locais independentes continuam separados.
 
-**Professor por IA:** a integração de conversa e avaliação está implementada, mas começa desligada. Depende de uma chave configurada somente no servidor e de validação pedagógica com o modelo real. Com a IA ativa, as notas têm justificativas e o plano de estudo pode receber uma ordem sugerida. Nenhuma chamada real foi feita nesta preparação.
+**Professor por IA:** a integração de conversa e avaliação está implementada, mas começa desligada. Depende de uma chave configurada somente no servidor e de validação pedagógica com o modelo real. Com a IA ativa, as notas têm justificativas e o plano de estudo pode receber uma ordem sugerida. Uma amostra real de conversa e avaliação em IoT foi verificada; a validação pedagógica completa continua pendente.
 
 ## Executar neste computador
 
@@ -41,7 +41,7 @@ No GitHub, abra **Code > Codespaces** e escolha a branch deste PR enquanto ela n
 
 Depois, execute `npm run dev:cloud`. Abra a porta 3000 encaminhada pelo Codespaces e mantenha sua visibilidade **privada**. Se o ambiente for exposto por HTTPS, configure `COOKIE_SECURE=true`. O Codespaces depende da cota e das condições da conta; sua criação não foi executada nesta tarefa.
 
-Código enviado ao GitHub pode ser retomado em outro computador. Os bancos local e do Codespaces são independentes. Acesso ao mesmo histórico de aprendizagem em diferentes navegadores depende da futura implementação de contas e de um banco compartilhado.
+Código enviado ao GitHub pode ser retomado em outro computador. Os bancos local e do Codespaces são independentes. Acesso ao mesmo histórico de aprendizagem em diferentes navegadores depende das contas já implementadas e de um banco compartilhado ainda a publicar.
 
 ## Banco e migrações
 
@@ -51,6 +51,7 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Configurar o professor com Gemini](docs/CONFIGURAR-GEMINI.md)
 - [Contas e professor por IA](docs/CONTAS-E-PROFESSOR.md)
 - [Ativação e avaliação pedagógica](docs/AVALIACAO-PEDAGOGICA.md)
 - [Interface e primeiro acesso](docs/INTERFACE-E-PRIMEIRO-ACESSO.md)
