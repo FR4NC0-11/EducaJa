@@ -2,7 +2,7 @@
 
 ## Contas
 
-Cadastro por nome, e-mail e senha de 12 a 128 caracteres. O e-mail é normalizado para minúsculas; não é tratado como verificado. As senhas usam scrypt com salt aleatório, N=32768, r=8, p=3 e chave derivada de 64 bytes. Nunca são guardadas em texto puro.
+Cadastro por nome, e-mail e senha de 8 a 255 caracteres. O e-mail é normalizado para minúsculas e só é confirmado após o código recebido na caixa. Cadastro e login exigem essa etapa antes de criar a sessão; veja CONFIRMACAO-EMAIL.md para a configuração do envio. As senhas usam scrypt com salt aleatório, N=32768, r=8, p=3 e chave derivada de 64 bytes. Nunca são guardadas em texto puro.
 
 Uma conta aponta para um perfil de aprendizagem. Criar a conta vincula o progresso do visitante atual e revoga o token anônimo antigo, de modo que esse token não continue dando acesso ao perfil vinculado. Entrar em uma conta existente não mistura automaticamente o progresso de outro visitante.
 
@@ -12,7 +12,7 @@ Tentativas de cadastro/login são limitadas no banco: oito por e-mail a cada jan
 
 Se a sessão expirar durante uma escrita, o servidor não grava silenciosamente em outro perfil de visitante. A interface orienta copiar o texto não salvo e recarregar para entrar novamente.
 
-**Ainda pendentes antes de abrir cadastros ao público:** confirmação e recuperação por e-mail, alteração de senha, encerramento de todas as sessões pela conta, política de retenção/exclusão e revisão operacional de autenticação. Esta etapa permanece para uso privado de desenvolvimento.
+**Ainda pendentes antes de abrir cadastros ao público:** ativação e verificação da entrega real dos códigos, recuperação e alteração de senha, encerramento de todas as sessões pela conta, política de retenção/exclusão e revisão operacional de autenticação. Esta etapa permanece para uso privado de desenvolvimento.
 
 ## Professor
 
@@ -39,8 +39,8 @@ Padrões: 20 pedidos por conta/dia e 200 globais por janela de 24 horas. AI_DAIL
 ## Verificação realizada
 
 - PostgreSQL local: migrações 002 e 003 aplicadas; nova execução não reaplica nenhuma migração.
-- Sete testes de regras/segurança: catálogo e referências, limites de entradas, senhas, rubrica e adaptador.
-- Seis testes de navegador/API: cadastro com preservação de progresso, acesso em segundo navegador, revogação de sessão, token anônimo antigo, entradas inválidas, limites de tentativas e regressões do estudo.
+- Dez testes de regras/segurança: catálogo e referências, limites de entradas, senhas, rubrica e adaptador.
+- Onze testes de navegador/API, incluindo confirmação por código: cadastro com preservação de progresso, acesso em segundo navegador, revogação de sessão, token anônimo antigo, entradas inválidas, limites de tentativas e regressões do estudo.
 - Três testes de integração com provedor exclusivamente simulado: conversa/avaliação persistentes e ordem sugerida; limite diário; falha incompleta; descarte de avaliação atrasada.
 - TypeScript e build aprovados.
 

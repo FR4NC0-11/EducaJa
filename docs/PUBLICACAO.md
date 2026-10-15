@@ -2,7 +2,7 @@
 
 ## Estado atual
 
-Repositório de referência com base na branch main, com origin apontando para https://github.com/FR4NC0-11/EducaJa.git. Aplicação Next.js/TypeScript com PostgreSQL, interface escura e IoT integrados. Contas e professor por IA preparados em feat/contas-e-progresso para revisão por PR. Nenhum serviço público criado.
+Repositório de referência com base na branch main, com origin apontando para https://github.com/FR4NC0-11/EducaJa.git. Aplicação Next.js/TypeScript com PostgreSQL, interface escura e IoT integrados. Contas e professor Gemini integrados; confirmação de acesso por e-mail preparada em feat/confirmacao-email para revisão por PR. Nenhum serviço público criado.
 
 ## Etapas
 
@@ -12,7 +12,7 @@ Repositório de referência com base na branch main, com origin apontando para h
 4. Definir esquema, migrações e autenticação. Validar a aplicação e as migrações em ambiente de teste antes da primeira publicação.
 5. Escolher hospedagem da aplicação e PostgreSQL gerenciado, sem Supabase. Comparar custo mensal, suspensão por inatividade, região, conexões, backups e recuperação. O usuário prefere evitar suspensão por inatividade; não presumir que planos gratuitos atendam a essa preferência.
 6. Configurar banco de produção independente, conexão TLS, credenciais próprias e segredos no painel da hospedagem. Nenhuma senha de desenvolvimento deve ser reutilizada.
-7. Configurar implantação a partir do GitHub, executar migrações como etapa controlada e verificar login, persistência e saúde da aplicação.
+7. Configurar envio transacional, credencial privada e domínio/remetente autorizado conforme CONFIRMACAO-EMAIL.md antes de exigir códigos no serviço publicado. Configurar implantação a partir do GitHub, executar migrações como etapa controlada e verificar entrega real de e-mail, login, persistência e saúde da aplicação.
 8. Ativar endereço HTTPS, registros de erro, limites de consumo da IA e backups. Validar restauração antes de armazenar dados importantes.
 
 ## Pendências para execução

@@ -12,7 +12,7 @@ export async function currentAccount(client: PoolClient, lock = false): Promise<
     `SELECT a.id, a.profile_id, a.name, a.email
     FROM account_sessions s JOIN accounts a ON a.id = s.account_id
     JOIN visitors v ON v.id = a.profile_id
-    WHERE s.token_hash = $1 AND s.expires_at > now() ${lock ? "FOR UPDATE OF v" : ""}`,
+    WHERE s.token_hash = $1 AND s.expires_at > now() AND a.email_verified_at IS NOT NULL ${lock ? "FOR UPDATE OF v" : ""}`,
     [tokenHash(token)],
   );
   return result.rows[0] ?? null;

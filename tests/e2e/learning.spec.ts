@@ -55,7 +55,7 @@ test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page 
 test("API isola navegadores, bloqueia origem externa e não conclui diagnóstico incompleto", async ({
   playwright,
 }) => {
-  const origin = "http://localhost:3000";
+  const origin = "http://localhost:3002";
   const first = await playwright.request.newContext({ baseURL: origin });
   const second = await playwright.request.newContext({ baseURL: origin });
   await first.get("/api/workspace");

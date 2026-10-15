@@ -1961,6 +1961,28 @@ textarea::placeholder {
   margin-top: 11px;
   margin-bottom: 0;
 }
+.password-field {
+  position: relative;
+}
+.password-field input {
+  padding-right: 48px;
+}
+.password-toggle {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.password-toggle:hover {
+  color: var(--accent);
+}
 .evaluate-button {
   margin-top: 11px;
 }

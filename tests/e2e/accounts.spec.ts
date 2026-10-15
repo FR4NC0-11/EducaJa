@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { lastCode } from "../helpers/email";
 import { randomUUID } from "node:crypto";
 
 test("cadastro preserva visitante, login recupera em outro navegador e saída revoga apenas a sessão atual", async ({
@@ -6,7 +7,7 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
   browser,
   playwright,
 }) => {
-  const origin = "http://localhost:3000";
+  const origin = "http://localhost:3002";
   const email = `teste-${randomUUID()}@example.test`;
   const password = "frase de teste local 123!";
   await page.goto("/");
@@ -35,7 +36,15 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
   await page.getByLabel("Como você quer ser chamado?").fill("Estudante de teste");
   await page.getByLabel("E-mail", { exact: true }).fill(email);
   await page.getByLabel("Senha", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Mostrar senha", exact: true }).click();
+  await expect(page.getByLabel("Senha", { exact: true })).toHaveAttribute("type", "text");
+  await page.getByRole("button", { name: "Ocultar senha", exact: true }).click();
+  await expect(page.getByLabel("Senha", { exact: true })).toHaveAttribute("type", "password");
   await page.getByRole("button", { name: "Criar minha conta", exact: true }).click();
+  await expect(page.getByLabel("Código de confirmação")).toBeVisible();
+  expect((await (await page.request.get("/api/workspace")).json()).user).toBeNull();
+  await page.getByLabel("Código de confirmação").fill(lastCode(email));
+  await page.getByRole("button", { name: "Confirmar e entrar" }).click();
   await expect(page.getByRole("button", { name: "Sua conta", exact: true })).toBeVisible();
   const sessionCookie = (await page.context().cookies()).find(
     (cookie) => cookie.name === "educaja_account",
@@ -49,6 +58,9 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
   await other.getByLabel("E-mail", { exact: true }).fill(email.toUpperCase());
   await other.getByLabel("Senha", { exact: true }).fill(password);
   await other.getByRole("button", { name: "Entrar na minha conta" }).click();
+  await expect(other.getByLabel("Código de confirmação")).toBeVisible();
+  await other.getByLabel("Código de confirmação").fill(lastCode(email));
+  await other.getByRole("button", { name: "Confirmar e entrar" }).click();
   await expect(other.getByRole("button", { name: "Sua conta", exact: true })).toBeVisible();
   await other.getByRole("button", { name: "Estudar", exact: true }).click();
   await expect(other.getByLabel("Suas anotações")).toHaveValue(
@@ -80,7 +92,7 @@ test("autenticação valida entrada, origem e limita tentativas sem permitir ace
   request,
   playwright,
 }) => {
-  const origin = "http://localhost:3000";
+  const origin = "http://localhost:3002";
   const email = `inexistente-${randomUUID()}@example.test`;
   const blocked = await request.post("/api/auth", {
     headers: { Origin: "https://outro.example" },
