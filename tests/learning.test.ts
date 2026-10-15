@@ -9,6 +9,8 @@ test("cada diagnóstico contém dez questões e etapas com identificadores únic
     assert.equal(topic.questions.length, 10);
     assert.equal(new Set(topic.lessons.map((l) => l.id)).size, topic.lessons.length);
     assert.ok(topic.lessons.every((l) => l.explanation && l.exercise && l.hint));
+    assert.ok(topic.shortTitle && topic.introduction);
+    assert.ok(topic.goalExamples.length > 0 && topic.glossary.length > 0);
   }
 });
 
@@ -30,4 +32,10 @@ test("conta somente respostas válidas nas dez posições e valida a etapa dentr
   );
   assert.equal(validateLesson("java-poo", "objetos"), true);
   assert.equal(validateLesson("postgresql", "objetos"), false);
+  assert.equal(validateLesson("iot-fundamentos", "objetos-conectados"), true);
+  assert.equal(
+    actionSchema.safeParse({ kind: "start", topicId: "iot-fundamentos", goal: "Aprender do zero" })
+      .success,
+    true,
+  );
 });

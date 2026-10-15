@@ -9,6 +9,8 @@ Origem: mensagens do usuário na conversa “Projeto Site-Educacional-Programaç
 - Possibilidade de diagnóstico adaptativo, a explicar e validar antes da implementação.
 - Categorias como front-end, back-end e banco de dados; Java e orientação a objetos são exemplos de temas.
 - Alternância entre ensino por conversa e trilhas de aprendizagem.
+- IoT (Internet das Coisas) como assunto de ensino, com introdução acessível a iniciantes.
+- Visual escuro inspirado no Dracula, formas retas e menu lateral recolhível.
 - PostgreSQL, com interesse do usuário em aprender a utilizá-lo.
 - Não usar Supabase.
 - Código acessível em outros computadores e ambiente de desenvolvimento na nuvem.

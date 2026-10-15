@@ -15,6 +15,10 @@ export type Topic = {
   description: string;
   symbol: string;
   color: string;
+  shortTitle: string;
+  introduction: string;
+  goalExamples: string[];
+  glossary: { term: string; meaning: string }[];
   questions: string[];
   lessons: Lesson[];
 };
@@ -26,7 +30,27 @@ export const topics: Topic[] = [
     title: "Java e orientação a objetos",
     symbol: "{ }",
     color: "orange",
-    description: "De classes e objetos a um código com responsabilidades bem definidas.",
+    shortTitle: "Programação com Java",
+    introduction:
+      "Java é uma linguagem para escrever programas. Aqui, você vai aprender a organizar informações e ações usando objetos. Não precisa instalar nada para ler as aulas ou fazer os exercícios por escrito.",
+    description: "Entenda como dar instruções ao computador e organizar um programa em partes.",
+    goalExamples: [
+      "Quero aprender Java do zero.",
+      "Tenho uma prova de orientação a objetos.",
+      "Quero organizar melhor meu programa.",
+    ],
+    glossary: [
+      { term: "Programa", meaning: "Conjunto de instruções que o computador executa." },
+      {
+        term: "Classe",
+        meaning: "Modelo que descreve as informações e ações de um tipo de objeto.",
+      },
+      {
+        term: "Objeto",
+        meaning: "Uma unidade criada a partir de uma classe, com seus próprios dados.",
+      },
+      { term: "Método", meaning: "Uma ação definida dentro de uma classe." },
+    ],
     questions: [
       "Qual é a diferença entre uma classe e um objeto? Dê um exemplo do dia a dia.",
       "O que são atributos e métodos? Descreva os dois em uma classe Aluno.",
@@ -87,7 +111,31 @@ export const topics: Topic[] = [
     title: "Fundamentos da web",
     symbol: "</>",
     color: "purple",
-    description: "Entenda como HTML, CSS e JavaScript trabalham juntos no navegador.",
+    shortTitle: "Criação de sites",
+    introduction:
+      "Uma página é formada por conteúdo, aparência e comportamento. Você vai conhecer as linguagens que cuidam dessas partes: HTML, CSS e JavaScript. Comece pela explicação; o código é opcional na primeira leitura.",
+    description: "Aprenda como montar uma página, mudar sua aparência e criar interações.",
+    goalExamples: [
+      "Quero criar meu primeiro site.",
+      "Preciso entender HTML e CSS para uma prova.",
+      "Quero fazer uma página funcionar no celular.",
+    ],
+    glossary: [
+      {
+        term: "HTML",
+        meaning:
+          "Linguagem que organiza os conteúdos de uma página, como títulos, textos e botões.",
+      },
+      { term: "CSS", meaning: "Regras que definem a aparência da página, como cores e espaços." },
+      {
+        term: "JavaScript",
+        meaning: "Linguagem que adiciona comportamento à página, como reagir a um clique.",
+      },
+      {
+        term: "Navegador",
+        meaning: "Programa usado para abrir sites, como Firefox, Chrome ou Edge.",
+      },
+    ],
     questions: [
       "Qual é o papel de HTML, CSS e JavaScript em uma página web?",
       "Por que usar um button em vez de uma div clicável?",
@@ -148,7 +196,30 @@ export const topics: Topic[] = [
     title: "SQL e PostgreSQL",
     symbol: "[ ]",
     color: "blue",
-    description: "Organize informações, conecte tabelas e faça perguntas aos seus dados.",
+    shortTitle: "Banco de dados e SQL",
+    introduction:
+      "Um banco de dados guarda informações de forma organizada. SQL é a linguagem usada para consultar esses dados. As primeiras aulas explicam os conceitos; você não precisa ter um banco instalado para acompanhar.",
+    description: "Descubra como guardar informações e encontrar os dados de que você precisa.",
+    goalExamples: [
+      "Quero entender bancos de dados do zero.",
+      "Preciso aprender consultas SQL.",
+      "Quero guardar dados de um projeto.",
+    ],
+    glossary: [
+      {
+        term: "Banco de dados",
+        meaning: "Sistema que organiza e guarda informações para consultar e atualizar depois.",
+      },
+      {
+        term: "Tabela",
+        meaning: "Organização de dados em linhas e colunas, parecida com uma planilha.",
+      },
+      {
+        term: "SQL",
+        meaning: "Linguagem para pedir e modificar informações em bancos relacionais.",
+      },
+      { term: "PostgreSQL", meaning: "Um programa de banco de dados que entende SQL." },
+    ],
     questions: [
       "O que representam uma tabela, uma linha e uma coluna em um banco relacional?",
       "Para que serve uma chave primária? Ela pode se repetir ou ser nula?",
@@ -200,6 +271,95 @@ export const topics: Topic[] = [
         exercise:
           "Se a segunda atualização falhar, por que a primeira não deveria ser confirmada? Como uma restrição do banco complementa a validação no código?",
         hint: "O banco deve preservar as regras mesmo quando dois pedidos chegam juntos. Considere uma restrição UNIQUE para uma reserva exclusiva.",
+      },
+    ],
+  },
+  {
+    id: "iot-fundamentos",
+    category: "IoT",
+    title: "IoT — Internet das Coisas",
+    shortTitle: "IoT: objetos conectados",
+    introduction:
+      "IoT significa Internet das Coisas. Pense em uma lâmpada que você controla pelo celular ou em um sensor que avisa quando uma planta precisa de água. Vamos entender essas ideias sem precisar comprar placas ou sensores.",
+    description:
+      "Entenda como sensores e dispositivos trocam informações, como em uma casa inteligente.",
+    symbol: "IoT",
+    color: "cyan",
+    goalExamples: [
+      "Quero entender o que é Internet das Coisas.",
+      "Quero conhecer sensores e automação.",
+      "Tenho uma ideia de projeto com objetos conectados.",
+    ],
+    glossary: [
+      {
+        term: "IoT",
+        meaning:
+          "Sigla de Internet of Things, ou Internet das Coisas: objetos físicos que coletam ou trocam dados por uma rede.",
+      },
+      {
+        term: "Sensor",
+        meaning: "Componente que mede algo do ambiente, como temperatura, luz ou umidade.",
+      },
+      {
+        term: "Atuador",
+        meaning: "Componente que realiza uma ação física, como um motor que abre uma janela.",
+      },
+      {
+        term: "Broker MQTT",
+        meaning: "Servidor que recebe mensagens e as encaminha aos dispositivos interessados.",
+      },
+    ],
+    questions: [
+      "O que você entende por Internet das Coisas? Dê um exemplo de um objeto conectado.",
+      "Um termômetro mede a temperatura e um ventilador movimenta o ar. Qual deles age como sensor e qual como atuador? Por quê?",
+      "Uma planta recebe água automaticamente quando a terra seca. Que informação o sistema precisa medir?",
+      "Qual é a função de uma placa de controle, como um ESP32, em um projeto com sensor e lâmpada?",
+      "Por que um dispositivo conectado pode precisar continuar funcionando mesmo sem internet?",
+      "Explique como uma medição de temperatura pode sair de um sensor e aparecer em uma página no celular.",
+      "No MQTT, um dispositivo publica uma mensagem em um tópico e outro assina esse tópico. Como um broker participa dessa troca?",
+      "Um sensor envia medições em Celsius, mas um programa interpreta os números como Fahrenheit. Como evitar essa confusão nos dados?",
+      "Que cuidados você tomaria para impedir que pessoas não autorizadas controlassem uma fechadura conectada?",
+      "Um sistema de irrigação recebe uma leitura errada de umidade. Como você evitaria que ele desperdiçasse água ou danificasse a planta?",
+    ],
+    lessons: [
+      {
+        id: "objetos-conectados",
+        title: "O que é um objeto conectado?",
+        minutes: 7,
+        explanation:
+          "Internet das Coisas, ou IoT, é o uso de objetos físicos capazes de coletar ou trocar dados por uma rede. Um sensor mede algo: por exemplo, a temperatura. Um programa recebe essa medida e decide o que fazer. Um atuador realiza uma ação física, como ligar um ventilador. Nem todo objeto precisa se comunicar pela internet o tempo todo; parte das decisões pode acontecer no próprio dispositivo.",
+        analogy:
+          "Pense em uma pessoa cuidando de uma planta. Ela sente a terra seca, decide regar e abre a torneira. Em um sistema automático, o sensor percebe a umidade, o programa toma uma decisão e a válvula ou bomba executa a ação.",
+        code: '// Pseudocódigo: descreve a ideia, não roda em uma placa.\numidade = ler_sensor()\nse umidade estiver baixa:\n    avisar("A planta precisa de água")',
+        exercise:
+          "Escolha um objeto da sua casa que poderia ser automatizado. Descreva o que ele precisaria medir e que ação deveria realizar.",
+        hint: "Comece com uma situação simples: acender uma luz quando escurece. A luz ambiente é a medida; ligar a lâmpada é a ação. Você não precisa ter os componentes para descrever o projeto.",
+      },
+      {
+        id: "caminho-dos-dados",
+        title: "Como os dados chegam até você",
+        minutes: 9,
+        explanation:
+          "Uma placa de controle, como o ESP32, executa um programa e pode ler um sensor. Ela transforma a leitura em dados que outro programa consegue interpretar. Esses dados podem passar por uma rede local ou pela internet e chegar a um serviço que os guarda ou mostra em uma tela. Para interpretar a leitura, é importante informar o valor, a unidade e a origem. Uma rede é apenas o meio de comunicação: se ela falhar, o dispositivo precisa ter um comportamento definido.",
+        analogy:
+          "Imagine enviar um bilhete com uma medição. Escrever apenas 25 pode causar dúvida. Escrever quarto, 25 graus Celsius torna a mensagem mais clara. A rede é o caminho percorrido pelo bilhete; a tela é onde alguém lê a informação.",
+        code: '// Exemplo de mensagem: um texto estruturado chamado JSON.\n{\n  "sensor": "quarto",\n  "temperatura": 25,\n  "unidade": "Celsius"\n}',
+        exercise:
+          "Descreva o caminho de uma leitura de temperatura até uma tela no celular. O que você mostraria se a última leitura fosse antiga porque a conexão caiu?",
+        hint: "Organize em quatro partes: sensor, dispositivo, comunicação e tela. Mostrar quando a medição foi recebida ajuda a não confundir um dado antigo com a situação atual.",
+      },
+      {
+        id: "mensagens-e-cuidados",
+        title: "Troca de mensagens e cuidados básicos",
+        minutes: 11,
+        explanation:
+          "MQTT é um protocolo, isto é, um conjunto de regras para trocar mensagens. Um dispositivo publica dados em um tópico, que funciona como o assunto da mensagem. Outros dispositivos assinam esse tópico para receber as mensagens. Um servidor chamado broker faz o encaminhamento. Em um projeto real, autenticação e permissões definem quem pode publicar e receber. Também é preciso proteger a conexão e planejar o que acontece quando a rede falha. MQTT por si só não resolve esses cuidados.",
+        analogy:
+          "Um broker funciona como uma central de avisos. O sensor envia notícias para o assunto casa/quarto/temperatura. A tela se inscreve nesse assunto e a central entrega os avisos a ela. Não é preciso enviar uma cópia diretamente para cada tela.",
+        code: '// Exemplo conceitual, sem conexão com dispositivos reais.\nTópico: casa/quarto/temperatura\nMensagem: { "valor": 25, "unidade": "Celsius" }\n\nSensor → publica no broker → tela recebe o tópico',
+        exercise:
+          "Imagine uma janela automática. Que cuidados você tomaria para que ela não recebesse comandos de estranhos e não se movesse de forma perigosa ao perder a conexão?",
+        hint: "Pense em três perguntas: quem pode dar o comando, como o dispositivo verifica esse comando e qual deve ser o estado seguro se algo falhar.",
       },
     ],
   },

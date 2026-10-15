@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EducaJá — seu próximo passo começa aqui",
-  description: "Aprenda programação com diagnóstico, explicações claras e trilhas no seu ritmo.",
+  title: "EducaJá — programação e tecnologia",
+  description:
+    "Comece pelo básico: aulas de programação, criação de sites, banco de dados e Internet das Coisas.",
 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
