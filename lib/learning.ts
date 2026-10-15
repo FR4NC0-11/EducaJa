@@ -37,6 +37,7 @@ export type Workspace = {
   session: StudySession | null;
   summaries: { topic_id: string; answered: number; completed: number }[];
   aiReady: boolean;
+  emailReady: boolean;
 };
 
 export function answerCount(answers: Record<string, string>) {

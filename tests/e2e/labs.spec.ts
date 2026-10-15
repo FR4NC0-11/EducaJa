@@ -1,7 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 async function openLesson(page: Page, topicId: string, lesson?: string) {
+  const workspace = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/workspace") && response.request().method() === "GET",
+  );
   await page.goto("/");
+  await workspace;
   const response = await page.request.post("/api/workspace", {
     headers: { Origin: "http://localhost:3002" },
     data: { kind: "start", topicId, goal: "Verificar prática didática" },

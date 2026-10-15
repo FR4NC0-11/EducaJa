@@ -4,6 +4,7 @@ import { teacherAction } from "@/lib/teacher-contract";
 import { teach } from "@/lib/teacher";
 import { UserError } from "@/lib/workspace";
 export const runtime = "nodejs";
+export const maxDuration = 90;
 export async function POST(request: NextRequest) {
   try {
     const action = teacherAction.safeParse(await readJson(request));
