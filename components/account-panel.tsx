@@ -7,10 +7,12 @@ export default function AccountPanel({
   user,
   onClose,
   onChanged,
+  emailReady,
 }: {
   user: Workspace["user"];
   onClose: () => void;
   onChanged: () => Promise<void>;
+  emailReady: boolean;
 }) {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [name, setName] = useState("");
@@ -182,6 +184,12 @@ export default function AccountPanel({
             {notice}
           </p>
         )}
+        {!user && !emailReady && (
+          <p role="status" className="account-note">
+            O envio de códigos ainda está sendo configurado. Cadastro e login estarão disponíveis
+            depois dessa ativação. Você já pode acessar as aulas e os laboratórios como visitante.
+          </p>
+        )}
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -189,7 +197,7 @@ export default function AccountPanel({
           }}
         >
           {!user && (
-            <fieldset disabled={busy}>
+            <fieldset disabled={busy || !emailReady}>
               {requiresCode ? (
                 <>
                   <label htmlFor="account-code">Código de confirmação</label>
@@ -290,7 +298,11 @@ export default function AccountPanel({
               )}
             </fieldset>
           )}
-          <button className="button primary full" disabled={busy} type="submit">
+          <button
+            className="button primary full"
+            disabled={busy || (!user && !emailReady)}
+            type="submit"
+          >
             {busy ? (
               <LoaderCircle className="spin" size={17} />
             ) : user ? (

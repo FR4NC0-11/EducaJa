@@ -2,6 +2,25 @@ import { test, expect } from "@playwright/test";
 import { lastCode } from "../helpers/email";
 import { randomUUID } from "node:crypto";
 
+test("sem serviço de e-mail, a tela explica a indisponibilidade e mantém as aulas acessíveis", async ({
+  page,
+}) => {
+  await page.route("**/api/workspace", async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({ response, json: { ...(await response.json()), emailReady: false } });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Entrar ou criar conta", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText(
+    "envio de códigos ainda está sendo configurado",
+  );
+  await expect(page.getByRole("button", { name: "Entrar na minha conta" })).toBeDisabled();
+  await page.getByRole("button", { name: "Fechar conta" }).click();
+  await expect(
+    page.getByRole("button", { name: "Escolher IoT: objetos conectados" }),
+  ).toBeEnabled();
+});
+
 test("cadastro preserva visitante, login recupera em outro navegador e saída revoga apenas a sessão atual", async ({
   page,
   browser,

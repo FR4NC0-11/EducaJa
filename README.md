@@ -19,6 +19,8 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 
 ## Executar neste computador
 
+Para acesso pela internet sem depender de Docker no computador do estudante, veja [publicação com Vercel e Neon](docs/PUBLICACAO.md). O banco na nuvem já foi preparado; o endereço público da aplicação ainda depende da implantação. A configuração de nuvem tem exemplo separado em `.env.cloud.example` e preserva o banco local.
+
 Abra no VS Code a pasta `C:\Users\coron\OneDrive\Documentos\ProjetosVSCODE\Sites\EducaJa\EducaJa`.
 
 1. Abra Docker Desktop e aguarde iniciar.

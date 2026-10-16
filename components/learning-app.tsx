@@ -1055,6 +1055,7 @@ export default function LearningApp() {
       {accountOpen && (
         <AccountPanel
           user={data?.user ?? null}
+          emailReady={data?.emailReady ?? false}
           onClose={() => setAccountOpen(false)}
           onChanged={accountChanged}
         />
