@@ -39,7 +39,10 @@ export function cloudConfiguration(env) {
   }
   if (env.AI_ENABLED === "true" && !env.GEMINI_API_KEY?.trim())
     errors.push("GEMINI_API_KEY é obrigatória quando AI_ENABLED=true.");
-  if (!env.RESEND_API_KEY?.trim() || !env.EMAIL_FROM?.trim())
+  if (
+    env.AUTH_EMAIL_VERIFICATION === "true" &&
+    (!env.RESEND_API_KEY?.trim() || !env.EMAIL_FROM?.trim())
+  )
     warnings.push(
       "Envio de e-mail pendente: aulas de visitante disponíveis; cadastro/login e professor autenticado indisponíveis.",
     );

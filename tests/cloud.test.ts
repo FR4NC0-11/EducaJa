@@ -27,6 +27,7 @@ test("configuração de nuvem exige HTTPS, cookie seguro, banco remoto e certifi
 test("validação de publicação informa limites sem revelar segredos", () => {
   const result = cloudConfiguration({
     ...valid,
+    AUTH_EMAIL_VERIFICATION: "true",
     DATABASE_URL: "postgresql://private-user:do-not-print-this-password@localhost/db",
   });
   assert.ok(result.warnings.some((message) => message.includes("e-mail pendente")));

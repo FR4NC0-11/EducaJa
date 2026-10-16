@@ -8,11 +8,13 @@ export default function AccountPanel({
   onClose,
   onChanged,
   emailReady,
+  emailVerificationRequired,
 }: {
   user: Workspace["user"];
   onClose: () => void;
   onChanged: () => Promise<void>;
   emailReady: boolean;
+  emailVerificationRequired: boolean;
 }) {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [name, setName] = useState("");
@@ -321,7 +323,9 @@ export default function AccountPanel({
         </form>
         {!user && (
           <small>
-            O acesso exige a senha e o código enviado ao seu e-mail. Nunca compartilhe esse código.
+            {emailVerificationRequired
+              ? "O acesso exige a senha e o código enviado ao seu e-mail. Nunca compartilhe esse código."
+              : "O acesso usa e-mail e senha. Por enquanto, não enviamos código nem confirmamos a titularidade do e-mail."}{" "}
             A recuperação de senha ainda não está disponível.
           </small>
         )}

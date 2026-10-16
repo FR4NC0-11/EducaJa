@@ -50,3 +50,11 @@ Recuperação/alteração de senha, encerramento de todas as sessões, política
 - https://resend.com/docs/dashboard/domains/introduction
 - https://resend.com/docs/knowledge-base/403-error-resend-dev-domain
 - https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html
+
+## Modo temporário sem confirmação — 16/10/2026
+
+Por decisão do responsável, cadastro e login agora usam e-mail e senha por padrão, inclusive sem Resend. AUTH_EMAIL_VERIFICATION=false (ou ausente) habilita esse modo. Mantêm-se senha com hash, unicidade de e-mail, limites de tentativas, cookies de sessão, revogação no logout, vínculo do progresso visitante e Origin/CSRF. E-mails com formato válido, incluindo ponto e sublinhado antes do @, podem ser cadastrados sem prova de titularidade; terceiros podem reservar um endereço que não possuem. Não usar esse endereço como identidade comprovada ou como base de recuperação de senha sem confirmação posterior.
+
+Novas contas ficam com email_verified_at NULL. Não há migração nem marcação falsa de contas como verificadas. Desafios antigos não autenticam enquanto o modo sem confirmação estiver ativo. Login em conta existente continua exigindo a senha e não mistura progresso de visitante.
+
+Para reativar a confirmação, configurar AUTH_EMAIL_VERIFICATION=true no servidor e remetente validado no Resend, depois redeploy. Contas sem confirmação terão de entrar com senha e confirmar o código; suas sessões não verificadas deixarão de ser aceitas nesse modo. Contas confirmadas e dados são preservados. A suíte original testa o modo com código explicitamente, e playwright.password.config.ts testa sem provedor. Não executar testes automatizados em produção.

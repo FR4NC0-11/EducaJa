@@ -17,6 +17,7 @@ export default defineConfig({
     url: "http://localhost:3002/api/health",
     reuseExistingServer: false,
     env: {
+      AUTH_EMAIL_VERIFICATION: "true",
       RESEND_API_KEY: "test-email-not-a-real-key",
       EMAIL_FROM: "EducaJá <teste@example.test>",
       AI_ENABLED: "false",

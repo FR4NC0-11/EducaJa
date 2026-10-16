@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import type { PoolClient } from "pg";
+import { emailVerificationRequired } from "./auth-policy";
 
 export const accountCookie = "educaja_account";
 export const tokenHash = (token: string) => createHash("sha256").update(token).digest("hex");
@@ -12,8 +13,8 @@ export async function currentAccount(client: PoolClient, lock = false): Promise<
     `SELECT a.id, a.profile_id, a.name, a.email
     FROM account_sessions s JOIN accounts a ON a.id = s.account_id
     JOIN visitors v ON v.id = a.profile_id
-    WHERE s.token_hash = $1 AND s.expires_at > now() AND a.email_verified_at IS NOT NULL ${lock ? "FOR UPDATE OF v" : ""}`,
-    [tokenHash(token)],
+    WHERE s.token_hash = $1 AND s.expires_at > now() AND (NOT $2::boolean OR a.email_verified_at IS NOT NULL) ${lock ? "FOR UPDATE OF v" : ""}`,
+    [tokenHash(token), emailVerificationRequired()],
   );
   return result.rows[0] ?? null;
 }

@@ -14,6 +14,7 @@ import { consumeLimit } from "./rate-limit";
 import { type AuthAction } from "./auth-contract";
 import { emailConfigured, sendAccessCode } from "./email";
 import { accessCodeHash, matchesAccessCode, newAccessCode } from "./access-code";
+import { emailVerificationRequired } from "./auth-policy";
 export { authSchema } from "./auth-contract";
 
 const challengeCookie = "educaja_access_challenge";
@@ -72,8 +73,16 @@ export async function authenticate(action: AuthAction) {
     jar.delete(challengeCookie);
     return { ok: true as const };
   }
-  if (action.kind === "verify" || action.kind === "resend") return await confirmOrResend(action);
+  if (action.kind === "verify" || action.kind === "resend") {
+    if (!emailVerificationRequired())
+      throw new UserError(
+        "Entre com seu e-mail e senha; a confirmação por código está desativada.",
+        400,
+      );
+    return await confirmOrResend(action);
+  }
   await limitEmail(action.email);
+  if (!emailVerificationRequired()) return await passwordOnly(action);
   if (!emailConfigured())
     throw new UserError(
       "A confirmação por e-mail ainda não está configurada. O responsável pelo site precisa ativar o envio de códigos.",
@@ -157,6 +166,62 @@ export async function authenticate(action: AuthAction) {
       process.env.APP_ORIGIN?.startsWith("https://") === true,
   });
   return { ok: true as const, requiresCode: true as const };
+}
+
+async function passwordOnly(action: Extract<AuthAction, { kind: "register" | "login" }>) {
+  const client = await getDb().connect();
+  let token: string;
+  try {
+    await client.query("BEGIN");
+    if (await currentAccount(client))
+      throw new UserError("Saia da conta atual antes de acessar outra.", 409);
+    // Serialize competing registrations for the same normalized email.
+    await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [action.email]);
+    const result = await client.query("SELECT id,password_hash FROM accounts WHERE email=$1", [
+      action.email,
+    ]);
+    let id: string;
+    if (action.kind === "register") {
+      if (result.rows.length) throw new UserError("Este e-mail já possui conta. Use Entrar.", 409);
+      const profile = await visitor(client);
+      const linked = await client.query("SELECT id FROM accounts WHERE profile_id=$1", [profile]);
+      if (linked.rows.length)
+        throw new UserError(
+          "Este progresso já foi vinculado a uma conta. Recarregue e tente entrar.",
+          409,
+        );
+      const created = await client.query(
+        "INSERT INTO accounts(profile_id,name,email,password_hash) VALUES($1,$2,$3,$4) RETURNING id",
+        [profile, action.name, action.email, await hashPassword(action.password)],
+      );
+      id = created.rows[0].id;
+      // Preserve progress while invalidating the old anonymous token.
+      await client.query("UPDATE visitors SET token_hash=$2, expires_at=now() WHERE id=$1", [
+        profile,
+        tokenHash(randomBytes(32).toString("hex")),
+      ]);
+    } else {
+      const account = result.rows[0];
+      if (!(await verifyPassword(action.password, account?.password_hash ?? "")))
+        throw new UserError("E-mail ou senha incorretos.", 401);
+      id = account.id;
+    }
+    token = await issueSession(client, id);
+    const pending = (await cookies()).get(challengeCookie)?.value;
+    if (pending)
+      await client.query("DELETE FROM auth_challenges WHERE token_hash=$1", [tokenHash(pending)]);
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+  await setSessionCookie(token);
+  const jar = await cookies();
+  jar.delete(challengeCookie);
+  if (action.kind === "register") jar.delete("educaja_visitor");
+  return { ok: true as const };
 }
 
 async function confirmOrResend(action: Extract<AuthAction, { kind: "verify" | "resend" }>) {

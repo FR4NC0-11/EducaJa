@@ -38,6 +38,7 @@ export type Workspace = {
   summaries: { topic_id: string; answered: number; completed: number }[];
   aiReady: boolean;
   emailReady: boolean;
+  emailVerificationRequired: boolean;
 };
 
 export function answerCount(answers: Record<string, string>) {
