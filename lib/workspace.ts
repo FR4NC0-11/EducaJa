@@ -6,6 +6,7 @@ import { accountCookie, currentAccount } from "./session";
 import { aiConfigured } from "./gemini-teacher";
 import { emailConfigured } from "./email";
 import { emailVerificationRequired } from "./auth-policy";
+import { teacherDailyLimit } from "./teacher-usage";
 import {
   type Action,
   type StudySession,
@@ -61,6 +62,15 @@ export async function visitor(client: PoolClient, rejectExpired = false) {
 }
 
 async function readWorkspace(client: PoolClient, visitorId: string): Promise<Workspace> {
+  const account = await currentAccount(client);
+  const limit = teacherDailyLimit();
+  const usage = account
+    ? await client.query<{ calls: number }>(
+        "SELECT calls FROM ai_usage WHERE profile_id=$1 AND day=CURRENT_DATE",
+        [account.profile_id],
+      )
+    : null;
+  const used = usage?.rows[0]?.calls ?? 0;
   const current = await client.query<StudySession>(
     `SELECT s.topic_id, s.goal, s.answers, s.completed_lessons, s.notes, s.submitted_at, s.updated_at, s.evaluation, s.conversation
     FROM study_sessions s JOIN visitors v ON v.id = s.visitor_id
@@ -72,9 +82,8 @@ async function readWorkspace(client: PoolClient, visitorId: string): Promise<Wor
     [visitorId],
   );
   return {
-    user: await currentAccount(client).then((account) =>
-      account ? { name: account.name, email: account.email } : null,
-    ),
+    user: account ? { name: account.name, email: account.email } : null,
+    teacherUsage: account ? { used, limit, remaining: Math.max(0, limit - used) } : null,
     session: current.rows[0] ?? null,
     summaries: all.rows.map((row) => ({
       topic_id: row.topic_id,

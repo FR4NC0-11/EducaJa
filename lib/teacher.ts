@@ -15,6 +15,7 @@ import {
 } from "./teacher-contract";
 import { answerCount, type StudySession } from "./learning";
 import { diagnosticReference } from "./diagnostic-reference";
+import { teacherDailyLimit } from "./teacher-usage";
 
 export async function teach(action: TeacherAction) {
   if (!aiConfigured())
@@ -60,10 +61,7 @@ export async function teach(action: TeacherAction) {
         "O professor já está respondendo a um pedido seu. Aguarde a conclusão.",
         429,
       );
-    const quota = Math.max(
-      1,
-      Math.min(100, Number.parseInt(process.env.AI_DAILY_LIMIT || "20", 10) || 20),
-    );
+    const quota = teacherDailyLimit();
     const usage = await client.query(
       `INSERT INTO ai_usage(profile_id, day, calls) VALUES($1,CURRENT_DATE,1)
       ON CONFLICT(profile_id,day) DO UPDATE SET calls=ai_usage.calls+1

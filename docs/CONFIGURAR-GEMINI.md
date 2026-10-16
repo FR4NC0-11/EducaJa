@@ -38,3 +38,7 @@ Os testes automatizados usam um provedor simulado. Eles verificam integração, 
 - https://ai.google.dev/gemini-api/docs/pricing
 - https://ai.google.dev/gemini-api/docs/models
 - https://ai.google.dev/api/generate-content
+
+## Contador de uso
+
+Abaixo da conversa, contas autenticadas com IA ativa veem os pedidos restantes no limite diário da conta. O valor vem de ai_usage, com a mesma configuração AI_DAILY_LIMIT aplicada pelo servidor, e soma perguntas e avaliações de todos os assuntos. Atualiza ao carregar os dados e após pedidos, inclusive falhas de conversa. Não representa tokens ou tamanho do histórico, nem garante disponibilidade do provedor ou da cota global. A virada do dia segue CURRENT_DATE do PostgreSQL, como a aplicação do limite existente.

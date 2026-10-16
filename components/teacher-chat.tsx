@@ -43,6 +43,11 @@ export default function TeacherChat({
       setText("");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Não foi possível responder agora.");
+      // Failed provider requests can also consume the daily allowance.
+      try {
+        const current = await fetch("/api/workspace", { cache: "no-store" });
+        if (current.ok) onUpdate(await current.json());
+      } catch {}
     } finally {
       setPending(false);
       setBusy(false);
@@ -96,6 +101,17 @@ export default function TeacherChat({
               </p>
             )}
           </div>
+          {data.teacherUsage && (
+            <div className="chat-help" role="status" aria-label="Uso diário do professor">
+              <strong>
+                Pedidos restantes hoje: {data.teacherUsage.remaining} de {data.teacherUsage.limit}
+              </strong>
+              <p>
+                Inclui perguntas e avaliações em todos os assuntos. Pedidos que falham também podem
+                consumir o limite. O serviço pode ter outros limites de disponibilidade.
+              </p>
+            </div>
+          )}
           {error && (
             <div className="error-banner" role="alert">
               {error}

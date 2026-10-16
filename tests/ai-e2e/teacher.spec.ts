@@ -49,9 +49,15 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
   await diagnostic(page.request);
   await page.goto("/");
   await page.getByRole("button", { name: "Aulas", exact: true }).click();
+  await expect(page.getByRole("status", { name: "Uso diário do professor" })).toContainText(
+    "Pedidos restantes hoje: 3 de 3",
+  );
   await page.getByLabel("Sua dúvida", { exact: true }).fill("Qual é a função de um sensor?");
   await page.getByRole("button", { name: "Perguntar ao professor" }).click();
   await expect(page.getByText(/Resposta sintética de teste:/)).toBeVisible();
+  await expect(page.getByRole("status", { name: "Uso diário do professor" })).toContainText(
+    "Pedidos restantes hoje: 2 de 3",
+  );
   await page.reload();
   await page.getByRole("button", { name: "Teste inicial", exact: true }).click();
   await page.getByRole("button", { name: "Pedir avaliação ao professor" }).click();
@@ -66,6 +72,9 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
       exact: true,
     }),
   ).toBeVisible();
+  await expect(page.getByRole("status", { name: "Uso diário do professor" })).toContainText(
+    "Pedidos restantes hoje: 1 de 3",
+  );
   const chat = {
     kind: "chat",
     topicId: "iot-fundamentos",
@@ -82,6 +91,7 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
   expect(current.session.evaluation).toBeNull();
   expect(current.session.submitted_at).toBeNull();
   expect(current.session.conversation).toHaveLength(4);
+  expect(current.teacherUsage).toEqual({ used: 3, limit: 3, remaining: 0 });
 });
 
 test("resposta incompleta do provedor não é salva como conversa (IA simulada)", async ({
@@ -98,6 +108,11 @@ test("resposta incompleta do provedor não é salva como conversa (IA simulada)"
     },
   });
   expect(response.status()).toBe(502);
+  expect((await (await request.get("/api/workspace")).json()).teacherUsage).toEqual({
+    used: 1,
+    limit: 3,
+    remaining: 2,
+  });
   expect((await (await request.get("/api/workspace")).json()).session.conversation).toEqual([]);
 });
 

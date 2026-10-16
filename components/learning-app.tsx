@@ -294,6 +294,15 @@ export default function LearningApp() {
       setNotice("Avaliação salva. Veja as justificativas e a ordem sugerida das aulas.");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Não foi possível avaliar agora.");
+      try {
+        const response = await fetch("/api/workspace", { cache: "no-store" });
+        if (response.ok) {
+          const current: Workspace = await response.json();
+          setData((previous) =>
+            previous ? { ...previous, teacherUsage: current.teacherUsage } : previous,
+          );
+        }
+      } catch {}
     } finally {
       setBusy(false);
     }
