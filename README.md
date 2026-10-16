@@ -54,6 +54,7 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Contexto completo para continuar com outra IA e próximas tarefas](docs/CONTEXTO-PARA-CONTINUAR.md)
 - [Aulas e laboratórios por categoria](docs/AULAS-E-LABORATORIOS.md)
 - [Senha e confirmação por e-mail](docs/CONFIRMACAO-EMAIL.md)
 - [Configurar o professor com Gemini](docs/CONFIGURAR-GEMINI.md)
