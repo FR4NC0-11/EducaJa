@@ -278,3 +278,9 @@ Há documentos históricos com três aulas, sem contas ou publicação pendente.
 7. Atualizar este guia com data e evidência quando estado ou decisão mudar. Nunca inserir segredos, códigos ou dados pessoais de estudantes.
 
 Primeiro concluir verificação de produção e envio real de e-mail. Não recriar aplicação ou banco: já existem e o site está publicado.
+
+## 14. Redirecionamento canônico (16/10/2026)
+
+Alteração proposta em branch: `proxy.ts` redireciona GET/HEAD de hosts alternativos `*.vercel.app` exclusivamente quando `VERCEL=1` e `VERCEL_ENV=production`, para `https://educa-ja.vercel.app`, preservando caminho e consulta. Destino fixo, status 307 e Cache-Control no-store evitam destino controlado pelo visitante e cache permanente. Não usa X-Forwarded-Host como destino. POST/PUT/PATCH/DELETE não são redirecionados; a validação de Origin/CSRF em lib/http.ts permanece intacta. Cookies/progresso de outro domínio não são transferidos.
+
+Produção continua exigindo APP_ORIGIN=https://educa-ja.vercel.app. Preview mantém sua APP_ORIGIN específica, sem redirecionamento; desenvolvimento local também permanece independente. As variáveis de sistema Vercel precisam estar disponíveis. Domínios personalizados não são afetados. Testes em tests/canonical-domain.test.ts cobrem destino, ambientes, métodos e rejeição de origens. Deploy real e persistência dependem de verificação após revisão/merge pelo responsável; não foram realizados nesta alteração.
