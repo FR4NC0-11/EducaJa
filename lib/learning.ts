@@ -37,6 +37,7 @@ export type Workspace = {
   session: StudySession | null;
   summaries: { topic_id: string; answered: number; completed: number }[];
   aiReady: boolean;
+  teacherUsage: { used: number; limit: number; remaining: number } | null;
   emailReady: boolean;
   emailVerificationRequired: boolean;
 };
