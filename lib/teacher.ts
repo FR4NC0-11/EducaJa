@@ -14,7 +14,7 @@ import {
   validateEvaluation,
 } from "./teacher-contract";
 import { answerCount, type StudySession } from "./learning";
-import { diagnosticReference } from "./diagnostic-reference";
+import { teachingContext, adaptiveTeachingRules } from "./teacher-context";
 import { teacherDailyLimit } from "./teacher-usage";
 
 export async function teach(action: TeacherAction) {
@@ -93,25 +93,7 @@ export async function teach(action: TeacherAction) {
       ))
     )
       throw new UserError("O limite de pedidos do dia foi atingido. Tente novamente amanhã.", 429);
-    const context = {
-      topic: topic.title,
-      goal: session.goal,
-      lesson: lesson ?? null,
-      availableLessons: topic.lessons.map((item) => ({
-        id: item.id,
-        title: item.title,
-        explanation: item.explanation,
-      })),
-      diagnostic: topic.questions.map((question, index) => ({
-        index,
-        question,
-        answer: session.answers[String(index)] ?? "",
-        reference:
-          diagnosticReference[topic.id]?.[index] ??
-          "Use a pergunta e os critérios gerais; aceite respostas tecnicamente equivalentes.",
-      })),
-      evaluation: session.evaluation ?? null,
-    };
+    const context = teachingContext(topic, session, lesson);
     const history: ChatMessage[] = session.conversation ?? [];
     const messages: { role: "user" | "assistant"; content: string }[] = [
       {
@@ -130,7 +112,8 @@ export async function teach(action: TeacherAction) {
         content: "Avalie as dez respostas segundo a rubrica e proponha a ordem das aulas.",
       });
     const response = await modelResponse({
-      instructions: teachingRules + (action.kind === "grade" ? "\n" + gradingRules : ""),
+      instructions:
+        teachingRules + "\n" + (action.kind === "grade" ? gradingRules : adaptiveTeachingRules),
       messages,
       ...(action.kind === "grade" ? { schema: evaluationJsonSchema(topic) } : {}),
     });

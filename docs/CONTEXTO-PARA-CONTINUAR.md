@@ -288,3 +288,7 @@ Produção continua exigindo APP_ORIGIN=https://educa-ja.vercel.app. Preview man
 ## 15. Contas sem código — decisão de 16/10/2026
 
 O responsável solicitou suspender temporariamente a confirmação para permitir contas com e-mails de outros usuários enquanto o domínio de envio não está disponível. A proposta usa AUTH_EMAIL_VERIFICATION=false por padrão; detalhes, limites e reativação estão em CONFIRMACAO-EMAIL.md. Esta seção substitui a obrigatoriedade anterior de código para o modo temporário. Não marca e-mails como verificados nem altera migrações aplicadas. Mudança em branch/PR; verificar estado do merge e deploy antes de presumir ativação.
+
+## 16. Adaptação do professor — 16/10/2026
+
+Primeira correção incremental: contexto de conversa passa a informar estado do diagnóstico e aulas concluídas válidas da trilha. Orientação explícita usa feedback por questão nas explicações/exercícios pertinentes, pede tentativa curta e ajusta o próximo passo ao histórico, sem presumir domínio pela média ou conclusão. Não há novas notas, migrações ou mudanças em interface, autenticação/cotas e provedor. Protocolo e limitações em AVALIACAO-PEDAGOGICA.md; validação humana com Gemini nas quatro trilhas continua pendente.
