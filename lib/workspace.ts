@@ -5,6 +5,7 @@ import { getDb } from "./db";
 import { accountCookie, currentAccount } from "./session";
 import { aiConfigured } from "./gemini-teacher";
 import { emailConfigured } from "./email";
+import { emailVerificationRequired } from "./auth-policy";
 import {
   type Action,
   type StudySession,
@@ -81,7 +82,8 @@ async function readWorkspace(client: PoolClient, visitorId: string): Promise<Wor
       completed: row.completed_lessons.length,
     })),
     aiReady: aiConfigured(),
-    emailReady: emailConfigured(),
+    emailReady: !emailVerificationRequired() || emailConfigured(),
+    emailVerificationRequired: emailVerificationRequired(),
   };
 }
 

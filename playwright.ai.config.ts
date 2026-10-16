@@ -11,6 +11,7 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 60000,
     env: {
+      AUTH_EMAIL_VERIFICATION: "true",
       AI_ENABLED: "true",
       RESEND_API_KEY: "test-email-not-a-real-key",
       EMAIL_FROM: "EducaJá <teste@example.test>",
