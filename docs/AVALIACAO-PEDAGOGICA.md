@@ -41,3 +41,9 @@ Registrar, para cada caso: data, modelo, pedido, resposta, conceitos esperados, 
 ## O que não é garantia
 
 JSON válido garante formato, não verdade. Limitar notas e verificar IDs impede algumas falhas estruturais, mas não prova que uma correção é justa. Para testes mais abrangentes, acrescentar revisão humana e exemplos de respostas com notas de referência. Avaliação do EducaJá é formativa e não deve ser usada sozinha para certificação ou decisões de acesso à educação.
+
+## Primeira melhoria de adaptação — 16/10/2026
+
+A conversa já recebia respostas e avaliação das dez questões, mas não as aulas concluídas. Agora o contexto inclui o estado do diagnóstico e as aulas marcadas como concluídas da trilha atual. As instruções da conversa pedem usar feedback por questão para explicar uma lacuna pertinente, propor uma pequena aplicação e aguardar a tentativa antes de aumentar a dificuldade. Média global e marcação de conclusão não comprovam domínio; diagnóstico ausente ou parcial não bloqueia as aulas. A avaliação e sua rubrica permanecem iguais.
+
+Testes sintéticos cobrem as quatro trilhas, respostas parciais, avaliação presente/invalidada e filtragem do progresso. Eles verificam os dados fornecidos ao modelo, não garantem que Gemini seguirá a orientação. Próxima validação humana: comparar explicação e exercício para a mesma dúvida com uma lacuna, domínio inicial demonstrado e diagnóstico ausente; após uma tentativa correta/incorreta, conferir o próximo passo. Incluir caso de aula concluída com dificuldade persistente. Não atribuir novas notas automaticamente pela conversa.

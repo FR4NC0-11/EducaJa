@@ -1,3 +1,4 @@
+import { secureCookies } from "./deployment-config.mjs";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { getDb } from "./db";
@@ -161,9 +162,7 @@ export async function authenticate(action: AuthAction) {
     sameSite: "lax",
     path: "/",
     maxAge: 1800,
-    secure:
-      process.env.COOKIE_SECURE === "true" ||
-      process.env.APP_ORIGIN?.startsWith("https://") === true,
+    secure: secureCookies(),
   });
   return { ok: true as const, requiresCode: true as const };
 }

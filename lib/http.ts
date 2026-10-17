@@ -1,14 +1,17 @@
+import { appOrigins } from "./deployment-config.mjs";
 import { NextRequest } from "next/server";
 import { UserError } from "./workspace";
 
 export async function readJson(request: NextRequest, maximum = 12000): Promise<unknown> {
   const origin = request.headers.get("origin");
-  const expected = process.env.APP_ORIGIN;
+  const expected = appOrigins();
   let valid = false;
   try {
     valid =
       !!origin &&
-      (expected ? origin === expected : new URL(origin).host === request.headers.get("host"));
+      (expected.length
+        ? expected.includes(origin)
+        : process.env.VERCEL !== "1" && new URL(origin).host === request.headers.get("host"));
   } catch {}
   if (!valid) throw new UserError("Origem não permitida.", 403);
   if (!request.headers.get("content-type")?.includes("application/json"))

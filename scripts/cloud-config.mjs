@@ -1,12 +1,14 @@
+import { appOrigins } from "../lib/deployment-config.mjs";
 /** Validate deployment settings without returning credentials or URLs in messages. */
 export function cloudConfiguration(env) {
   const errors = [];
+  const effectiveOrigin = appOrigins(env)[0];
   const warnings = [];
   try {
-    const origin = new URL(env.APP_ORIGIN || "");
+    const origin = new URL(effectiveOrigin || "");
     if (
       origin.protocol !== "https:" ||
-      origin.origin !== env.APP_ORIGIN ||
+      origin.origin !== effectiveOrigin ||
       /^(?:localhost|127\.|0\.|\[?::1\]?$)/i.test(origin.hostname) ||
       /SEU-PROJETO/i.test(origin.host)
     )
@@ -14,7 +16,8 @@ export function cloudConfiguration(env) {
   } catch {
     errors.push("APP_ORIGIN deve ser a origem HTTPS definitiva, sem barra final.");
   }
-  if (env.COOKIE_SECURE !== "true") errors.push("COOKIE_SECURE deve ser true na nuvem.");
+  if (env.VERCEL !== "1" && env.COOKIE_SECURE !== "true")
+    errors.push("COOKIE_SECURE deve ser true na nuvem.");
   if (env.NODE_TLS_REJECT_UNAUTHORIZED === "0")
     errors.push("A verificação TLS não pode estar desativada na hospedagem.");
   for (const key of ["DATABASE_URL", "MIGRATION_DATABASE_URL"]) {

@@ -1,3 +1,4 @@
+import { secureCookies } from "./deployment-config.mjs";
 import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import type { PoolClient } from "pg";
@@ -36,8 +37,6 @@ export async function setSessionCookie(token: string) {
     sameSite: "lax",
     path: "/",
     maxAge: 7 * 24 * 60 * 60,
-    secure:
-      process.env.COOKIE_SECURE === "true" ||
-      process.env.APP_ORIGIN?.startsWith("https://") === true,
+    secure: secureCookies(),
   });
 }

@@ -1,3 +1,4 @@
+import { readJson } from "@/lib/http";
 import { NextRequest, NextResponse } from "next/server";
 import { actionSchema } from "@/lib/learning";
 import { UserError, workspace } from "@/lib/workspace";
@@ -21,32 +22,8 @@ export async function GET() {
   }
 }
 export async function POST(request: NextRequest) {
-  // A browser must originate writes from this application, never a third-party site.
-  const origin = request.headers.get("origin");
-  const expectedOrigin = process.env.APP_ORIGIN;
-  const sameOrigin = expectedOrigin
-    ? origin === expectedOrigin
-    : origin !== null &&
-      (() => {
-        try {
-          return new URL(origin).host === request.headers.get("host");
-        } catch {
-          return false;
-        }
-      })();
-  if (!sameOrigin) return NextResponse.json({ error: "Origem não permitida." }, { status: 403 });
-  if (!request.headers.get("content-type")?.includes("application/json"))
-    return NextResponse.json({ error: "Envie dados em JSON." }, { status: 415 });
   try {
-    const text = await request.text();
-    if (Buffer.byteLength(text) > 12000)
-      return NextResponse.json({ error: "O texto enviado é muito grande." }, { status: 413 });
-    let payload: unknown;
-    try {
-      payload = JSON.parse(text);
-    } catch {
-      return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
-    }
+    const payload = await readJson(request);
     const parsed = actionSchema.safeParse(payload);
     if (!parsed.success)
       return NextResponse.json(
