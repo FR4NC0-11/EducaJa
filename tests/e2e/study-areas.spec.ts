@@ -28,7 +28,7 @@ test("troca de área preserva progresso e pede salvar rascunhos", async ({ page 
   await page.getByRole("button", { name: "Começar a estudar", exact: true }).click();
   await page.getByLabel("Suas anotações").fill("Sensor mede; atuador age.");
   await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText(
+  await expect(page.locator(".feedback").getByRole("alert")).toContainText(
     "Salve sua resposta ou anotação antes de trocar de área",
   );
   await expect(page.getByLabel("Suas anotações")).toHaveValue("Sensor mede; atuador age.");
