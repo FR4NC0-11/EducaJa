@@ -1,19 +1,19 @@
 import type { Topic } from "./catalog";
 import { lesson } from "./secondary-lesson";
 import { secondaryExtraLessons } from "./secondary-expansion";
+import { secondaryNextLessons } from "./secondary-next-lessons";
 const initialSecondaryTopics: Topic[] = [
   {
     id: "em3-matematica-contagem",
     area: "secondary",
     category: "Matemática",
-    title: "Contagem e probabilidade",
+    title: "Contagem, estatística e geometria analítica",
     shortTitle: "Matemática: contagem",
-    description:
-      "Contagem, permutações, combinações e probabilidade: avance com exemplos e exercícios.",
+    description: "De contagem e probabilidade a médias, leitura de dados, distância e ponto médio.",
     symbol: "×",
     color: "orange",
     introduction:
-      "3ª série · Primeira unidade de Matemática. Retomamos contagem antes de avançar para combinatória e probabilidade.",
+      "3ª série · Comece por contagem e probabilidade e explore estatística e geometria analítica. Cada aula traz prática e conferência comentada.",
     goalExamples: ["Quero entender problemas de contagem."],
     glossary: [
       { term: "Etapa", meaning: "Uma escolha que faz parte da construção de um resultado." },
@@ -64,14 +64,14 @@ const initialSecondaryTopics: Topic[] = [
     id: "em3-linguagens-leitura",
     area: "secondary",
     category: "Linguagens",
-    title: "Leitura, interpretação e redação Enem",
+    title: "Leitura, redação Enem, língua em uso e inglês",
     shortTitle: "Linguagens: interpretação",
     description:
-      "Da interpretação à redação Enem: planeje, argumente e revise com prática autoral.",
+      "Interprete, pratique redação Enem e explore variação linguística e hipóteses em inglês.",
     symbol: "Aa",
     color: "purple",
     introduction:
-      "3ª série · Primeira unidade de Linguagens. Texto e exercícios autorais; não são questões oficiais de exame.",
+      "3ª série · Leitura, redação, língua em uso e inglês. Textos e exercícios autorais; não são questões oficiais de exame.",
     goalExamples: ["Quero justificar melhor minhas interpretações."],
     glossary: [
       {
@@ -123,10 +123,10 @@ const initialSecondaryTopics: Topic[] = [
     id: "em3-humanas-populacao",
     area: "secondary",
     category: "Ciências Humanas",
-    title: "População, redes e sustentabilidade",
+    title: "População, regiões, mapas e sustentabilidade",
     shortTitle: "Humanas: população",
     description:
-      "Interprete dados e migrações, analise redes globais e avalie propostas de consumo.",
+      "Estude população, migrações, redes, regionalização e mapas, com leitura crítica do espaço.",
     symbol: "↗",
     color: "cyan",
     introduction:
@@ -184,10 +184,9 @@ const initialSecondaryTopics: Topic[] = [
     id: "em3-natureza-hereditariedade",
     area: "secondary",
     category: "Ciências da Natureza",
-    title: "Genética e biotecnologia",
+    title: "Genética, expressão gênica e biotecnologia",
     shortTitle: "Natureza: genética",
-    description:
-      "Da hereditariedade aos heredogramas, segregação independente e análise de biotecnologia.",
+    description: "Da herança e biotecnologia ao uso da informação genética, mutações e evolução.",
     symbol: "Aa",
     color: "green",
     introduction:
@@ -251,5 +250,9 @@ const initialSecondaryTopics: Topic[] = [
 ];
 export const secondaryTopics: Topic[] = initialSecondaryTopics.map((topic) => ({
   ...topic,
-  lessons: [...topic.lessons, ...(secondaryExtraLessons[topic.id] ?? [])],
+  lessons: [
+    ...topic.lessons,
+    ...(secondaryExtraLessons[topic.id] ?? []),
+    ...(secondaryNextLessons[topic.id] ?? []),
+  ],
 }));
