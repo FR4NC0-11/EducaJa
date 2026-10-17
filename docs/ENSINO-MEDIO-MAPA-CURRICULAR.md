@@ -98,3 +98,20 @@ Não transferir automaticamente o contrato do professor de programação: ele ai
 ## Estado desta entrega
 
 Levantamento aprovado pelo responsável. A implementação inicial prepara uma unidade autoral em cada área: contagem, interpretação, dados populacionais e hereditariedade. Inclui explicação, exemplo, exercício, dica e conferência comentada; conclusão e anotações usam sessões com IDs próprios em PostgreSQL. Não exige migração e não modifica o progresso de programação. Diagnóstico e professor de IA do Ensino Médio não são ativados: a interface não os oferece e os contratos de entrada rejeitam essas ações antes de consumir cota ou acessar o provedor. Próximo passo: revisar qualidade e ampliar assuntos gradualmente.
+
+## Ampliação autoral — 17/10/2026
+
+O catálogo passa a 18 aulas, preservando temas e primeiras aulas existentes. Novas sequências:
+
+- Matemática: contagem → fatorial/permutação → arranjos/combinações → probabilidade condicional e reposição.
+- Linguagens: interpretação → projeto de redação Enem → argumentação e repertório → coesão e escrita formal → intervenção → oficina de texto completo e reescrita.
+- Humanas: proporções populacionais → migrações e saldos → redes de globalização → consumo e sustentabilidade.
+- Natureza: hereditariedade → heredogramas → segregação independente → análise de biotecnologia.
+
+Redação recebe atenção especial à prática: tema autoral sobre acesso à leitura, projeto, parágrafos, proposta e revisão. Os exemplos são estratégias de estudo, não moldes obrigatórios. Nenhum texto do aplicativo é apresentado como redação com nota oficial 1000. Checklist e conferência não atribuem nota. Para vários rascunhos ou textos maiores que 4.000 caracteres, orientar caderno externo, pois o aplicativo mantém apenas a anotação atual por aula.
+
+Critérios de redação conferidos em [notícia oficial do Inep sobre as competências de 2026](https://www.gov.br/inep/pt-br/centrais-de-conteudo/noticias/enem/enem-2026-cartilha-da-redacao-esta-disponivel) e [página da Cartilha do Participante 2026](https://www.gov.br/inep/pt-br/centrais-de-conteudo/acervo-linha-editorial/publicacoes-institucionais/avaliacoes-e-exames-da-educacao-basica/a-redacao-do-enem-2026-cartilha-do-a-participante). O download do PDF e da matriz retornou falha nesta sessão; não se afirma consulta integral. Não foram introduzidas regras detalhadas de anulação ou reprodução de correções oficiais sem conferência.
+
+No Geekie One, revisitados o índice de Linguagens e o sumário sobre planejamento textual. A referência orienta o recorte de assuntos; explicações, cenários e exercícios desta ampliação são próprios. Contagem/probabilidade também apoiadas no [portal OBMEP/IMPA](https://portaldaobmep.impa.br/index.php/modulo/ver?modulo=69); migrações em [IBGE Educa](https://educa.ibge.gov.br/professores/educa-atividades/17681-origem-dos-emigrados.html); biotecnologia em [NHGRI](https://www.genome.gov/genetics-glossary/Recombinant-DNA-Technology). Cada aula registra fontes pertinentes quando usadas.
+
+Antes de ampliar novamente, revisar os raciocínios matemáticos, os limites dos modelos de genética e as devolutivas de escrita com um professor. Não há promessa de domínio completo das matérias, diagnóstico ou IA escolares ativos. Próximos recortes possíveis incluem geometria/estatística, inglês/literatura, estudos regionais e evolução, mantendo o mapa inicial como planejamento e não como conteúdo já publicado.

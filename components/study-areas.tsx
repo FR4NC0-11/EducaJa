@@ -28,8 +28,8 @@ export default function StudyAreas({
           <div>
             <h2>Comece pelas primeiras unidades</h2>
             <p>
-              Uma unidade por área já está disponível. Outros assuntos, o diagnóstico e o professor
-              por IA serão adicionados em próximas etapas.
+              Já são 18 aulas nas quatro áreas, incluindo uma sequência de redação Enem. Outros
+              assuntos, o diagnóstico e o professor por IA serão adicionados em próximas etapas.
             </p>
           </div>
         </div>
@@ -42,6 +42,10 @@ export default function StudyAreas({
               <h2>{topic.category}</h2>
               <h3>{topic.title}</h3>
               <p>{topic.description}</p>
+              <span className="quiet-badge">
+                {topic.lessons.length} aulas ·{" "}
+                {topic.lessons.reduce((sum, lesson) => sum + lesson.minutes, 0)} min estimados
+              </span>
               <button
                 className="button primary"
                 disabled={busy}
