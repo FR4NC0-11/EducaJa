@@ -170,7 +170,8 @@ export function StudyAreaEntry({
           <span className="eyebrow">IDEIAS QUE VIRAM PROJETOS</span>
           <h2>Programação</h2>
           <p>
-            Aprenda com aulas, exemplos e exercícios de Java, Web, PostgreSQL e Internet das Coisas.
+            Aprenda com aulas, exemplos e exercícios de Java, Web, PostgreSQL, Internet das Coisas e
+            T.I. com Git/GitHub.
           </p>
           <button className="button primary" onClick={onProgramming}>
             Acessar Programação <ArrowRight size={18} aria-hidden="true" />

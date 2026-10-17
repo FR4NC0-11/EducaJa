@@ -2306,6 +2306,69 @@ textarea::placeholder {
   }
 }
 
+.git-terminal {
+  margin: 28px 0;
+  padding: 20px;
+  background: #171923;
+  border: 1px solid #526878;
+  border-top: 3px solid #91e7ae;
+  border-radius: 4px;
+  min-width: 0;
+}
+.git-terminal h3 {
+  color: #91e7ae;
+}
+.git-terminal p,
+.lesson-screenshot figcaption {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #c1c7db;
+}
+.git-terminal pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #edf0f7;
+}
+.terminal-prompt {
+  color: #91e7ae;
+}
+.terminal-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.terminal-controls span {
+  font-size: 12px;
+  color: #c1c7db;
+}
+.lesson-screenshot {
+  margin: 28px 0;
+  min-width: 0;
+}
+.lesson-screenshot img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.lesson-screenshot figcaption {
+  padding-top: 12px;
+}
+.lesson-screenshot a {
+  color: #8be9fd;
+}
+.saep-guide section {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.saep-guide li {
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
 /* Study navigation and the third-year editorial palette stay on dark surfaces. */
 .back-navigation {
   display: inline-flex;

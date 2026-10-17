@@ -19,7 +19,7 @@ function session(): StudySession {
   };
 }
 
-test("contexto distingue diagnóstico parcial, finalizado e avaliado nas quatro trilhas", () => {
+test("contexto distingue diagnóstico parcial, finalizado e avaliado nas trilhas de programação", () => {
   for (const topic of topics) {
     const study = session();
     study.topic_id = topic.id;
@@ -77,7 +77,7 @@ test("acompanhamento inclui só aulas da trilha e não transmite anotações pes
 });
 
 // These semantic anchors deliberately catch accidental remapping, beyond checking IDs exist.
-test("associações editoriais cobrem quarenta questões e usam apenas aulas válidas", async () => {
+test("associações editoriais cobrem as questões de todas as trilhas e usam apenas aulas válidas", async () => {
   const { diagnosticSkills } = await import("../lib/diagnostic-skills");
   assert.deepEqual(Object.keys(diagnosticSkills).sort(), topics.map((t) => t.id).sort());
   for (const topic of topics) {

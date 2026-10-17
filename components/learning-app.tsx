@@ -34,6 +34,8 @@ import AccountPanel from "./account-panel";
 import TeacherChat from "./teacher-chat";
 import EvaluationSummary from "./evaluation-summary";
 import LessonDemo from "./lesson-demo";
+import GitTerminal from "./git-terminal";
+import { saepPractice } from "@/lib/saep-preparation";
 
 type Screen = "areas" | "secondary" | "home" | "diagnostic" | "learn";
 type View = "teacher" | "trail";
@@ -976,6 +978,52 @@ export default function LearningApp() {
                                     <p>{section.body}</p>
                                   </section>
                                 ))}
+                                {lesson.terminal && (
+                                  <GitTerminal key={lesson.id} steps={lesson.terminal} />
+                                )}
+                                {lesson.images?.map((image) => (
+                                  <figure className="lesson-screenshot" key={image.src}>
+                                    {/* Local educational screenshots retain their source attribution. */}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <a
+                                      href={image.src}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      aria-label={`Ampliar: ${image.alt}`}
+                                    >
+                                      <img src={image.src} alt={image.alt} loading="lazy" />
+                                    </a>
+                                    <figcaption>
+                                      {image.caption}{" "}
+                                      <a href={image.source} target="_blank" rel="noreferrer">
+                                        Fonte: GitHub Docs
+                                      </a>{" "}
+                                      ·{" "}
+                                      <a
+                                        href="https://creativecommons.org/licenses/by/4.0/"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                      >
+                                        CC BY 4.0
+                                      </a>{" "}
+                                      · Sem alterações. Abra a imagem para ampliar.
+                                    </figcaption>
+                                  </figure>
+                                ))}
+                                {saepPractice[topic.id] && (
+                                  <details className="lesson-lab">
+                                    <summary>Aplicar esta trilha na preparação para o SAEP</summary>
+                                    <p>
+                                      {saepPractice[topic.id].focus}. Orientações de estudo sujeitas
+                                      a mudanças; siga o enunciado da avaliação.
+                                    </p>
+                                    <ol>
+                                      {saepPractice[topic.id].steps.map((step) => (
+                                        <li key={step}>{step}</li>
+                                      ))}
+                                    </ol>
+                                  </details>
+                                )}
                                 {lesson.code && (
                                   <details className="code-example">
                                     <summary>

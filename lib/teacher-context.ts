@@ -2,11 +2,13 @@ import type { Topic, Lesson } from "./catalog";
 import type { StudySession } from "./learning";
 import { diagnosticReference } from "./diagnostic-reference";
 import { diagnosticSkills } from "./diagnostic-skills";
+import { saepPractice } from "./saep-preparation";
 
 export function teachingContext(topic: Topic, session: StudySession, lesson?: Lesson) {
   return {
     topic: topic.title,
     goal: session.goal,
+    studyPractice: saepPractice[topic.id] ?? null,
     lesson: lesson ?? null,
     availableLessons: topic.lessons.map((item) => ({
       id: item.id,

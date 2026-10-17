@@ -1,5 +1,17 @@
 // Reference points guide formative feedback; equivalent correct answers remain valid.
 export const diagnosticReference: Record<string, string[]> = {
+  "ti-git-github": [
+    "Ler README, dependências, configuração de exemplo e scripts; executar a versão inicial em ambiente de treino, localizar responsabilidades e registrar comportamento antes de editar.",
+    "Git é versionamento distribuído local; GitHub é hospedagem e colaboração remota. Status, diff, log, add e commit funcionam localmente; operações com GitHub remoto precisam de rede e autorização.",
+    "Git clone URL cria cópia com histórico; entrar na pasta com cd; pwd, git status e git branch --show-current verificam localização/branch. URL e credenciais devem ser as autorizadas.",
+    "Diretório de trabalho contém edições; staging/index contém a versão preparada com add; commit registra esse conteúdo localmente. Editar depois de add não atualiza automaticamente o staging.",
+    "Git diff -- README.md, git add README.md e git diff --cached antes de git commit. Não preparar .env; gitignore previne novos arquivos ignorados, não remove segredos já versionados. Aceitar fluxo seguro equivalente.",
+    "Branch separa a linha de trabalho da base para comparar/revisar a tarefa. Conferir a base e status; alterações sem commit não são isoladas automaticamente ao trocar branch.",
+    "Fetch atualiza referências remotas sem integrar; pull busca e integra conforme opções; push envia commits. Em rejeição, conferir remoto/branch, buscar e analisar histórico antes de integrar; não recomendar força automaticamente.",
+    "Ler ambos os lados e o requisito, produzir versão conciliada sem marcadores, revisar diff, preparar, testar e concluir merge. Não escolher um lado sem analisar perdas; começar com trabalho limpo.",
+    "Base é destino e compare é origem da proposta. Descrever problema, comportamento resultante, validações realizadas e limitações. Abrir PR não faz merge; novos commits na mesma branch atualizam o PR.",
+    "Planejar casos válidos/limites/inválidos e acesso negado; conferir estado persistido, atomicidade, rastreabilidade e concorrência. Registrar esperado/obtido e resultados reais, README e scripts; commits locais e envio apenas conforme rede e instruções permitidas.",
+  ],
   "java-poo": [
     "Classe é o modelo; objeto é uma instância concreta com seu próprio estado. Aceitar analogias coerentes e nomes diferentes.",
     "Atributos guardam estado, como nome e matrícula; métodos descrevem ações, como apresentar ou calcular média.",

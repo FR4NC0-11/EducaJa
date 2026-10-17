@@ -19,7 +19,7 @@ test("entrada separa áreas e Ensino Médio oferece primeiras unidades sem ativa
   await expect(page.locator("#main-content")).toBeFocused();
   await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
   await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
-  await expect(page.getByRole("button", { name: /^Escolher / })).toHaveCount(4);
+  await expect(page.getByRole("button", { name: /^Escolher / })).toHaveCount(5);
   await page.reload();
   await expect(page.getByRole("heading", { name: "Qual área você quer acessar?" })).toBeVisible();
 });
@@ -110,7 +110,7 @@ test("unidades da 3ª série salvam anotações e conclusão sem misturar com pr
   expect(invalid.status()).toBe(409);
   await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
   await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
-  await expect(page.getByRole("button", { name: /^Escolher / })).toHaveCount(4);
+  await expect(page.getByRole("button", { name: /^Escolher / })).toHaveCount(5);
   await expect(page.getByRole("button", { name: "Continuar estudando", exact: true })).toHaveCount(
     0,
   );

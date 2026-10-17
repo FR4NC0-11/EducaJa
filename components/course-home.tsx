@@ -1,6 +1,7 @@
 import { ArrowRight, BookOpen, Check, Clock3 } from "lucide-react";
 import { topics, type Topic } from "@/lib/catalog";
 import type { Workspace } from "@/lib/learning";
+import { saepPractice } from "@/lib/saep-preparation";
 
 const categories = [
   { value: "Todos", label: "Todos os assuntos" },
@@ -8,6 +9,7 @@ const categories = [
   { value: "Back-end", label: "Programação" },
   { value: "Banco de dados", label: "Dados" },
   { value: "IoT", label: "IoT" },
+  { value: "T.I.", label: "T.I." },
 ];
 
 export default function CourseHome({
@@ -130,6 +132,29 @@ export default function CourseHome({
             })}
         </div>
       </section>
+      <details className="help-panel saep-guide">
+        <summary>Preparação prática para o SAEP</summary>
+        <p>
+          Roteiro baseado nas orientações fornecidas para estudo. Os tópicos podem mudar: siga o
+          enunciado e as regras da sua avaliação. As aulas introduzem conceitos; pratique também em
+          um projeto existente completo.
+        </p>
+        {topics.map((item) => (
+          <section key={item.id}>
+            <h3>
+              {item.shortTitle}: {saepPractice[item.id].focus}
+            </h3>
+            <ol>
+              {saepPractice[item.id].steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+            <button className="button" disabled={!data || busy} onClick={() => choose(item)}>
+              Praticar {item.shortTitle}
+            </button>
+          </section>
+        ))}
+      </details>
       <details className="help-panel">
         <summary>Preciso fazer o teste inicial antes de estudar?</summary>
         <p>
