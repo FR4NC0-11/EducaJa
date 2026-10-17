@@ -11,6 +11,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Aulas guiadas com explicações, exemplos do dia a dia, glossários e exercícios preparados.
 - 45 aulas em cinco trilhas, com aprofundamento, projetos e práticas guiadas; exemplos Web interativos e roteiros de Cisco Packet Tracer em IoT. T.I. inclui nove aulas de Git/GitHub, demonstrações de Git Bash e capturas oficiais do GitHub. Preparação prática por trilha em [PREPARACAO-SAEP.md](docs/PREPARACAO-SAEP.md).
 - Alternância entre aulas e plano de estudo, mantendo o progresso.
+- Ensino Médio da 3ª série com 26 aulas autorais: Matemática, Linguagens (incluindo redação Enem e inglês), Ciências Humanas e Ciências da Natureza. Anotações e conclusão salvas; diagnóstico/IA escolares ainda não disponíveis. Recorte e fontes em [ENSINO-MEDIO-MAPA-CURRICULAR.md](docs/ENSINO-MEDIO-MAPA-CURRICULAR.md).
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
 
 **Contas:** cadastro, login com código por e-mail e saída estão implementados. A senha aceita de 8 a 255 caracteres e pode ser mostrada/ocultada. O envio exige configuração privada de Resend e remetente autorizado; sem isso, cadastro e login permanecem bloqueados. Criar uma conta preserva o progresso de visitante. Ao entrar com a mesma conta em outros navegadores que acessam esta instalação, você recupera o mesmo histórico. Bancos locais independentes continuam separados.

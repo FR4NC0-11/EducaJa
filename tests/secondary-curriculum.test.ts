@@ -4,6 +4,7 @@ import { topics, getTopic } from "../lib/catalog";
 import { secondaryTopics } from "../lib/secondary-curriculum";
 import { actionSchema, validateLesson } from "../lib/learning";
 import { teacherAction } from "../lib/teacher-contract";
+import { secondaryNextLessons } from "../lib/secondary-next-lessons";
 
 test("unidades da 3ª série têm IDs próprios e conteúdo completo sem entrar no catálogo de programação", () => {
   assert.equal(topics.length, 5);
@@ -35,6 +36,59 @@ test("unidades da 3ª série têm IDs próprios e conteúdo completo sem entrar 
   }
 });
 
+test("novos recortes integram a área correta sem substituir as 18 aulas publicadas", () => {
+  assert.deepEqual(
+    Object.keys(secondaryNextLessons).sort(),
+    secondaryTopics.map((t) => t.id).sort(),
+  );
+  const previous = [
+    [
+      "em3-contagem-etapas",
+      "em3-contagem-permutacoes",
+      "em3-contagem-combinacoes",
+      "em3-probabilidade-condicional",
+    ],
+    [
+      "em3-leitura-evidencias",
+      "em3-redacao-projeto",
+      "em3-redacao-argumentacao",
+      "em3-redacao-coesao",
+      "em3-redacao-intervencao",
+      "em3-redacao-oficina",
+    ],
+    [
+      "em3-populacao-proporcoes",
+      "em3-humanas-migracoes",
+      "em3-humanas-globalizacao",
+      "em3-humanas-consumo",
+    ],
+    [
+      "em3-genetica-modelo",
+      "em3-genetica-heredogramas",
+      "em3-genetica-segregacao",
+      "em3-genetica-biotecnologia",
+    ],
+  ];
+  secondaryTopics.forEach((topic, index) => {
+    assert.deepEqual(
+      topic.lessons.slice(0, previous[index].length).map((item) => item.id),
+      previous[index],
+    );
+    const added = secondaryNextLessons[topic.id];
+    assert.equal(added.length, 2);
+    assert.deepEqual(
+      topic.lessons.slice(-2).map((item) => item.id),
+      added.map((item) => item.id),
+    );
+    for (const item of added) {
+      assert.equal(validateLesson(topic.id, item.id), true);
+      assert.equal(validateLesson(topics[0].id, item.id), false);
+      assert.ok(item.objectives!.length >= 2 && item.sections!.length >= 3);
+      assert.ok(item.lab!.expected && item.exercise && item.hint && item.resources!.length);
+    }
+  });
+});
+
 test("API não aceita diagnóstico ou professor de programação para unidades do Ensino Médio", () => {
   for (const topic of secondaryTopics) {
     assert.equal(
@@ -64,10 +118,10 @@ test("API não aceita diagnóstico ou professor de programação para unidades d
   );
 });
 
-test("ampliação preserva primeiras aulas e usa IDs únicos em dezoito aulas com prática", () => {
+test("ampliação preserva primeiras aulas e redação em 26 aulas com prática", () => {
   assert.deepEqual(
     secondaryTopics.map((t) => t.lessons.length),
-    [4, 6, 4, 4],
+    [6, 8, 6, 6],
   );
   assert.deepEqual(
     secondaryTopics.map((t) => t.lessons[0].id),
@@ -79,8 +133,8 @@ test("ampliação preserva primeiras aulas e usa IDs únicos em dezoito aulas co
     ],
   );
   const ids = secondaryTopics.flatMap((t) => t.lessons.map((l) => l.id));
-  assert.equal(new Set(ids).size, 18);
-  const writing = secondaryTopics[1].lessons.slice(1);
+  assert.equal(new Set(ids).size, 26);
+  const writing = secondaryTopics[1].lessons.slice(1, 6);
   assert.equal(writing.length, 5);
   assert.equal(writing.at(-1)?.id, "em3-redacao-oficina");
   for (const item of writing) {
