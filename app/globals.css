@@ -2305,3 +2305,308 @@ textarea::placeholder {
     padding: 20px;
   }
 }
+
+/* Study navigation and the third-year editorial palette stay on dark surfaces. */
+.back-navigation {
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--sidebar);
+  color: var(--ink);
+  padding: 10px 14px;
+  margin-bottom: 25px;
+  border-radius: 3px;
+  font-size: 13px;
+}
+.back-navigation:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.entry-secondary {
+  background: #2b303e;
+  border-top: 3px solid #8be9fd;
+}
+.entry-programming {
+  border-top: 3px solid var(--accent);
+}
+.school-home {
+  --school-cyan: #8be9fd;
+}
+.school-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 38px;
+  padding: 12px 0 36px;
+  border-bottom: 1px solid var(--line);
+}
+.school-hero h1 {
+  font-size: clamp(32px, 4vw, 50px);
+  line-height: 1.1;
+  margin: 14px 0 20px;
+  letter-spacing: -1.4px;
+}
+.school-hero .eyebrow {
+  color: var(--school-cyan);
+}
+.school-hero .school-lead {
+  font-size: clamp(22px, 2.5vw, 30px);
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+.school-hero p {
+  max-width: 600px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.school-edition {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
+  border-left: 2px solid var(--school-cyan);
+  color: var(--school-cyan);
+  background: #242733;
+}
+.school-edition strong {
+  font-size: 62px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-top: 14px;
+}
+.school-edition > span {
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+.school-edition div {
+  font-size: 12px;
+  margin-top: 22px;
+  color: var(--muted);
+}
+.essay-feature {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 28px;
+  margin: 28px 0 44px;
+  background: #302d3e;
+  border: 1px solid #68537f;
+  border-left: 4px solid var(--accent);
+}
+.essay-feature-icon {
+  color: var(--accent);
+}
+.essay-feature h2 {
+  font-size: 23px;
+  margin: 8px 0 10px;
+}
+.essay-feature p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #d2ccdf;
+  margin: 0;
+}
+.school-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.school-section-heading h2 {
+  margin: 10px 0 0;
+  font-size: 24px;
+}
+.school-subjects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.school-subject {
+  --subject-color: #ffbd86;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--subject-color);
+  padding: 28px;
+  background: #252833;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.school-subject.subject-1 {
+  --subject-color: #c7a4fa;
+}
+.school-subject.subject-2 {
+  --subject-color: #8be9fd;
+}
+.school-subject.subject-3 {
+  --subject-color: #91e7ae;
+}
+.school-subject-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+.school-subject-icon {
+  color: var(--subject-color);
+  display: flex;
+  padding: 12px;
+  background: #303440;
+  border: 1px solid #444a5b;
+}
+.school-subject-number {
+  font-size: 24px;
+  color: #a1a7bd;
+  font-variant-numeric: tabular-nums;
+}
+.school-subject-caption {
+  font-size: 12px;
+  color: var(--subject-color);
+  margin-bottom: 10px;
+}
+.school-subject h2 {
+  font-size: 27px;
+  margin: 0 0 12px;
+}
+.school-subject h3 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+.school-subject > p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+.school-preview {
+  list-style: none;
+  padding: 18px 0;
+  margin: auto 0 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.school-preview li {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 5px 0;
+  color: #d3d6e3;
+}
+.school-preview li span {
+  color: var(--subject-color);
+}
+.school-subject-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding-top: 20px;
+}
+.school-subject-bottom > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.school-subject-bottom .button {
+  border-color: var(--subject-color);
+  color: var(--subject-color);
+}
+.school-footnote {
+  margin-top: 30px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  color: var(--muted);
+}
+.school-footnote > svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.school-footnote p {
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0;
+}
+.school-footnote .text-button {
+  flex-shrink: 0;
+}
+.secondary-workspace .teacher-panel {
+  border-top: 3px solid #8be9fd;
+}
+.secondary-workspace .teacher-header {
+  background: #252b39;
+}
+.secondary-workspace .lesson-nav {
+  border-left: 2px solid #526878;
+}
+.secondary-workspace .lesson-objectives {
+  border-left: 3px solid #8be9fd;
+}
+@media (max-width: 1000px) {
+  .essay-feature {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+  .essay-feature .button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+@media (max-width: 700px) {
+  .school-hero {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .school-edition {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+  }
+  .school-edition strong {
+    font-size: 32px;
+    margin: 0;
+  }
+  .school-edition div {
+    margin: 0 0 0 auto;
+  }
+  .school-subjects {
+    grid-template-columns: 1fr;
+  }
+  .school-subject {
+    padding: 22px;
+  }
+  .school-subject h2 {
+    font-size: 25px;
+  }
+  .essay-feature {
+    padding: 22px 18px;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .essay-feature h2 {
+    font-size: 21px;
+  }
+  .school-section-heading {
+    align-items: flex-start;
+  }
+  .school-section-heading .quiet-badge {
+    display: none;
+  }
+  .school-footnote {
+    flex-wrap: wrap;
+  }
+  .school-footnote .text-button {
+    margin-left: 33px;
+  }
+}

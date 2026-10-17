@@ -192,3 +192,24 @@ test("menu recolhido persiste e iniciante estuda IoT sem objetivo ou teste obrig
   await page.getByRole("button", { name: "Plano de estudo", exact: true }).click();
   await expect(page.getByText("1/9 concluídas", { exact: true })).toBeVisible();
 });
+
+test("voltar em Programação tem destino claro e protege anotações", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: /^Voltar / })).toHaveCount(0);
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
+  await page.getByRole("button", { name: "Voltar às áreas", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Qual área você quer acessar?" })).toBeVisible();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
+  await page.getByRole("button", { name: "Escolher IoT: objetos conectados", exact: true }).click();
+  await page.getByRole("button", { name: "Começar a estudar", exact: true }).click();
+  await page.getByLabel("Suas anotações").fill("Rascunho protegido ao voltar.");
+  await page.getByRole("button", { name: "Voltar aos assuntos", exact: true }).click();
+  await expect(page.locator(".feedback").getByRole("alert")).toContainText("antes de voltar");
+  await expect(page.getByLabel("Suas anotações")).toHaveValue("Rascunho protegido ao voltar.");
+  await page.getByRole("button", { name: "Salvar anotação", exact: true }).click();
+  await page.getByRole("button", { name: "Voltar aos assuntos", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "O que você quer aprender?" })).toBeVisible();
+  await page.getByRole("button", { name: "Teste inicial", exact: true }).click();
+  await page.getByRole("button", { name: "Voltar aos assuntos", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "O que você quer aprender?" })).toBeVisible();
+});
