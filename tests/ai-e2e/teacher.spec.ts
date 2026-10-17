@@ -48,6 +48,7 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
   await account(page.request);
   await diagnostic(page.request);
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page.getByRole("button", { name: "Aulas", exact: true }).click();
   await expect(page.getByRole("status", { name: "Uso diário do professor" })).toContainText(
     "Pedidos restantes hoje: 3 de 3",
@@ -59,6 +60,7 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
     "Pedidos restantes hoje: 2 de 3",
   );
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page.getByRole("button", { name: "Teste inicial", exact: true }).click();
   await page.getByRole("button", { name: "Pedir avaliação ao professor" }).click();
   await expect(

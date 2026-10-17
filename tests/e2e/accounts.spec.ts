@@ -10,6 +10,7 @@ test("sem serviço de e-mail, a tela explica a indisponibilidade e mantém as au
     await route.fulfill({ response, json: { ...(await response.json()), emailReady: false } });
   });
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page.getByRole("button", { name: "Entrar ou criar conta", exact: true }).click();
   await expect(page.getByRole("status")).toContainText(
     "envio de códigos ainda está sendo configurado",
@@ -30,6 +31,7 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
   const email = `teste-${randomUUID()}@example.test`;
   const password = "frase de teste local 123!";
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Escolher IoT: objetos conectados" }),
   ).toBeEnabled();
@@ -50,6 +52,7 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
     (cookie) => cookie.name === "educaja_visitor",
   )!;
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page.getByRole("button", { name: "Entrar ou criar conta", exact: true }).click();
   await page.getByRole("button", { name: "Criar conta", exact: true }).click();
   await page.getByLabel("Como você quer ser chamado?").fill("Estudante de teste");
@@ -73,6 +76,7 @@ test("cadastro preserva visitante, login recupera em outro navegador e saída re
   const second = await browser.newContext({ baseURL: origin });
   const other = await second.newPage();
   await other.goto("/");
+  await other.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await other.getByRole("button", { name: "Entrar ou criar conta", exact: true }).click();
   await other.getByLabel("E-mail", { exact: true }).fill(email.toUpperCase());
   await other.getByLabel("Senha", { exact: true }).fill(password);

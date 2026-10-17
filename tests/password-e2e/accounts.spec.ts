@@ -10,6 +10,7 @@ test("cadastro sem e-mail preserva progresso, login valida senha e não declara 
   const email = `aluno.nome_${randomUUID()}@example.test`;
   const password = "frase sintética de teste 123";
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Escolher IoT: objetos conectados" }),
   ).toBeEnabled();
@@ -34,6 +35,7 @@ test("cadastro sem e-mail preserva progresso, login valida senha e não declara 
   expect(workspace.user.email).toBe(email);
   expect(workspace.session.goal).toBe("Teste sintético");
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await expect(page.getByRole("button", { name: "Sua conta", exact: true })).toBeVisible();
   const client = new Client({ connectionString: process.env.DATABASE_URL });
   await client.connect();

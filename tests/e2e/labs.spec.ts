@@ -6,6 +6,7 @@ async function openLesson(page: Page, topicId: string, lesson?: string) {
       response.url().endsWith("/api/workspace") && response.request().method() === "GET",
   );
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await workspace;
   const response = await page.request.post("/api/workspace", {
     headers: { Origin: "http://localhost:3002" },
@@ -13,6 +14,7 @@ async function openLesson(page: Page, topicId: string, lesson?: string) {
   });
   expect(response.ok()).toBeTruthy();
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page
     .getByRole("navigation", { name: "Principal" })
     .getByRole("button", { name: "Aulas", exact: true })

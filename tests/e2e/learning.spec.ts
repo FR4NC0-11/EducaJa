@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await expect(page.getByRole("navigation", { name: "Principal" }).getByRole("button")).toHaveText([
     "Assuntos",
     "Teste inicial",
@@ -29,6 +30,7 @@ test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page 
   await page.getByRole("button", { name: "Finalizar teste", exact: true }).click();
   await expect(page.getByRole("button", { name: "Teste registrado", exact: true })).toBeDisabled();
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page.getByRole("button", { name: "Teste inicial" }).click();
   await expect(page.getByText("10 de 10 salvas")).toBeVisible();
   await expect(page.getByLabel("Sua resposta", { exact: true })).toHaveValue(
@@ -46,6 +48,7 @@ test("diagnóstico, caderno e trilha persistem após recarregar", async ({ page 
   await page.getByRole("button", { name: "Salvar anotação" }).click();
   await page.getByRole("button", { name: "Concluir aula", exact: true }).click();
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page
     .getByRole("navigation", { name: "Principal" })
     .getByRole("button", { name: "Aulas" })
@@ -115,6 +118,7 @@ test("API isola navegadores, bloqueia origem externa e não conclui diagnóstico
 test("layout funciona em celular sem ultrapassar a tela", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Escolha por onde começar" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
@@ -142,6 +146,7 @@ test("menu recolhido persiste e iniciante estuda IoT sem objetivo ou teste obrig
 }) => {
   await page.setViewportSize({ width: 1366, height: 900 });
   await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   const sidebar = page.locator("#learning-sidebar");
   const expandedWidth = await sidebar.evaluate((element) => element.getBoundingClientRect().width);
   await page.getByRole("button", { name: "Recolher menu", exact: true }).click();
@@ -153,6 +158,7 @@ test("menu recolhido persiste e iniciante estuda IoT sem objetivo ou teste obrig
     expandedWidth / 2,
   );
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await expect(page.getByRole("button", { name: "Expandir menu" })).toBeVisible();
   await page.getByRole("button", { name: "IoT", exact: true }).click();
   await expect(page.getByRole("button", { name: /^Escolher / })).toHaveCount(1);
@@ -180,6 +186,7 @@ test("menu recolhido persiste e iniciante estuda IoT sem objetivo ou teste obrig
     .click();
   await expect(page.getByText("QUESTÃO 02 / 10", { exact: true })).toBeVisible();
   await page.reload();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
   await page.getByRole("button", { name: "Teste inicial", exact: true }).click();
   await expect(page.getByLabel("Sua resposta", { exact: true })).toHaveValue("Ainda não sei.");
   await page.getByRole("button", { name: "Plano de estudo", exact: true }).click();

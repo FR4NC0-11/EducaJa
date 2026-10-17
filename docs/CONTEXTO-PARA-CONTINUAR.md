@@ -300,3 +300,7 @@ Logs do deployment GXnun5HMMAw9o2RcHJFnHaUQWVuq do PR #14 mostraram ausência de
 ## 18. Evidências do diagnóstico por aula — 17/10/2026
 
 PR #14 integrado na main f37ff37. Próxima etapa associa editorialmente as quarenta questões a conceitos e aulas, fornecendo evidências específicas da aula ao professor. Notas localizadas por índice, sem classificação pela média, novos bloqueios, migrações ou alterações de cotas. Protocolo/limitações em AVALIACAO-PEDAGOGICA.md; Gemini real ainda depende de revisão humana.
+
+## 19. Entrada por área de estudo — 17/10/2026
+
+A entrada passa a oferecer Programação e Ensino Médio antes dos assuntos. Programação mantém as quatro trilhas, professor, conta e progresso existentes. Ensino Médio apresenta Matemática, Linguagens, Ciências Humanas e Ciências da Natureza como conteúdos em preparação; não há aulas, diagnósticos, novos IDs ou chamada de IA nessa área. A cada recarga a pessoa volta à escolha de áreas; Trocar de área preserva progresso e exige salvar rascunhos. Conteúdos do Ensino Médio serão definidos em etapa posterior com referências autorizadas pelo responsável. Nenhum site externo foi acessado nesta etapa.

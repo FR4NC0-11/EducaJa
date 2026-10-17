@@ -29,12 +29,13 @@ import { getTopic, orderedTopicLessons, type Topic } from "@/lib/catalog";
 import { answerCount, type Action, type Workspace } from "@/lib/learning";
 
 import CourseHome from "./course-home";
+import StudyAreas, { StudyAreaEntry } from "./study-areas";
 import AccountPanel from "./account-panel";
 import TeacherChat from "./teacher-chat";
 import EvaluationSummary from "./evaluation-summary";
 import LessonDemo from "./lesson-demo";
 
-type Screen = "home" | "diagnostic" | "learn";
+type Screen = "areas" | "secondary" | "home" | "diagnostic" | "learn";
 type View = "teacher" | "trail";
 type Drafts = Record<string, Record<string, string>>;
 
@@ -47,7 +48,7 @@ export default function LearningApp() {
   const [collapsed, setCollapsed] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-  const [screen, setScreen] = useState<Screen>("home");
+  const [screen, setScreen] = useState<Screen>("areas");
   const [view, setView] = useState<View>("teacher");
   const [category, setCategory] = useState("Todos");
   const [selected, setSelected] = useState<Topic | null>(null);
@@ -242,11 +243,16 @@ export default function LearningApp() {
     setNoteDrafts({});
     setNotice("");
     setError("");
-    setScreen("home");
+    setScreen((current) => (current === "areas" || current === "secondary" ? current : "home"));
     await load();
   }
   function navigate(next: Screen) {
     if (busy) return;
+    if ((next === "areas" || next === "secondary") && unsaved) {
+      setError("Salve sua resposta ou anotação antes de trocar de área.");
+      return;
+    }
+    setError("");
     setNotice("");
     setScreen(next);
   }
@@ -324,7 +330,7 @@ export default function LearningApp() {
       <aside className="sidebar" id="learning-sidebar" inert={!!selected || accountOpen}>
         <button
           className="brand"
-          onClick={() => navigate("home")}
+          onClick={() => navigate("areas")}
           aria-label="EducaJá, início"
           title="EducaJá"
         >
@@ -333,62 +339,76 @@ export default function LearningApp() {
           </span>
           <span className="brand-name">EducaJá</span>
         </button>
-        <div className="sidebar-label">APRENDER</div>
-        <nav aria-label="Principal" className="main-nav">
-          <button
-            aria-label="Assuntos"
-            title="Assuntos"
-            aria-current={screen === "home" ? "page" : undefined}
-            className={screen === "home" ? "active" : ""}
-            onClick={() => navigate("home")}
-          >
-            <LayoutDashboard size={19} />
-            <span className="nav-label">Assuntos</span>
-          </button>
-          <button
-            aria-label="Teste inicial"
-            title="Teste inicial — descubra o que já sabe"
-            aria-current={screen === "diagnostic" ? "page" : undefined}
-            className={screen === "diagnostic" ? "active" : ""}
-            onClick={() => navigate("diagnostic")}
-          >
-            <Compass size={19} />
-            <span className="nav-label">Teste inicial</span>
-            {topic && <span className="nav-count">{answered}/10</span>}
-          </button>
-          <button
-            aria-label="Plano de estudo"
-            title="Plano de estudo — suas aulas e seu progresso"
-            aria-current={screen === "learn" && view === "trail" ? "page" : undefined}
-            className={screen === "learn" && view === "trail" ? "active" : ""}
-            onClick={() => {
-              navigate("learn");
-              setView("trail");
-            }}
-          >
-            <Route size={19} />
-            <span className="nav-label">Plano de estudo</span>
-          </button>
-          <button
-            aria-label="Aulas"
-            title="Aulas — explicações e exercícios"
-            aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
-            className={screen === "learn" && view === "teacher" ? "active" : ""}
-            onClick={() => {
-              navigate("learn");
-              setView("teacher");
-            }}
-          >
-            <BookOpen size={19} />
-            <span className="nav-label">Aulas</span>
-          </button>
-        </nav>
+        <button
+          className="sidebar-help"
+          aria-label="Trocar de área"
+          title="Trocar de área"
+          onClick={() => navigate("areas")}
+          disabled={busy}
+        >
+          <GraduationCap size={19} />
+          <span className="nav-label">Trocar de área</span>
+        </button>
+        {screen !== "areas" && screen !== "secondary" && (
+          <>
+            <div className="sidebar-label">PROGRAMAÇÃO</div>
+            <nav aria-label="Principal" className="main-nav">
+              <button
+                aria-label="Assuntos"
+                title="Assuntos"
+                aria-current={screen === "home" ? "page" : undefined}
+                className={screen === "home" ? "active" : ""}
+                onClick={() => navigate("home")}
+              >
+                <LayoutDashboard size={19} />
+                <span className="nav-label">Assuntos</span>
+              </button>
+              <button
+                aria-label="Teste inicial"
+                title="Teste inicial — descubra o que já sabe"
+                aria-current={screen === "diagnostic" ? "page" : undefined}
+                className={screen === "diagnostic" ? "active" : ""}
+                onClick={() => navigate("diagnostic")}
+              >
+                <Compass size={19} />
+                <span className="nav-label">Teste inicial</span>
+                {topic && <span className="nav-count">{answered}/10</span>}
+              </button>
+              <button
+                aria-label="Plano de estudo"
+                title="Plano de estudo — suas aulas e seu progresso"
+                aria-current={screen === "learn" && view === "trail" ? "page" : undefined}
+                className={screen === "learn" && view === "trail" ? "active" : ""}
+                onClick={() => {
+                  navigate("learn");
+                  setView("trail");
+                }}
+              >
+                <Route size={19} />
+                <span className="nav-label">Plano de estudo</span>
+              </button>
+              <button
+                aria-label="Aulas"
+                title="Aulas — explicações e exercícios"
+                aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
+                className={screen === "learn" && view === "teacher" ? "active" : ""}
+                onClick={() => {
+                  navigate("learn");
+                  setView("teacher");
+                }}
+              >
+                <BookOpen size={19} />
+                <span className="nav-label">Aulas</span>
+              </button>
+            </nav>
+          </>
+        )}
         <div className="sidebar-bottom">
           <div className="sidebar-note">
             <GraduationCap size={20} />
             <div>
               <strong>Seu aprendizado</strong>
-              <p>As aulas começam pelo básico.</p>
+              <p>Escolha seu espaço de estudo.</p>
             </div>
           </div>
           <button
@@ -418,13 +438,17 @@ export default function LearningApp() {
             <div className="breadcrumb">
               EducaJá <ChevronRight size={14} />
               <strong>
-                {screen === "home"
-                  ? "Assuntos"
-                  : screen === "diagnostic"
-                    ? "Teste inicial"
-                    : view === "teacher"
-                      ? "Aulas"
-                      : "Plano de estudo"}
+                {screen === "areas"
+                  ? "Áreas de estudo"
+                  : screen === "secondary"
+                    ? "Ensino Médio"
+                    : screen === "home"
+                      ? "Programação · Assuntos"
+                      : screen === "diagnostic"
+                        ? "Teste inicial"
+                        : view === "teacher"
+                          ? "Aulas"
+                          : "Plano de estudo"}
               </strong>
             </div>
           </div>
@@ -456,8 +480,9 @@ export default function LearningApp() {
               </div>
               <ol>
                 <li>
-                  <strong>Escolha um assunto.</strong> Leia as descrições e clique no que quer
-                  aprender.
+                  <strong>Escolha uma área.</strong> Acesse Programação para estudar os assuntos
+                  disponíveis. Ensino Médio está em preparação. Depois, escolha um assunto. Leia as
+                  descrições e clique no que quer aprender.
                 </li>
                 <li>
                   <strong>Comece a estudar.</strong> A primeira aula explica o básico. Veja o
@@ -498,6 +523,15 @@ export default function LearningApp() {
             </div>
           ) : (
             <>
+              {screen === "areas" && (
+                <StudyAreaEntry
+                  onProgramming={() => navigate("home")}
+                  onSecondary={() => navigate("secondary")}
+                />
+              )}
+              {screen === "secondary" && (
+                <StudyAreas secondary onProgramming={() => navigate("home")} />
+              )}
               {screen === "home" && (
                 <CourseHome
                   data={data}
@@ -512,7 +546,7 @@ export default function LearningApp() {
                   }}
                 />
               )}
-              {screen !== "home" && !topic && (
+              {(screen === "diagnostic" || screen === "learn") && !topic && (
                 <section className="empty-state">
                   <Compass size={42} />
                   <h1>Primeiro, escolha um assunto.</h1>
@@ -1050,7 +1084,7 @@ export default function LearningApp() {
                 </>
               )}
               <footer className="page-footer">
-                <span>EducaJá · Programação e tecnologia</span>
+                <span>EducaJá · Seu espaço de estudo</span>
                 <span>
                   {data?.user
                     ? "Progresso salvo na sua conta. Entre com a mesma conta para retomá-lo em outro navegador."
