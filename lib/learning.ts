@@ -7,11 +7,20 @@ export const actionSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("start"), topicId, goal: z.string().trim().min(1).max(600) }),
   z.object({
     kind: z.literal("answer"),
-    topicId,
+    topicId: topicId.refine(
+      (id) => getTopic(id)?.area !== "secondary",
+      "Diagnóstico indisponível nesta área",
+    ),
     index: z.number().int().min(0).max(9),
     text: z.string().trim().min(1).max(4000),
   }),
-  z.object({ kind: z.literal("submit"), topicId }),
+  z.object({
+    kind: z.literal("submit"),
+    topicId: topicId.refine(
+      (id) => getTopic(id)?.area !== "secondary",
+      "Diagnóstico indisponível nesta área",
+    ),
+  }),
   z.object({ kind: z.literal("lesson"), topicId, lessonId: z.string().max(80), done: z.boolean() }),
   z.object({
     kind: z.literal("note"),

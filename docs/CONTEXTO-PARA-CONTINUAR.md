@@ -304,3 +304,11 @@ PR #14 integrado na main f37ff37. Próxima etapa associa editorialmente as quare
 ## 19. Entrada por área de estudo — 17/10/2026
 
 A entrada passa a oferecer Programação e Ensino Médio antes dos assuntos. Programação mantém as quatro trilhas, professor, conta e progresso existentes. Ensino Médio apresenta Matemática, Linguagens, Ciências Humanas e Ciências da Natureza como conteúdos em preparação; não há aulas, diagnósticos, novos IDs ou chamada de IA nessa área. A cada recarga a pessoa volta à escolha de áreas; Trocar de área preserva progresso e exige salvar rascunhos. Conteúdos do Ensino Médio serão definidos em etapa posterior com referências autorizadas pelo responsável. Nenhum site externo foi acessado nesta etapa.
+
+## 20. Referência curricular do Ensino Médio — 17/10/2026
+
+Levantamento autorizado no Geekie One, em Minhas matérias, com recorte visível de 3ª série. Mapa sintetizado e propostas autorais em ENSINO-MEDIO-MAPA-CURRICULAR.md. Catálogos: Matemática (43 capítulos), Linguagens (35), Humanas (21, foco em Geografia) e Natureza (12, foco em genética/Biologia). Índices dos três trimestres e dois sumários internos consultados; não houve leitura integral das 111 unidades. Física/Química e História/Filosofia/Sociologia não foram observadas como catálogos próprios neste acesso. Documento em rascunho local para revisão; não cria aulas, não ativa professor de Ensino Médio e não abre PR nesta etapa. Responsável mencionou PR posterior com squash; não implica autorização de merge.
+
+## 21. Primeiras unidades da 3ª série — 17/10/2026
+
+Recorte confirmado pelo responsável. Implementação em lib/secondary-curriculum.ts: quatro temas com uma aula autoral cada, sem reprodução de capítulos ou exercícios da referência. Matemática/contagem, Linguagens/interpretação, Humanas/dados populacionais e Natureza/hereditariedade. IDs em3- preservam as sessões de programação. Catálogo de programação permanece com quatro temas; getTopic também resolve os novos temas. Conclusão e notas usam a persistência existente, sem migração. Diagnóstico e IA de Ensino Médio ficam fora desta etapa, bloqueados no contrato da API e ausentes da interface. Planejamento e referências em ENSINO-MEDIO-MAPA-CURRICULAR.md. Merge só após revisão do responsável; squash pode reunir os commits deste PR.

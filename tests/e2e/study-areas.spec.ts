@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("entrada separa áreas e Ensino Médio não oferece aulas ou professor antecipados", async ({
+test("entrada separa áreas e Ensino Médio oferece primeiras unidades sem ativar IA ou diagnóstico", async ({
   page,
 }) => {
   await page.goto("/");
@@ -10,8 +10,11 @@ test("entrada separa áreas e Ensino Médio não oferece aulas ou professor ante
   await expect(page.getByRole("heading", { name: "Ensino Médio", exact: true })).toBeVisible();
   for (const name of ["Matemática", "Linguagens", "Ciências Humanas", "Ciências da Natureza"])
     await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Conteúdos em preparação" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Principal" })).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "Comece pelas primeiras unidades" }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Teste inicial", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /^Estudar / })).toHaveCount(4);
   await expect(page.getByLabel("Sua dúvida", { exact: true })).toHaveCount(0);
   await expect(page.locator("#main-content")).toBeFocused();
   await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
@@ -52,4 +55,63 @@ test("escolha de áreas funciona com teclado e em tela estreita", async ({ page 
     true,
   );
   await page.screenshot({ path: ".cache/study-areas-mobile.png", fullPage: true });
+});
+
+test("unidades da 3ª série salvam anotações e conclusão sem misturar com programação", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Ensino Médio", exact: true }).click();
+  await page.getByRole("button", { name: "Estudar Matemática: contagem", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Fazer teste inicial (opcional)", exact: true }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Começar a estudar", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Somar ou multiplicar possibilidades?", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Sua dúvida", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Exercício", exact: true }).click();
+  await page.getByLabel("Suas anotações").fill("Multiplico etapas e somo alternativas disjuntas.");
+  await page.getByRole("button", { name: "Salvar anotação", exact: true }).click();
+  await page.getByRole("button", { name: "Concluir aula", exact: true }).click();
+  for (const action of [
+    { kind: "grade", topicId: "em3-matematica-contagem" },
+    {
+      kind: "chat",
+      topicId: "em3-matematica-contagem",
+      lessonId: "em3-contagem-etapas",
+      text: "Dúvida",
+    },
+  ]) {
+    expect(
+      (
+        await page.request.post("/api/teacher", {
+          headers: { Origin: "http://localhost:3002" },
+          data: action,
+        })
+      ).status(),
+    ).toBe(400);
+  }
+  await page.reload();
+  await page.getByRole("button", { name: "Acessar Ensino Médio", exact: true }).click();
+  await page.getByRole("button", { name: "Estudar Matemática: contagem", exact: true }).click();
+  await page.getByRole("button", { name: "Começar a estudar", exact: true }).click();
+  await expect(page.getByLabel("Suas anotações")).toHaveValue(
+    "Multiplico etapas e somo alternativas disjuntas.",
+  );
+  await expect(
+    page.getByRole("button", { name: "Marcar como não concluída", exact: true }),
+  ).toBeVisible();
+  const invalid = await page.request.post("/api/workspace", {
+    headers: { Origin: "http://localhost:3002" },
+    data: { kind: "lesson", topicId: "java-poo", lessonId: "em3-contagem-etapas", done: true },
+  });
+  expect(invalid.status()).toBe(409);
+  await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
+  await page.getByRole("button", { name: "Acessar Programação", exact: true }).click();
+  await expect(page.getByRole("button", { name: /^Escolher / })).toHaveCount(4);
+  await expect(page.getByRole("button", { name: "Continuar estudando", exact: true })).toHaveCount(
+    0,
+  );
 });
