@@ -2245,3 +2245,63 @@ textarea::placeholder {
     font-size: 25px;
   }
 }
+
+.study-area-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin: 28px 0;
+}
+.study-area-card,
+.secondary-subjects li,
+.area-notice {
+  border: 2px solid var(--line);
+  padding: 28px;
+}
+.study-area-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.study-area-card h2,
+.secondary-subjects h2,
+.area-notice h2 {
+  margin: 0;
+}
+.study-area-card p,
+.area-notice p {
+  line-height: 1.7;
+  margin: 0;
+}
+.study-area-card .button {
+  margin-top: auto;
+}
+.secondary-subjects {
+  list-style: none;
+  padding: 0;
+}
+.secondary-subjects li {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.area-notice {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+.area-notice > svg {
+  flex-shrink: 0;
+}
+@media (max-width: 700px) {
+  .study-area-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .study-area-card,
+  .secondary-subjects li,
+  .area-notice {
+    padding: 20px;
+  }
+}
