@@ -13,15 +13,26 @@ for (const [subject, title, id] of [
   ],
   ["Humanas: população", "Mapas: escala, projeção e leitura crítica", "em3-geografia-mapas"],
   ["Natureza: genética", "DNA, RNA e expressão gênica", "em3-genetica-expressao"],
+  ["Matemática: contagem", "Geometria espacial: cone, área e volume", "em3-espacial-cone"],
+  [
+    "Linguagens: interpretação",
+    "Inglês: imaginar outro passado com o third conditional",
+    "em3-ingles-third",
+  ],
+  [
+    "Humanas: população",
+    "Desenvolvimento: médias, desigualdade e indicadores",
+    "em3-desenvolvimento-indicadores",
+  ],
+  ["Natureza: genética", "Genoma humano: informação, evidência e privacidade", "em3-genoma-etica"],
 ]) {
-  test(`nova aula de ${subject} salva notas e conclusão sem afetar a primeira aula`, async ({
-    page,
-  }) => {
+  test(`${id} salva notas e conclusão sem afetar a primeira aula`, async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Acessar Ensino Médio", exact: true }).click();
-    await expect(page.getByText("26 aulas", { exact: false }).first()).toBeVisible();
+    await expect(page.getByText("40 aulas", { exact: false }).first()).toBeVisible();
     await page.getByRole("button", { name: `Estudar ${subject}`, exact: true }).click();
     await page.getByRole("button", { name: "Começar a estudar", exact: true }).click();
+    await expect(page.locator(".lesson-nav").getByRole("button")).toHaveCount(10);
     await page.locator(".lesson-nav").getByRole("button").filter({ hasText: title }).click();
     await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible();
     await expect(page.getByLabel("Sua dúvida", { exact: true })).toHaveCount(0);

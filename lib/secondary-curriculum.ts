@@ -2,18 +2,20 @@ import type { Topic } from "./catalog";
 import { lesson } from "./secondary-lesson";
 import { secondaryExtraLessons } from "./secondary-expansion";
 import { secondaryNextLessons } from "./secondary-next-lessons";
+import { secondaryCompletion } from "./secondary-completion";
 const initialSecondaryTopics: Topic[] = [
   {
     id: "em3-matematica-contagem",
     area: "secondary",
     category: "Matemática",
-    title: "Contagem, estatística e geometria analítica",
+    title: "Contagem, estatística, álgebra e geometria",
     shortTitle: "Matemática: contagem",
-    description: "De contagem e probabilidade a médias, leitura de dados, distância e ponto médio.",
+    description:
+      "De contagem e probabilidade a estatística, complexos, polinômios e geometria plana e espacial.",
     symbol: "×",
     color: "orange",
     introduction:
-      "3ª série · Comece por contagem e probabilidade e explore estatística e geometria analítica. Cada aula traz prática e conferência comentada.",
+      "3ª série · Dez aulas de contagem, probabilidade, estatística, álgebra e geometria. Comece pelos fundamentos e explore cada novo recorte com prática e conferência comentada.",
     goalExamples: ["Quero entender problemas de contagem."],
     glossary: [
       { term: "Etapa", meaning: "Uma escolha que faz parte da construção de um resultado." },
@@ -67,7 +69,7 @@ const initialSecondaryTopics: Topic[] = [
     title: "Leitura, redação Enem, língua em uso e inglês",
     shortTitle: "Linguagens: interpretação",
     description:
-      "Interprete, pratique redação Enem e explore variação linguística e hipóteses em inglês.",
+      "Interpretação, cinco aulas de redação Enem, língua em uso, coesão referencial e inglês.",
     symbol: "Aa",
     color: "purple",
     introduction:
@@ -126,7 +128,7 @@ const initialSecondaryTopics: Topic[] = [
     title: "População, regiões, mapas e sustentabilidade",
     shortTitle: "Humanas: população",
     description:
-      "Estude população, migrações, redes, regionalização e mapas, com leitura crítica do espaço.",
+      "População, migrações, mapas, urbanização, integração econômica e indicadores de desenvolvimento.",
     symbol: "↗",
     color: "cyan",
     introduction:
@@ -186,7 +188,8 @@ const initialSecondaryTopics: Topic[] = [
     category: "Ciências da Natureza",
     title: "Genética, expressão gênica e biotecnologia",
     shortTitle: "Natureza: genética",
-    description: "Da herança e biotecnologia ao uso da informação genética, mutações e evolução.",
+    description:
+      "Hereditariedade, ABO, modelos ligados ao X, cromossomos, expressão gênica e genoma humano.",
     symbol: "Aa",
     color: "green",
     introduction:
@@ -254,5 +257,6 @@ export const secondaryTopics: Topic[] = initialSecondaryTopics.map((topic) => ({
     ...topic.lessons,
     ...(secondaryExtraLessons[topic.id] ?? []),
     ...(secondaryNextLessons[topic.id] ?? []),
+    ...(secondaryCompletion[topic.id] ?? []),
   ],
 }));
