@@ -296,3 +296,7 @@ Primeira correção incremental: contexto de conversa passa a informar estado do
 ## 17. Correção recorrente de Preview — 16/10/2026
 
 Logs do deployment GXnun5HMMAw9o2RcHJFnHaUQWVuq do PR #14 mostraram ausência de APP_ORIGIN e COOKIE_SECURE nas novas branches. Correção no próprio PR: lib/deployment-config.mjs compartilha resolução de origens de Preview (VERCEL_BRANCH_URL/VERCEL_URL) entre validação do build e rotas; cookies sempre Secure na Vercel. Produção continua exigindo APP_ORIGIN. Rota workspace passa pela mesma validação JSON/origem usada em autenticação e professor, eliminando regra duplicada. Ver PUBLICACAO.md. Não alterar segredos ou banco para resolver esse erro.
+
+## 18. Evidências do diagnóstico por aula — 17/10/2026
+
+PR #14 integrado na main f37ff37. Próxima etapa associa editorialmente as quarenta questões a conceitos e aulas, fornecendo evidências específicas da aula ao professor. Notas localizadas por índice, sem classificação pela média, novos bloqueios, migrações ou alterações de cotas. Protocolo/limitações em AVALIACAO-PEDAGOGICA.md; Gemini real ainda depende de revisão humana.

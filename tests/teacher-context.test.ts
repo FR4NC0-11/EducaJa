@@ -75,3 +75,87 @@ test("acompanhamento inclui só aulas da trilha e não transmite anotações pes
   assert.equal(JSON.stringify(context).includes("anotação privada sintética"), false);
   assert.equal(context.lesson, null);
 });
+
+// These semantic anchors deliberately catch accidental remapping, beyond checking IDs exist.
+test("associações editoriais cobrem quarenta questões e usam apenas aulas válidas", async () => {
+  const { diagnosticSkills } = await import("../lib/diagnostic-skills");
+  assert.deepEqual(Object.keys(diagnosticSkills).sort(), topics.map((t) => t.id).sort());
+  for (const topic of topics) {
+    const skills = diagnosticSkills[topic.id];
+    assert.equal(skills.length, topic.questions.length);
+    for (const skill of skills) {
+      assert.ok(skill.concept.trim());
+      assert.ok(skill.lessonIds.length);
+      assert.equal(new Set(skill.lessonIds).size, skill.lessonIds.length);
+      for (const id of skill.lessonIds)
+        assert.ok(
+          topic.lessons.some((l) => l.id === id),
+          `${topic.id}: ${id}`,
+        );
+    }
+  }
+  assert.ok(diagnosticSkills["java-poo"][8].lessonIds.includes("igualdade"));
+  assert.ok(diagnosticSkills["web-fundamentos"][9].lessonIds.includes("acessibilidade"));
+  assert.ok(diagnosticSkills.postgresql[9].lessonIds.includes("concorrencia-reservas"));
+  assert.ok(diagnosticSkills["iot-fundamentos"][6].lessonIds.includes("mqtt-telemetria"));
+});
+
+test("aula usa feedback por índice, não média ou posição das notas", () => {
+  const topic = topics.find((t) => t.id === "postgresql")!;
+  const study = session();
+  study.answers = { "7": "Índice não tem custo", "9": "Resposta sobre concorrência" };
+  study.evaluation = validateEvaluation(
+    {
+      grades: topic.questions.map((_, index) => ({
+        index,
+        concepts: index === 7 ? 0 : 4,
+        application: index === 7 ? 0 : 3,
+        reasoning: index === 7 ? 0 : 2,
+        clarity: index === 7 ? 0 : 1,
+        feedback: index === 7 ? "Rever custos de escrita" : "Resposta sintética correta",
+      })),
+      summary: "Média alta com lacuna em índices",
+      lessonOrder: topic.lessons.map((l) => l.id),
+    },
+    topic,
+    "fixture",
+  );
+  study.evaluation.grades.reverse();
+  const context = teachingContext(
+    topic,
+    study,
+    topic.lessons.find((l) => l.id === "indices-explain"),
+  );
+  assert.equal(context.evaluation?.average, 9);
+  assert.deepEqual(
+    context.currentLessonEvidence.map((e) => e.questionIndex),
+    [7],
+  );
+  assert.equal(context.currentLessonEvidence[0].answer, "Índice não tem custo");
+  assert.equal(context.currentLessonEvidence[0].grade?.concepts, 0);
+  assert.equal(context.currentLessonEvidence[0].grade?.feedback, "Rever custos de escrita");
+  assert.equal(context.diagnostic[7].concept, "Benefícios e custos de índices");
+  assert.deepEqual(context.diagnostic[7].relatedLessonIds, ["indices-explain"]);
+  study.evaluation = null;
+  study.answers["7"] = "Nova tentativa sobre índices";
+  const edited = teachingContext(
+    topic,
+    study,
+    topic.lessons.find((l) => l.id === "indices-explain"),
+  );
+  assert.equal(edited.currentLessonEvidence[0].grade, null);
+  assert.equal(edited.currentLessonEvidence[0].answer, study.answers["7"]);
+});
+
+test("diagnóstico vazio e aula sem medida específica não ganham domínio inventado", () => {
+  const study = session();
+  const context = teachingContext(topics[0], study, topics[0].lessons[0]);
+  assert.ok(context.currentLessonEvidence.length);
+  assert.ok(context.currentLessonEvidence.every((e) => e.answer === "" && e.grade === null));
+  assert.deepEqual(teachingContext(topics[0], study).currentLessonEvidence, []);
+  const topicWithoutLinks = { ...topics[0], id: "future-topic" };
+  assert.deepEqual(
+    teachingContext(topicWithoutLinks, study, topicWithoutLinks.lessons[0]).currentLessonEvidence,
+    [],
+  );
+});

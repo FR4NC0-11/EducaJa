@@ -26,7 +26,9 @@ globalThis.fetch = async (url, options) => {
         summary: "Resumo sintético do provedor de teste, sem avaliação pedagógica real.",
         lessonOrder: context.availableLessons.map((lesson) => lesson.id).reverse(),
       })
-    : "Resposta sintética de teste: um sensor mede algo do ambiente. Que medida seu projeto precisa?";
+    : input.includes("fixture-lesson-evidence")
+      ? JSON.stringify({ evidence: context.currentLessonEvidence })
+      : "Resposta sintética de teste: um sensor mede algo do ambiente. Que medida seu projeto precisa?";
   return Response.json({
     modelVersion: "fixture-model",
     candidates: [{ finishReason: "STOP", content: { parts: [{ text }] } }],
