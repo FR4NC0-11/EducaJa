@@ -10,11 +10,11 @@ test("entrada separa áreas e Ensino Médio oferece primeiras unidades sem ativa
   await expect(page.getByRole("heading", { name: "Ensino Médio", exact: true })).toBeVisible();
   for (const name of ["Matemática", "Linguagens", "Ciências Humanas", "Ciências da Natureza"])
     await expect(page.getByRole("heading", { name, exact: true })).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Comece pelas primeiras unidades" }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Escolha sua área de estudo" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Teste inicial", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /^Estudar / })).toHaveCount(4);
+  await expect(
+    page.getByRole("list", { name: "Unidades disponíveis da 3ª série" }).getByRole("button"),
+  ).toHaveCount(4);
   await expect(page.getByLabel("Sua dúvida", { exact: true })).toHaveCount(0);
   await expect(page.locator("#main-content")).toBeFocused();
   await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
@@ -173,4 +173,26 @@ test("redação Enem tem sequência própria e rascunho persistente por aula", a
   const saved = (await (await page.request.get("/api/workspace")).json()).session;
   expect(saved.completed_lessons).toContain("em3-redacao-projeto");
   expect(saved.notes["em3-leitura-evidencias"]).toBeUndefined();
+});
+
+test("destaque de redação abre a aula correta e visual mantém fundo escuro", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Acessar Ensino Médio", exact: true }).click();
+  expect(await page.locator("html").evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(
+    "rgb(40, 42, 54)",
+  );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole("button", { name: "Estudar redação", exact: true }).click();
+  await page.getByRole("button", { name: "Começar a estudar", exact: true }).click();
+  await expect(
+    page.getByRole("heading", {
+      name: "Redação Enem: projeto de texto para buscar a nota 1000",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Voltar aos assuntos", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Ensino Médio", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Voltar às áreas", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Qual área você quer acessar?" })).toBeVisible();
 });

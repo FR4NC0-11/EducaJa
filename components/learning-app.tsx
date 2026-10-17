@@ -52,6 +52,7 @@ export default function LearningApp() {
   const [studyArea, setStudyArea] = useState<"programming" | "secondary">("programming");
   const [view, setView] = useState<View>("teacher");
   const [category, setCategory] = useState("Todos");
+  const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>();
   const [selected, setSelected] = useState<Topic | null>(null);
   const [goal, setGoal] = useState("");
   const [question, setQuestion] = useState(0);
@@ -265,6 +266,14 @@ export default function LearningApp() {
     setNotice("");
     setScreen(next === "home" && studyArea === "secondary" ? "secondary" : next);
   }
+  function goBack() {
+    if (busy) return;
+    if (unsaved) {
+      setError("Salve sua resposta ou anotação antes de voltar.");
+      return;
+    }
+    navigate(screen === "home" || screen === "secondary" ? "areas" : "home");
+  }
   function switchArea(area: "programming" | "secondary") {
     if (busy) return;
     if (unsaved) {
@@ -276,11 +285,12 @@ export default function LearningApp() {
     setStudyArea(area);
     setScreen(area === "secondary" ? "secondary" : "home");
   }
-  function choose(candidate: Topic) {
+  function choose(candidate: Topic, lessonId?: string) {
     if (topic && topic.id !== candidate.id && unsaved) {
       setError("Salve sua resposta ou anotação antes de mudar de tema.");
       return;
     }
+    setSelectedLessonId(lessonId);
     setSelected(candidate);
     setGoal(candidate.id === topic?.id ? (session?.goal ?? "") : "");
   }
@@ -295,7 +305,14 @@ export default function LearningApp() {
     ) {
       setSelected(null);
       setQuestion(0);
-      setLessonIndex(0);
+      setLessonIndex(
+        selectedLessonId
+          ? Math.max(
+              0,
+              selected.lessons.findIndex((item) => item.id === selectedLessonId),
+            )
+          : 0,
+      );
       setTeacherTab("explanation");
       setView("teacher");
       setScreen(destination);
@@ -343,7 +360,9 @@ export default function LearningApp() {
   }
 
   return (
-    <div className={`app-shell ${collapsed ? "sidebar-collapsed" : ""}`}>
+    <div
+      className={`app-shell ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""}`}
+    >
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo
       </a>
@@ -490,6 +509,14 @@ export default function LearningApp() {
           </button>
         </header>
         <main id="main-content" tabIndex={-1}>
+          {screen !== "areas" && (
+            <button className="back-navigation" onClick={goBack} disabled={busy}>
+              <ArrowLeft size={17} aria-hidden="true" />
+              {screen === "home" || screen === "secondary"
+                ? "Voltar às áreas"
+                : "Voltar aos assuntos"}
+            </button>
+          )}
           {helpOpen && (
             <section className="usage-help" id="usage-help" aria-labelledby="help-title">
               <div>
@@ -557,6 +584,7 @@ export default function LearningApp() {
                 <StudyAreas
                   secondary
                   choose={choose}
+                  summaries={data?.summaries ?? []}
                   busy={busy || !data}
                   onProgramming={() => switchArea("programming")}
                 />
