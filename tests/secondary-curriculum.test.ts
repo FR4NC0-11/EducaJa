@@ -5,6 +5,47 @@ import { secondaryTopics } from "../lib/secondary-curriculum";
 import { actionSchema, validateLesson } from "../lib/learning";
 import { teacherAction } from "../lib/teacher-contract";
 import { secondaryNextLessons } from "../lib/secondary-next-lessons";
+import { secondaryCompletion } from "../lib/secondary-completion";
+
+test("cada matéria tem dez aulas com as 26 anteriores preservadas e novos IDs isolados", () => {
+  assert.deepEqual(
+    Object.keys(secondaryCompletion).sort(),
+    secondaryTopics.map((t) => t.id).sort(),
+  );
+  const earlierLengths = [6, 8, 6, 6];
+  let count = 0;
+  secondaryTopics.forEach((topic, index) => {
+    const added = secondaryCompletion[topic.id];
+    assert.equal(topic.lessons.length, 10);
+    assert.equal(added.length, 10 - earlierLengths[index]);
+    assert.deepEqual(
+      topic.lessons.slice(earlierLengths[index] - 2, earlierLengths[index]).map((l) => l.id),
+      secondaryNextLessons[topic.id].map((l) => l.id),
+    );
+    assert.deepEqual(
+      topic.lessons.slice(earlierLengths[index]).map((l) => l.id),
+      added.map((l) => l.id),
+    );
+    for (const item of added) {
+      count++;
+      assert.equal(validateLesson(topic.id, item.id), true);
+      for (const other of [...topics, ...secondaryTopics].filter((t) => t.id !== topic.id))
+        assert.equal(validateLesson(other.id, item.id), false);
+      assert.ok(item.objectives!.length >= 2 && item.sections!.length >= 3);
+      assert.ok(item.exercise && item.hint && item.lab!.expected && item.resources!.length);
+      assert.equal(
+        teacherAction.safeParse({
+          kind: "chat",
+          topicId: topic.id,
+          lessonId: item.id,
+          text: "Dúvida",
+        }).success,
+        false,
+      );
+    }
+  });
+  assert.equal(count, 14);
+});
 
 test("unidades da 3ª série têm IDs próprios e conteúdo completo sem entrar no catálogo de programação", () => {
   assert.equal(topics.length, 5);
@@ -77,7 +118,9 @@ test("novos recortes integram a área correta sem substituir as 18 aulas publica
     const added = secondaryNextLessons[topic.id];
     assert.equal(added.length, 2);
     assert.deepEqual(
-      topic.lessons.slice(-2).map((item) => item.id),
+      topic.lessons
+        .slice(previous[index].length, previous[index].length + 2)
+        .map((item) => item.id),
       added.map((item) => item.id),
     );
     for (const item of added) {
@@ -118,10 +161,10 @@ test("API não aceita diagnóstico ou professor de programação para unidades d
   );
 });
 
-test("ampliação preserva primeiras aulas e redação em 26 aulas com prática", () => {
+test("ampliação preserva primeiras aulas e redação em 40 aulas com prática", () => {
   assert.deepEqual(
     secondaryTopics.map((t) => t.lessons.length),
-    [6, 8, 6, 6],
+    [10, 10, 10, 10],
   );
   assert.deepEqual(
     secondaryTopics.map((t) => t.lessons[0].id),
@@ -133,7 +176,7 @@ test("ampliação preserva primeiras aulas e redação em 26 aulas com prática"
     ],
   );
   const ids = secondaryTopics.flatMap((t) => t.lessons.map((l) => l.id));
-  assert.equal(new Set(ids).size, 26);
+  assert.equal(new Set(ids).size, 40);
   const writing = secondaryTopics[1].lessons.slice(1, 6);
   assert.equal(writing.length, 5);
   assert.equal(writing.at(-1)?.id, "em3-redacao-oficina");
