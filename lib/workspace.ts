@@ -1,3 +1,4 @@
+import { secureCookies } from "./deployment-config.mjs";
 import { createHash, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import type { PoolClient } from "pg";
@@ -52,9 +53,7 @@ export async function visitor(client: PoolClient, rejectExpired = false) {
   jar.set(cookieName, newToken, {
     httpOnly: true,
     sameSite: "lax",
-    secure:
-      process.env.COOKIE_SECURE === "true" ||
-      process.env.APP_ORIGIN?.startsWith("https://") === true,
+    secure: secureCookies(),
     path: "/",
     maxAge: 60 * 60 * 24 * 30,
   });

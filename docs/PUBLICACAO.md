@@ -64,3 +64,11 @@ O segundo comando exige conexões diretas/pooled do mesmo endpoint e banco e man
 - Nenhuma credencial deve usar prefixo `NEXT_PUBLIC_`.
 
 Referências: [Vercel Next.js](https://vercel.com/docs/frameworks/full-stack/nextjs), [plano Hobby](https://vercel.com/docs/plans/hobby), [pool de conexões Neon](https://neon.com/docs/connect/connection-pooling), [retomada do Neon](https://neon.com/docs/introduction/scale-to-zero).
+
+## Previews automáticos — 16/10/2026
+
+Na Vercel Preview, build e rotas usam as origens HTTPS exatas de VERCEL_BRANCH_URL e VERCEL_URL fornecidas pelo servidor. Novas branches não exigem APP_ORIGIN específica nem COOKIE_SECURE: todos os cookies na Vercel são Secure, mesmo se uma configuração antiga disser false. Produção mantém APP_ORIGIN canônica obrigatória; fora da Vercel mantém configuração local. Sem aceitar qualquer subdomínio vercel.app ou confiar em Host/X-Forwarded-Host para autorizar escritas na nuvem. Origem explícita é fallback quando as URLs de sistema não estão disponíveis; sem nenhuma origem configurada, escritas Vercel são rejeitadas.
+
+As variáveis de sistema devem estar disponíveis no projeto Vercel. Não é necessário copiar APP_ORIGIN entre branches; configurações antigas não se sobrepõem às URLs geradas de Preview. Banco e chaves continuam configurados separadamente por ambiente. Esta correção não separa bancos nem autoriza testes de escrita em banco compartilhado com produção.
+
+Referência: https://vercel.com/docs/environment-variables/system-environment-variables
