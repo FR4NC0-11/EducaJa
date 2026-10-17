@@ -4,11 +4,14 @@ import { getTopic, type Topic } from "./catalog";
 export const teacherAction = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("chat"),
-    topicId: z.string().refine((id) => !!getTopic(id)),
+    topicId: z.string().refine((id) => !!getTopic(id) && getTopic(id)?.area !== "secondary"),
     lessonId: z.string(),
     text: z.string().trim().min(1).max(2000),
   }),
-  z.object({ kind: z.literal("grade"), topicId: z.string().refine((id) => !!getTopic(id)) }),
+  z.object({
+    kind: z.literal("grade"),
+    topicId: z.string().refine((id) => !!getTopic(id) && getTopic(id)?.area !== "secondary"),
+  }),
 ]);
 export type TeacherAction = z.infer<typeof teacherAction>;
 export type ChatMessage = { role: "user" | "assistant"; text: string };

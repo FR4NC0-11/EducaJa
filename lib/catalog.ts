@@ -1,3 +1,4 @@
+import { secondaryTopics } from "./secondary-curriculum";
 import { additionalLessons } from "./curriculum";
 
 export type Lesson = {
@@ -17,6 +18,7 @@ export type Lesson = {
   resources?: { title: string; url: string }[];
 };
 export type Topic = {
+  area?: "secondary";
   id: string;
   category: string;
   title: string;
@@ -406,5 +408,5 @@ export function orderedTopicLessons(topic: Topic, recommended: string[] = []): L
 }
 
 export function getTopic(id: string) {
-  return topics.find((topic) => topic.id === id);
+  return [...topics, ...secondaryTopics].find((topic) => topic.id === id);
 }

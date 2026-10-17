@@ -1,10 +1,16 @@
+import { secondaryTopics } from "@/lib/secondary-curriculum";
+import type { Topic } from "@/lib/catalog";
 import { ArrowRight, BookOpen, Code2, GraduationCap } from "lucide-react";
 
 export default function StudyAreas({
   secondary = false,
   onProgramming,
+  choose,
+  busy,
 }: {
   secondary?: boolean;
+  choose: (topic: Topic) => void;
+  busy: boolean;
   onProgramming: () => void;
 }) {
   if (secondary)
@@ -14,24 +20,36 @@ export default function StudyAreas({
           <div>
             <div className="eyebrow">ÁREA DE ESTUDO</div>
             <h1 id="secondary-title">Ensino Médio</h1>
-            <p>Um novo espaço para estudar as matérias da escola.</p>
+            <p>3ª série · Primeiras unidades de estudo, com explicações e exercícios autorais.</p>
           </div>
         </div>
         <div className="area-notice">
           <BookOpen size={24} aria-hidden="true" />
           <div>
-            <h2>Conteúdos em preparação</h2>
-            <p>As aulas, os exercícios e o professor desta área ainda não estão disponíveis.</p>
+            <h2>Comece pelas primeiras unidades</h2>
+            <p>
+              Uma unidade por área já está disponível. Outros assuntos, o diagnóstico e o professor
+              por IA serão adicionados em próximas etapas.
+            </p>
           </div>
         </div>
         <ul
           className="study-area-grid secondary-subjects"
-          aria-label="Áreas previstas para o Ensino Médio"
+          aria-label="Unidades disponíveis da 3ª série"
         >
-          {["Matemática", "Linguagens", "Ciências Humanas", "Ciências da Natureza"].map((name) => (
-            <li key={name}>
-              <h2>{name}</h2>
-              <span>Em breve</span>
+          {secondaryTopics.map((topic) => (
+            <li key={topic.id}>
+              <h2>{topic.category}</h2>
+              <h3>{topic.title}</h3>
+              <p>{topic.description}</p>
+              <button
+                className="button primary"
+                disabled={busy}
+                onClick={() => choose(topic)}
+                aria-label={`Estudar ${topic.shortTitle}`}
+              >
+                Estudar esta unidade <ArrowRight size={18} aria-hidden="true" />
+              </button>
             </li>
           ))}
         </ul>
@@ -74,7 +92,7 @@ export function StudyAreaEntry({
           <GraduationCap size={32} aria-hidden="true" />
           <h2>Ensino Médio</h2>
           <p>Matemática, Linguagens, Ciências Humanas e Ciências da Natureza.</p>
-          <span className="quiet-badge">Conteúdos em breve</span>
+          <span className="quiet-badge">3ª série · Primeiras unidades</span>
           <button className="button secondary" onClick={onSecondary}>
             Acessar Ensino Médio <ArrowRight size={18} aria-hidden="true" />
           </button>

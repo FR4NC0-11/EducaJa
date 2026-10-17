@@ -49,6 +49,7 @@ export default function LearningApp() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [screen, setScreen] = useState<Screen>("areas");
+  const [studyArea, setStudyArea] = useState<"programming" | "secondary">("programming");
   const [view, setView] = useState<View>("teacher");
   const [category, setCategory] = useState("Todos");
   const [selected, setSelected] = useState<Topic | null>(null);
@@ -65,7 +66,9 @@ export default function LearningApp() {
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const previousScreen = useRef(screen);
   const session = data?.session;
-  const topic = session ? getTopic(session.topic_id) : undefined;
+  const activeTopic = session ? getTopic(session.topic_id) : undefined;
+  const topic =
+    (activeTopic?.area === "secondary") === (studyArea === "secondary") ? activeTopic : undefined;
   const answered = session ? answerCount(session.answers) : 0;
   const completed = session?.completed_lessons.length ?? 0;
   const orderedLessons = topic ? orderedTopicLessons(topic, session?.evaluation?.lessonOrder) : [];
@@ -243,7 +246,13 @@ export default function LearningApp() {
     setNoteDrafts({});
     setNotice("");
     setError("");
-    setScreen((current) => (current === "areas" || current === "secondary" ? current : "home"));
+    setScreen((current) =>
+      current === "areas" || current === "secondary"
+        ? current
+        : studyArea === "secondary"
+          ? "secondary"
+          : "home",
+    );
     await load();
   }
   function navigate(next: Screen) {
@@ -254,7 +263,18 @@ export default function LearningApp() {
     }
     setError("");
     setNotice("");
-    setScreen(next);
+    setScreen(next === "home" && studyArea === "secondary" ? "secondary" : next);
+  }
+  function switchArea(area: "programming" | "secondary") {
+    if (busy) return;
+    if (unsaved) {
+      setError("Salve sua resposta ou anotação antes de trocar de área.");
+      return;
+    }
+    setError("");
+    setNotice("");
+    setStudyArea(area);
+    setScreen(area === "secondary" ? "secondary" : "home");
   }
   function choose(candidate: Topic) {
     if (topic && topic.id !== candidate.id && unsaved) {
@@ -349,31 +369,35 @@ export default function LearningApp() {
           <GraduationCap size={19} />
           <span className="nav-label">Trocar de área</span>
         </button>
-        {screen !== "areas" && screen !== "secondary" && (
+        {screen !== "areas" && (
           <>
-            <div className="sidebar-label">PROGRAMAÇÃO</div>
+            <div className="sidebar-label">
+              {studyArea === "secondary" ? "ENSINO MÉDIO · 3ª SÉRIE" : "PROGRAMAÇÃO"}
+            </div>
             <nav aria-label="Principal" className="main-nav">
               <button
                 aria-label="Assuntos"
                 title="Assuntos"
-                aria-current={screen === "home" ? "page" : undefined}
-                className={screen === "home" ? "active" : ""}
+                aria-current={screen === "home" || screen === "secondary" ? "page" : undefined}
+                className={screen === "home" || screen === "secondary" ? "active" : ""}
                 onClick={() => navigate("home")}
               >
                 <LayoutDashboard size={19} />
                 <span className="nav-label">Assuntos</span>
               </button>
-              <button
-                aria-label="Teste inicial"
-                title="Teste inicial — descubra o que já sabe"
-                aria-current={screen === "diagnostic" ? "page" : undefined}
-                className={screen === "diagnostic" ? "active" : ""}
-                onClick={() => navigate("diagnostic")}
-              >
-                <Compass size={19} />
-                <span className="nav-label">Teste inicial</span>
-                {topic && <span className="nav-count">{answered}/10</span>}
-              </button>
+              {studyArea !== "secondary" && (
+                <button
+                  aria-label="Teste inicial"
+                  title="Teste inicial — descubra o que já sabe"
+                  aria-current={screen === "diagnostic" ? "page" : undefined}
+                  className={screen === "diagnostic" ? "active" : ""}
+                  onClick={() => navigate("diagnostic")}
+                >
+                  <Compass size={19} />
+                  <span className="nav-label">Teste inicial</span>
+                  {topic && <span className="nav-count">{answered}/10</span>}
+                </button>
+              )}
               <button
                 aria-label="Plano de estudo"
                 title="Plano de estudo — suas aulas e seu progresso"
@@ -481,8 +505,8 @@ export default function LearningApp() {
               <ol>
                 <li>
                   <strong>Escolha uma área.</strong> Acesse Programação para estudar os assuntos
-                  disponíveis. Ensino Médio está em preparação. Depois, escolha um assunto. Leia as
-                  descrições e clique no que quer aprender.
+                  disponíveis. Ensino Médio já tem primeiras unidades da 3ª série. Depois, escolha
+                  um assunto. Leia as descrições e clique no que quer aprender.
                 </li>
                 <li>
                   <strong>Comece a estudar.</strong> A primeira aula explica o básico. Veja o
@@ -525,12 +549,17 @@ export default function LearningApp() {
             <>
               {screen === "areas" && (
                 <StudyAreaEntry
-                  onProgramming={() => navigate("home")}
-                  onSecondary={() => navigate("secondary")}
+                  onProgramming={() => switchArea("programming")}
+                  onSecondary={() => switchArea("secondary")}
                 />
               )}
               {screen === "secondary" && (
-                <StudyAreas secondary onProgramming={() => navigate("home")} />
+                <StudyAreas
+                  secondary
+                  choose={choose}
+                  busy={busy || !data}
+                  onProgramming={() => switchArea("programming")}
+                />
               )}
               {screen === "home" && (
                 <CourseHome
@@ -919,18 +948,23 @@ export default function LearningApp() {
                                     <p>{section.body}</p>
                                   </section>
                                 ))}
-                                <details className="code-example">
-                                  <summary>
-                                    Ver exemplo em código <Code2 size={16} />
-                                  </summary>
-                                  <p>
-                                    O código é uma forma de escrever instruções. Você pode ler
-                                    primeiro a explicação e voltar a este exemplo depois.
-                                  </p>
-                                  <pre>
-                                    <code>{lesson.code}</code>
-                                  </pre>
-                                </details>
+                                {lesson.code && (
+                                  <details className="code-example">
+                                    <summary>
+                                      {topic.area === "secondary"
+                                        ? "Ver exemplo"
+                                        : "Ver exemplo em código"}{" "}
+                                      <Code2 size={16} />
+                                    </summary>
+                                    <p>
+                                      O código é uma forma de escrever instruções. Você pode ler
+                                      primeiro a explicação e voltar a este exemplo depois.
+                                    </p>
+                                    <pre>
+                                      <code>{lesson.code}</code>
+                                    </pre>
+                                  </details>
+                                )}
                                 {lesson.lab && (
                                   <details className="lesson-lab">
                                     <summary>Prática guiada: {lesson.lab.tool}</summary>
@@ -985,7 +1019,7 @@ export default function LearningApp() {
                               ))}
                             </dl>
                           </details>
-                          {data && (
+                          {data && topic.area !== "secondary" && (
                             <TeacherChat
                               key={topic.id}
                               data={data}
@@ -1166,14 +1200,16 @@ export default function LearningApp() {
                 {busy ? <LoaderCircle className="spin" size={17} /> : <BookOpen size={17} />}Começar
                 a estudar <ArrowRight size={17} />
               </button>
-              <button
-                className="button secondary full"
-                disabled={busy}
-                onClick={() => start("diagnostic")}
-              >
-                <Compass size={17} />
-                Fazer teste inicial (opcional)
-              </button>
+              {selected.area !== "secondary" && (
+                <button
+                  className="button secondary full"
+                  disabled={busy}
+                  onClick={() => start("diagnostic")}
+                >
+                  <Compass size={17} />
+                  Fazer teste inicial (opcional)
+                </button>
+              )}
             </div>
             <small>Seu progresso anterior neste tema será preservado.</small>
           </section>
