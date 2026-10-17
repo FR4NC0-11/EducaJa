@@ -79,9 +79,17 @@ test("conversa e avaliação persistem, recomendações alteram a ordem e limite
     kind: "chat",
     topicId: "iot-fundamentos",
     lessonId: "objetos-conectados",
-    text: "Outra dúvida sintética",
+    text: "fixture-lesson-evidence",
   };
   expect((await page.request.post("/api/teacher", { headers, data: chat })).status()).toBe(200);
+  const afterChat = await (await page.request.get("/api/workspace")).json();
+  const evidence = JSON.parse(afterChat.session.conversation.at(-1).text).evidence;
+  expect(evidence.map((item: { questionIndex: number }) => item.questionIndex)).toEqual([
+    0, 1, 2, 3,
+  ]);
+  expect(evidence[1].answer).toBe("Resposta sintética");
+  expect(evidence[1].grade.index).toBe(1);
+  expect(evidence[1].grade.feedback).toContain("Feedback sintético");
   expect((await page.request.post("/api/teacher", { headers, data: chat })).status()).toBe(429);
   await page.request.post("/api/workspace", {
     headers,
