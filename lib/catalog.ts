@@ -1,5 +1,6 @@
 import { secondaryTopics } from "./secondary-curriculum";
 import { additionalLessons } from "./curriculum";
+import { tiTopic } from "./curriculum-ti";
 
 export type Lesson = {
   id: string;
@@ -16,6 +17,8 @@ export type Lesson = {
   lab?: { tool: string; setup: string; steps: string[]; expected: string; troubleshooting: string };
   demo?: "form" | "catalog" | "dashboard" | "responsive" | "objects" | "sql" | "iot";
   resources?: { title: string; url: string }[];
+  terminal?: { command: string; output: string }[];
+  images?: { src: string; alt: string; caption: string; source: string }[];
 };
 export type Topic = {
   area?: "secondary";
@@ -375,7 +378,7 @@ const coreTopics: Topic[] = [
   },
 ];
 
-export const topics: Topic[] = coreTopics.map((topic) => ({
+export const topics: Topic[] = [...coreTopics, tiTopic].map((topic) => ({
   ...topic,
   lessons: [
     ...topic.lessons.map((lesson) => ({

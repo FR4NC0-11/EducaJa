@@ -46,7 +46,7 @@ JSON válido garante formato, não verdade. Limitar notas e verificar IDs impede
 
 A conversa já recebia respostas e avaliação das dez questões, mas não as aulas concluídas. Agora o contexto inclui o estado do diagnóstico e as aulas marcadas como concluídas da trilha atual. As instruções da conversa pedem usar feedback por questão para explicar uma lacuna pertinente, propor uma pequena aplicação e aguardar a tentativa antes de aumentar a dificuldade. Média global e marcação de conclusão não comprovam domínio; diagnóstico ausente ou parcial não bloqueia as aulas. A avaliação e sua rubrica permanecem iguais.
 
-Testes sintéticos cobrem as quatro trilhas, respostas parciais, avaliação presente/invalidada e filtragem do progresso. Eles verificam os dados fornecidos ao modelo, não garantem que Gemini seguirá a orientação. Próxima validação humana: comparar explicação e exercício para a mesma dúvida com uma lacuna, domínio inicial demonstrado e diagnóstico ausente; após uma tentativa correta/incorreta, conferir o próximo passo. Incluir caso de aula concluída com dificuldade persistente. Não atribuir novas notas automaticamente pela conversa.
+Testes sintéticos cobrem as cinco trilhas de Programação, incluindo T.I./Git/GitHub, respostas parciais, avaliação presente/invalidada e filtragem do progresso. Eles verificam os dados fornecidos ao modelo, não garantem que Gemini seguirá a orientação. Próxima validação humana: comparar explicação e exercício para a mesma dúvida com uma lacuna, domínio inicial demonstrado e diagnóstico ausente; após uma tentativa correta/incorreta, conferir o próximo passo. Incluir caso de aula concluída com dificuldade persistente. Não atribuir novas notas automaticamente pela conversa.
 
 ## Evidências por aula — 17/10/2026
 

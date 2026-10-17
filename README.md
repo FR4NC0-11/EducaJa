@@ -9,7 +9,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Teste inicial opcional com dez questões por assunto e opção “Ainda não sei”.
 - Gravação e retomada das respostas, anotações e etapas concluídas no PostgreSQL.
 - Aulas guiadas com explicações, exemplos do dia a dia, glossários e exercícios preparados.
-- 36 aulas em quatro trilhas, com aprofundamento, projetos e práticas guiadas; exemplos Web interativos e roteiros de Cisco Packet Tracer em IoT.
+- 45 aulas em cinco trilhas, com aprofundamento, projetos e práticas guiadas; exemplos Web interativos e roteiros de Cisco Packet Tracer em IoT. T.I. inclui nove aulas de Git/GitHub, demonstrações de Git Bash e capturas oficiais do GitHub. Preparação prática por trilha em [PREPARACAO-SAEP.md](docs/PREPARACAO-SAEP.md).
 - Alternância entre aulas e plano de estudo, mantendo o progresso.
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
 

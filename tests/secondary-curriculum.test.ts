@@ -6,10 +6,10 @@ import { actionSchema, validateLesson } from "../lib/learning";
 import { teacherAction } from "../lib/teacher-contract";
 
 test("unidades da 3ª série têm IDs próprios e conteúdo completo sem entrar no catálogo de programação", () => {
-  assert.equal(topics.length, 4);
+  assert.equal(topics.length, 5);
   assert.equal(secondaryTopics.length, 4);
   const ids = new Set([...topics, ...secondaryTopics].map((t) => t.id));
-  assert.equal(ids.size, 8);
+  assert.equal(ids.size, 9);
   for (const topic of secondaryTopics) {
     assert.equal(getTopic(topic.id), topic);
     assert.equal(topic.area, "secondary");

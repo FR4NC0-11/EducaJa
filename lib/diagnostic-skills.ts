@@ -2,6 +2,18 @@
  * Array positions match the ten diagnostic questions in catalog.ts (zero based).
  */
 export const diagnosticSkills: Record<string, { concept: string; lessonIds: string[] }[]> = {
+  "ti-git-github": [
+    { concept: "Leitura e execução de projeto existente", lessonIds: ["ti-projeto", "ti-entrega"] },
+    { concept: "Versionamento local e colaboração remota", lessonIds: ["ti-clone", "ti-remotos"] },
+    { concept: "Clone e identificação da cópia de trabalho", lessonIds: ["ti-clone"] },
+    { concept: "Diretório de trabalho, index e histórico", lessonIds: ["ti-staging", "ti-commit"] },
+    { concept: "Revisão seletiva e proteção de segredos", lessonIds: ["ti-staging", "ti-commit"] },
+    { concept: "Branches e base de trabalho", lessonIds: ["ti-branches"] },
+    { concept: "Sincronização e divergência de históricos", lessonIds: ["ti-remotos"] },
+    { concept: "Resolução de conflitos preservando requisitos", lessonIds: ["ti-conflitos"] },
+    { concept: "Proposta e revisão de integração", lessonIds: ["ti-pull-request"] },
+    { concept: "Testes, persistência e entrega verificável", lessonIds: ["ti-entrega"] },
+  ],
   "java-poo": [
     { concept: "Classe, instância e estado independente", lessonIds: ["objetos"] },
     { concept: "Atributos e métodos", lessonIds: ["objetos", "encapsulamento"] },
