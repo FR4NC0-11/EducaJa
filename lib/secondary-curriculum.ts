@@ -1,54 +1,15 @@
-import type { Topic, Lesson } from "./catalog";
-
-function lesson(
-  id: string,
-  title: string,
-  objectives: string[],
-  explanation: string,
-  sections: { title: string; body: string }[],
-  analogy: string,
-  exercise: string,
-  hint: string,
-  expected: string,
-  resources: { title: string; url: string }[],
-): Lesson {
-  return {
-    id,
-    title,
-    minutes: 20,
-    level: "Fundamentos",
-    objectives,
-    explanation,
-    sections,
-    analogy,
-    exercise,
-    hint,
-    code: "",
-    resources,
-    lab: {
-      tool: "Caderno de estudo",
-      setup:
-        "Resolva o exercício antes de abrir a conferência. Use suas anotações para explicar o raciocínio.",
-      steps: [
-        "Registre sua tentativa com os dados do enunciado.",
-        "Explique como chegou à resposta.",
-        "Compare com a conferência e reescreva o trecho que precisar de ajuste.",
-      ],
-      expected,
-      troubleshooting:
-        "Se sua resposta diferir, identifique em qual etapa mudou a interpretação. A conferência não atribui nota nem marca domínio automaticamente.",
-    },
-  };
-}
-
-export const secondaryTopics: Topic[] = [
+import type { Topic } from "./catalog";
+import { lesson } from "./secondary-lesson";
+import { secondaryExtraLessons } from "./secondary-expansion";
+const initialSecondaryTopics: Topic[] = [
   {
     id: "em3-matematica-contagem",
     area: "secondary",
     category: "Matemática",
-    title: "Contagem de possibilidades",
+    title: "Contagem e probabilidade",
     shortTitle: "Matemática: contagem",
-    description: "Escolha entre somar e multiplicar possibilidades, sem contar duas vezes.",
+    description:
+      "Contagem, permutações, combinações e probabilidade: avance com exemplos e exercícios.",
     symbol: "×",
     color: "orange",
     introduction:
@@ -103,9 +64,10 @@ export const secondaryTopics: Topic[] = [
     id: "em3-linguagens-leitura",
     area: "secondary",
     category: "Linguagens",
-    title: "Leitura e interpretação",
+    title: "Leitura, interpretação e redação Enem",
     shortTitle: "Linguagens: interpretação",
-    description: "Separe informação explícita, inferência e opinião com apoio no texto.",
+    description:
+      "Da interpretação à redação Enem: planeje, argumente e revise com prática autoral.",
     symbol: "Aa",
     color: "purple",
     introduction:
@@ -161,9 +123,10 @@ export const secondaryTopics: Topic[] = [
     id: "em3-humanas-populacao",
     area: "secondary",
     category: "Ciências Humanas",
-    title: "População e leitura de dados",
+    title: "População, redes e sustentabilidade",
     shortTitle: "Humanas: população",
-    description: "Interprete quantidades e proporções sem confundir dados e explicações.",
+    description:
+      "Interprete dados e migrações, analise redes globais e avalie propostas de consumo.",
     symbol: "↗",
     color: "cyan",
     introduction:
@@ -221,9 +184,10 @@ export const secondaryTopics: Topic[] = [
     id: "em3-natureza-hereditariedade",
     area: "secondary",
     category: "Ciências da Natureza",
-    title: "Introdução à hereditariedade",
+    title: "Genética e biotecnologia",
     shortTitle: "Natureza: genética",
-    description: "Use um modelo simples para distinguir alelos, genótipo e fenótipo.",
+    description:
+      "Da hereditariedade aos heredogramas, segregação independente e análise de biotecnologia.",
     symbol: "Aa",
     color: "green",
     introduction:
@@ -285,3 +249,7 @@ export const secondaryTopics: Topic[] = [
     ],
   },
 ];
+export const secondaryTopics: Topic[] = initialSecondaryTopics.map((topic) => ({
+  ...topic,
+  lessons: [...topic.lessons, ...(secondaryExtraLessons[topic.id] ?? [])],
+}));

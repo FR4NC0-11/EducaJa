@@ -63,3 +63,28 @@ test("API não aceita diagnóstico ou professor de programação para unidades d
     }).success,
   );
 });
+
+test("ampliação preserva primeiras aulas e usa IDs únicos em dezoito aulas com prática", () => {
+  assert.deepEqual(
+    secondaryTopics.map((t) => t.lessons.length),
+    [4, 6, 4, 4],
+  );
+  assert.deepEqual(
+    secondaryTopics.map((t) => t.lessons[0].id),
+    [
+      "em3-contagem-etapas",
+      "em3-leitura-evidencias",
+      "em3-populacao-proporcoes",
+      "em3-genetica-modelo",
+    ],
+  );
+  const ids = secondaryTopics.flatMap((t) => t.lessons.map((l) => l.id));
+  assert.equal(new Set(ids).size, 18);
+  const writing = secondaryTopics[1].lessons.slice(1);
+  assert.equal(writing.length, 5);
+  assert.equal(writing.at(-1)?.id, "em3-redacao-oficina");
+  for (const item of writing) {
+    assert.ok(item.resources?.some((r) => r.url.startsWith("https://www.gov.br/inep/")));
+    assert.ok(item.lab?.expected);
+  }
+});
