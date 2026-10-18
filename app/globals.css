@@ -2306,6 +2306,153 @@ textarea::placeholder {
   }
 }
 
+.exam-page {
+  max-width: 900px;
+  min-width: 0;
+}
+.exam-page h1 {
+  font-size: clamp(30px, 4vw, 44px);
+  margin: 14px 0 20px;
+}
+.exam-page p {
+  line-height: 1.75;
+}
+.exam-storage,
+.exam-meta {
+  color: var(--muted);
+  font-size: 13px;
+}
+.exam-setup,
+.exam-attempt,
+.exam-results {
+  margin-top: 28px;
+  padding: 26px;
+  background: #252833;
+  border: 1px solid var(--line);
+  border-top: 3px solid #8be9fd;
+}
+.exam-setup > label {
+  display: block;
+  margin: 22px 0 9px;
+}
+.exam-setup select,
+.exam-setup input {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px;
+  color: var(--ink);
+  background: #1f2230;
+  border: 1px solid #626a80;
+  border-radius: 4px;
+  font: inherit;
+}
+.exam-setup select option {
+  background: #1f2230;
+}
+.exam-options {
+  border: 0;
+  padding: 0;
+  margin: 22px 0 16px;
+  min-width: 0;
+}
+.exam-options legend {
+  font-size: 19px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  width: 100%;
+}
+.exam-option {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px;
+  margin: 10px 0;
+  border: 1px solid #535b70;
+  border-radius: 4px;
+  line-height: 1.65;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.exam-option.selected {
+  border-color: #8be9fd;
+  background: #2a3542;
+}
+.exam-option:focus-within {
+  outline: 2px solid #8be9fd;
+  outline-offset: 3px;
+}
+.exam-option input {
+  accent-color: #8be9fd;
+  flex-shrink: 0;
+}
+.exam-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 22px;
+}
+.exam-map {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 26px 0;
+}
+.exam-map button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid #626a80;
+  background: #20232e;
+  color: var(--ink);
+  border-radius: 3px;
+}
+.exam-map .answered {
+  color: #91e7ae;
+}
+.exam-map [aria-current="step"] {
+  border: 2px solid #8be9fd;
+}
+.exam-confirm {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid #c7a4fa;
+  background: #302d3e;
+}
+.exam-confirm .button {
+  margin: 8px 12px 8px 0;
+}
+.exam-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  list-style: none;
+  padding: 18px 0;
+  color: #8be9fd;
+}
+.exam-review {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+  overflow-wrap: anywhere;
+}
+.exam-review summary {
+  cursor: pointer;
+  line-height: 1.6;
+}
+@media (max-width: 700px) {
+  .exam-setup,
+  .exam-attempt,
+  .exam-results {
+    padding: 20px 16px;
+  }
+  .exam-options legend {
+    font-size: 17px;
+  }
+  .exam-option {
+    padding: 12px;
+    gap: 8px;
+  }
+}
+
 .git-terminal {
   margin: 28px 0;
   padding: 20px;

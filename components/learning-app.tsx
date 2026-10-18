@@ -36,8 +36,9 @@ import EvaluationSummary from "./evaluation-summary";
 import LessonDemo from "./lesson-demo";
 import GitTerminal from "./git-terminal";
 import { saepPractice } from "@/lib/saep-preparation";
+import SecondaryExams from "./secondary-exams";
 
-type Screen = "areas" | "secondary" | "home" | "diagnostic" | "learn";
+type Screen = "areas" | "secondary" | "home" | "diagnostic" | "learn" | "exams";
 type View = "teacher" | "trail";
 type Drafts = Record<string, Record<string, string>>;
 
@@ -260,7 +261,7 @@ export default function LearningApp() {
   }
   function navigate(next: Screen) {
     if (busy) return;
-    if ((next === "areas" || next === "secondary") && unsaved) {
+    if ((next === "areas" || next === "secondary" || next === "exams") && unsaved) {
       setError("Salve sua resposta ou anotação antes de trocar de área.");
       return;
     }
@@ -419,6 +420,18 @@ export default function LearningApp() {
                   {topic && <span className="nav-count">{answered}/10</span>}
                 </button>
               )}
+              {studyArea === "secondary" && (
+                <button
+                  aria-label="Simulados"
+                  title="Simulados — pratique os assuntos das aulas"
+                  aria-current={screen === "exams" ? "page" : undefined}
+                  className={screen === "exams" ? "active" : ""}
+                  onClick={() => navigate("exams")}
+                >
+                  <Compass size={19} />
+                  <span className="nav-label">Simulados</span>
+                </button>
+              )}
               <button
                 aria-label="Plano de estudo"
                 title="Plano de estudo — suas aulas e seu progresso"
@@ -487,13 +500,15 @@ export default function LearningApp() {
                   ? "Áreas de estudo"
                   : screen === "secondary"
                     ? "Ensino Médio"
-                    : screen === "home"
-                      ? "Programação · Assuntos"
-                      : screen === "diagnostic"
-                        ? "Teste inicial"
-                        : view === "teacher"
-                          ? "Aulas"
-                          : "Plano de estudo"}
+                    : screen === "exams"
+                      ? "Ensino Médio · Simulados"
+                      : screen === "home"
+                        ? "Programação · Assuntos"
+                        : screen === "diagnostic"
+                          ? "Teste inicial"
+                          : view === "teacher"
+                            ? "Aulas"
+                            : "Plano de estudo"}
               </strong>
             </div>
           </div>
@@ -582,6 +597,9 @@ export default function LearningApp() {
                   onSecondary={() => switchArea("secondary")}
                 />
               )}
+              <div hidden={screen !== "exams"}>
+                <SecondaryExams active={screen === "exams"} />
+              </div>
               {screen === "secondary" && (
                 <StudyAreas
                   secondary
