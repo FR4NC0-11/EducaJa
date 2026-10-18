@@ -11,6 +11,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Aulas guiadas com explicações, exemplos do dia a dia, glossários e exercícios preparados.
 - 45 aulas em cinco trilhas, com aprofundamento, projetos e práticas guiadas; exemplos Web interativos e roteiros de Cisco Packet Tracer em IoT. T.I. inclui nove aulas de Git/GitHub, demonstrações de Git Bash e capturas oficiais do GitHub. Preparação prática por trilha em [PREPARACAO-SAEP.md](docs/PREPARACAO-SAEP.md).
 - Alternância entre aulas e plano de estudo, mantendo o progresso.
+- Aba Simulados no Ensino Médio: 80 questões autorais ligadas às aulas, 20 por padrão, escolha de matéria/quantidade, dificuldades misturadas, correção comentada e uma tentativa salva no navegador. Diagnóstico pedagógico será uma próxima etapa; detalhes em [SIMULADOS-ENSINO-MEDIO.md](docs/SIMULADOS-ENSINO-MEDIO.md).
 - Ensino Médio da 3ª série com 40 aulas autorais, dez por matéria: Matemática, Linguagens (incluindo redação Enem e inglês), Ciências Humanas e Ciências da Natureza. Anotações e conclusão salvas; diagnóstico/IA escolares ainda não disponíveis. Recorte e fontes em [ENSINO-MEDIO-MAPA-CURRICULAR.md](docs/ENSINO-MEDIO-MAPA-CURRICULAR.md).
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
 
