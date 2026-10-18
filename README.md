@@ -4,6 +4,8 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 
 ## O que já funciona
 
+- Três áreas de entrada: Programação, Ensino Médio e Direito. Direito tem identidade escura própria e oito prévias de matérias; aulas jurídicas ainda em preparação. Escopo em [AREA-DIREITO.md](docs/AREA-DIREITO.md).
+
 - Escolha entre programação com Java, criação de sites, banco de dados e IoT (Internet das Coisas).
 - Início direto pela aula 1, com objetivo opcional ou sugestões prontas.
 - Teste inicial opcional com dez questões por assunto e opção “Ainda não sei”.
