@@ -10,6 +10,7 @@ import {
   Globe2,
   Dna,
   PenLine,
+  Scale,
 } from "lucide-react";
 
 const subjectIcons = [Sigma, PenLine, Globe2, Dna];
@@ -151,9 +152,11 @@ export default function StudyAreas({
 export function StudyAreaEntry({
   onProgramming,
   onSecondary,
+  onLaw,
 }: {
   onProgramming: () => void;
   onSecondary: () => void;
+  onLaw: () => void;
 }) {
   return (
     <section aria-labelledby="areas-title">
@@ -185,6 +188,16 @@ export function StudyAreaEntry({
           <span className="quiet-badge">3ª série · Redação Enem e mais</span>
           <button className="button secondary" onClick={onSecondary}>
             Acessar Ensino Médio <ArrowRight size={18} aria-hidden="true" />
+          </button>
+        </article>
+        <article className="study-area-card entry-law">
+          <Scale size={32} strokeWidth={1.3} aria-hidden="true" />
+          <span className="eyebrow">LEITURA, CONTEXTO E ARGUMENTAÇÃO</span>
+          <h2>Direito</h2>
+          <p>Conheça o novo espaço de Direito brasileiro e explore a organização das matérias.</p>
+          <span className="quiet-badge">Novo espaço · Aulas em preparação</span>
+          <button className="button secondary" onClick={onLaw}>
+            Acessar Direito <ArrowRight size={18} aria-hidden="true" />
           </button>
         </article>
       </div>

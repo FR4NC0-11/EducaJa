@@ -37,8 +37,12 @@ import LessonDemo from "./lesson-demo";
 import GitTerminal from "./git-terminal";
 import { saepPractice } from "@/lib/saep-preparation";
 import SecondaryExams from "./secondary-exams";
+import LawArea from "./law-area";
 
-type Screen = "areas" | "secondary" | "home" | "diagnostic" | "learn" | "exams";
+type Screen = "areas" | "secondary" | "home" | "diagnostic" | "learn" | "exams" | "law";
+type StudyArea = "programming" | "secondary" | "law";
+const areaHome = (area: StudyArea): Screen =>
+  area === "secondary" ? "secondary" : area === "law" ? "law" : "home";
 type View = "teacher" | "trail";
 type Drafts = Record<string, Record<string, string>>;
 
@@ -52,7 +56,7 @@ export default function LearningApp() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [screen, setScreen] = useState<Screen>("areas");
-  const [studyArea, setStudyArea] = useState<"programming" | "secondary">("programming");
+  const [studyArea, setStudyArea] = useState<StudyArea>("programming");
   const [view, setView] = useState<View>("teacher");
   const [category, setCategory] = useState("Todos");
   const [selectedLessonId, setSelectedLessonId] = useState<string | undefined>();
@@ -72,7 +76,9 @@ export default function LearningApp() {
   const session = data?.session;
   const activeTopic = session ? getTopic(session.topic_id) : undefined;
   const topic =
-    (activeTopic?.area === "secondary") === (studyArea === "secondary") ? activeTopic : undefined;
+    studyArea !== "law" && (activeTopic?.area === "secondary") === (studyArea === "secondary")
+      ? activeTopic
+      : undefined;
   const answered = session ? answerCount(session.answers) : 0;
   const completed = session?.completed_lessons.length ?? 0;
   const orderedLessons = topic ? orderedTopicLessons(topic, session?.evaluation?.lessonOrder) : [];
@@ -251,23 +257,24 @@ export default function LearningApp() {
     setNotice("");
     setError("");
     setScreen((current) =>
-      current === "areas" || current === "secondary"
+      current === "areas" || current === "secondary" || current === "law"
         ? current
-        : studyArea === "secondary"
-          ? "secondary"
-          : "home",
+        : areaHome(studyArea),
     );
     await load();
   }
   function navigate(next: Screen) {
     if (busy) return;
-    if ((next === "areas" || next === "secondary" || next === "exams") && unsaved) {
+    if (
+      (next === "areas" || next === "secondary" || next === "law" || next === "exams") &&
+      unsaved
+    ) {
       setError("Salve sua resposta ou anotação antes de trocar de área.");
       return;
     }
     setError("");
     setNotice("");
-    setScreen(next === "home" && studyArea === "secondary" ? "secondary" : next);
+    setScreen(next === "home" ? areaHome(studyArea) : next);
   }
   function goBack() {
     if (busy) return;
@@ -275,9 +282,9 @@ export default function LearningApp() {
       setError("Salve sua resposta ou anotação antes de voltar.");
       return;
     }
-    navigate(screen === "home" || screen === "secondary" ? "areas" : "home");
+    navigate(screen === "home" || screen === "secondary" || screen === "law" ? "areas" : "home");
   }
-  function switchArea(area: "programming" | "secondary") {
+  function switchArea(area: StudyArea) {
     if (busy) return;
     if (unsaved) {
       setError("Salve sua resposta ou anotação antes de trocar de área.");
@@ -286,7 +293,7 @@ export default function LearningApp() {
     setError("");
     setNotice("");
     setStudyArea(area);
-    setScreen(area === "secondary" ? "secondary" : "home");
+    setScreen(areaHome(area));
   }
   function choose(candidate: Topic, lessonId?: string) {
     if (topic && topic.id !== candidate.id && unsaved) {
@@ -364,7 +371,7 @@ export default function LearningApp() {
 
   return (
     <div
-      className={`app-shell ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""}`}
+      className={`app-shell ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""} ${studyArea === "law" && screen !== "areas" ? "law-workspace" : ""}`}
     >
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo
@@ -394,20 +401,30 @@ export default function LearningApp() {
         {screen !== "areas" && (
           <>
             <div className="sidebar-label">
-              {studyArea === "secondary" ? "ENSINO MÉDIO · 3ª SÉRIE" : "PROGRAMAÇÃO"}
+              {studyArea === "secondary"
+                ? "ENSINO MÉDIO · 3ª SÉRIE"
+                : studyArea === "law"
+                  ? "DIREITO · BIBLIOTECA DE ESTUDO"
+                  : "PROGRAMAÇÃO"}
             </div>
             <nav aria-label="Principal" className="main-nav">
               <button
                 aria-label="Assuntos"
                 title="Assuntos"
-                aria-current={screen === "home" || screen === "secondary" ? "page" : undefined}
-                className={screen === "home" || screen === "secondary" ? "active" : ""}
+                aria-current={
+                  screen === "home" || screen === "secondary" || screen === "law"
+                    ? "page"
+                    : undefined
+                }
+                className={
+                  screen === "home" || screen === "secondary" || screen === "law" ? "active" : ""
+                }
                 onClick={() => navigate("home")}
               >
                 <LayoutDashboard size={19} />
                 <span className="nav-label">Assuntos</span>
               </button>
-              {studyArea !== "secondary" && (
+              {studyArea === "programming" && (
                 <button
                   aria-label="Teste inicial"
                   title="Teste inicial — descubra o que já sabe"
@@ -432,32 +449,36 @@ export default function LearningApp() {
                   <span className="nav-label">Simulados</span>
                 </button>
               )}
-              <button
-                aria-label="Plano de estudo"
-                title="Plano de estudo — suas aulas e seu progresso"
-                aria-current={screen === "learn" && view === "trail" ? "page" : undefined}
-                className={screen === "learn" && view === "trail" ? "active" : ""}
-                onClick={() => {
-                  navigate("learn");
-                  setView("trail");
-                }}
-              >
-                <Route size={19} />
-                <span className="nav-label">Plano de estudo</span>
-              </button>
-              <button
-                aria-label="Aulas"
-                title="Aulas — explicações e exercícios"
-                aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
-                className={screen === "learn" && view === "teacher" ? "active" : ""}
-                onClick={() => {
-                  navigate("learn");
-                  setView("teacher");
-                }}
-              >
-                <BookOpen size={19} />
-                <span className="nav-label">Aulas</span>
-              </button>
+              {studyArea !== "law" && (
+                <>
+                  <button
+                    aria-label="Plano de estudo"
+                    title="Plano de estudo — suas aulas e seu progresso"
+                    aria-current={screen === "learn" && view === "trail" ? "page" : undefined}
+                    className={screen === "learn" && view === "trail" ? "active" : ""}
+                    onClick={() => {
+                      navigate("learn");
+                      setView("trail");
+                    }}
+                  >
+                    <Route size={19} />
+                    <span className="nav-label">Plano de estudo</span>
+                  </button>
+                  <button
+                    aria-label="Aulas"
+                    title="Aulas — explicações e exercícios"
+                    aria-current={screen === "learn" && view === "teacher" ? "page" : undefined}
+                    className={screen === "learn" && view === "teacher" ? "active" : ""}
+                    onClick={() => {
+                      navigate("learn");
+                      setView("teacher");
+                    }}
+                  >
+                    <BookOpen size={19} />
+                    <span className="nav-label">Aulas</span>
+                  </button>
+                </>
+              )}
             </nav>
           </>
         )}
@@ -500,15 +521,17 @@ export default function LearningApp() {
                   ? "Áreas de estudo"
                   : screen === "secondary"
                     ? "Ensino Médio"
-                    : screen === "exams"
-                      ? "Ensino Médio · Simulados"
-                      : screen === "home"
-                        ? "Programação · Assuntos"
-                        : screen === "diagnostic"
-                          ? "Teste inicial"
-                          : view === "teacher"
-                            ? "Aulas"
-                            : "Plano de estudo"}
+                    : screen === "law"
+                      ? "Direito · Assuntos"
+                      : screen === "exams"
+                        ? "Ensino Médio · Simulados"
+                        : screen === "home"
+                          ? "Programação · Assuntos"
+                          : screen === "diagnostic"
+                            ? "Teste inicial"
+                            : view === "teacher"
+                              ? "Aulas"
+                              : "Plano de estudo"}
               </strong>
             </div>
           </div>
@@ -529,7 +552,7 @@ export default function LearningApp() {
           {screen !== "areas" && (
             <button className="back-navigation" onClick={goBack} disabled={busy}>
               <ArrowLeft size={17} aria-hidden="true" />
-              {screen === "home" || screen === "secondary"
+              {screen === "home" || screen === "secondary" || screen === "law"
                 ? "Voltar às áreas"
                 : "Voltar aos assuntos"}
             </button>
@@ -595,8 +618,10 @@ export default function LearningApp() {
                 <StudyAreaEntry
                   onProgramming={() => switchArea("programming")}
                   onSecondary={() => switchArea("secondary")}
+                  onLaw={() => switchArea("law")}
                 />
               )}
+              {screen === "law" && <LawArea />}
               <div hidden={screen !== "exams"}>
                 <SecondaryExams active={screen === "exams"} />
               </div>
