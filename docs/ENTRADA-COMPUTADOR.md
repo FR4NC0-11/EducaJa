@@ -21,3 +21,5 @@ Nenhuma mudança de conteúdo curricular, banco, autenticação, cotas ou Gemini
 Inspeção visual local em 1280 × 720 e 390 × 844, sem banco local configurado. Ações de entrada/retorno conferidas; persistência depende do ambiente de CI com banco temporário. Teste de navegador verifica botões acima da dobra em 1280 × 720, larguras intermediárias sem estouro, entrada por teclado, retorno do menu e preservação da sessão. A suíte anterior continua cobrindo conta, rascunhos, leitura, celular, simulados e Direito.
 
 Revisão com usuários e aparelhos reais continua recomendada. Esta entrega redesenha a entrada e dá acabamento ao menu de computador; as telas internas de aulas e simulados não receberam uma reorganização completa.
+
+Atualização de 19/10/2026: proposta posterior leva o acabamento para a área de Programação, com identidade de bancada de projetos e detalhes em verde-menta. Comparação entre áreas e propostas futuras em [RELATORIO-VISUAL-E-IDEIAS.md](RELATORIO-VISUAL-E-IDEIAS.md). A entrada geral e os estilos próprios de Ensino Médio/Direito permanecem.

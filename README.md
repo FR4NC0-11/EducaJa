@@ -2,6 +2,8 @@
 
 A entrada no computador apresenta os três caminhos de estudo com identidade própria, recursos disponíveis e acesso direto; o celular mantém sua organização compacta. Detalhes em [ENTRADA-COMPUTADOR.md](docs/ENTRADA-COMPUTADOR.md).
 
+Programação usa uma identidade de bancada de projetos em lilás e verde-menta. A comparação dos estilos atuais e propostas de outras áreas está em [RELATORIO-VISUAL-E-IDEIAS.md](docs/RELATORIO-VISUAL-E-IDEIAS.md).
+
 Primeira versão do site educacional de programação, com Next.js, TypeScript e PostgreSQL, sem Supabase.
 
 ## O que já funciona
