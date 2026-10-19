@@ -19,3 +19,7 @@ Thumbs.db
 *.tsbuildinfo
 playwright-report/
 test-results/
+
+# Configuração pessoal e cópias de trabalho do Claude
+.claude/settings.local.json
+.claude/worktrees/
