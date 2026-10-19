@@ -1,5 +1,7 @@
 # Ensino Médio — levantamento e proposta de organização
 
+Atualização de 19/10/2026: nova consulta aos índices do 3º trimestre resultou em vinte aulas autorais adicionais, cinco por matéria, totalizando sessenta. Detalhes, fontes e limites em [ENSINO-MEDIO-TERCEIRO-TRIMESTRE.md](ENSINO-MEDIO-TERCEIRO-TRIMESTRE.md). As seções abaixo registram o levantamento e a evolução anterior, sem equivalência entre capítulos externos e aulas locais.
+
 Data: 17/10/2026. Estado: recorte de 3ª série confirmado pelo responsável; primeira implementação em branch para revisão.
 
 ## Referência e alcance

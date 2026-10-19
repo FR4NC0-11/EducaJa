@@ -80,6 +80,11 @@ export default function SecondaryExams({ active }: { active: boolean }) {
         Questões autorais de múltipla escolha, baseadas nas aulas do EducaJá. Não são questões
         oficiais de exame.
       </p>
+      <p className="exam-coverage">
+        O banco atual cobre as dez primeiras aulas de cada matéria. As cinco novas aulas por
+        matéria, com recortes do 3º trimestre, têm exercícios nas aulas e ainda não entram no
+        sorteio do simulado.
+      </p>
       <p className="exam-storage">
         {storageOK
           ? "Uma tentativa fica salva neste navegador, neste dispositivo. Não é sincronizada com a conta e não altera o progresso das aulas."

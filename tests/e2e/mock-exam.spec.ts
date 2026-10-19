@@ -10,6 +10,7 @@ test("aba escolar inicia 20 questões mistas sem repetição e preserva a ordem 
   await page.getByRole("button", { name: "Trocar de área", exact: true }).click();
   await page.getByRole("button", { name: "Acessar Ensino Médio", exact: true }).click();
   await page.getByRole("button", { name: "Simulados", exact: true }).click();
+  await expect(page.getByText(/O banco atual cobre as dez primeiras aulas/)).toBeVisible();
   await expect(page.getByLabel("Quantidade de questões")).toHaveValue("20");
   await expect(page.getByLabel("Matéria", { exact: true })).toHaveValue("all");
   const before = (await (await page.request.get("/api/workspace")).json()).session;

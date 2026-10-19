@@ -3,6 +3,7 @@ import { lesson } from "./secondary-lesson";
 import { secondaryExtraLessons } from "./secondary-expansion";
 import { secondaryNextLessons } from "./secondary-next-lessons";
 import { secondaryCompletion } from "./secondary-completion";
+import { secondaryThirdTerm } from "./secondary-third-term";
 const initialSecondaryTopics: Topic[] = [
   {
     id: "em3-matematica-contagem",
@@ -11,11 +12,11 @@ const initialSecondaryTopics: Topic[] = [
     title: "Contagem, estatística, álgebra e geometria",
     shortTitle: "Matemática: contagem",
     description:
-      "De contagem e probabilidade a estatística, complexos, polinômios e geometria plana e espacial.",
+      "Contagem, probabilidade, estatística e geometria; novos recortes de esfera, transformações, pesquisa e cônicas.",
     symbol: "×",
     color: "orange",
     introduction:
-      "3ª série · Dez aulas de contagem, probabilidade, estatística, álgebra e geometria. Comece pelos fundamentos e explore cada novo recorte com prática e conferência comentada.",
+      "3ª série · Quinze aulas de contagem, probabilidade, estatística, álgebra e geometria. As cinco últimas exploram recortes do 3º trimestre, com prática e conferência comentada.",
     goalExamples: ["Quero entender problemas de contagem."],
     glossary: [
       { term: "Etapa", meaning: "Uma escolha que faz parte da construção de um resultado." },
@@ -69,11 +70,11 @@ const initialSecondaryTopics: Topic[] = [
     title: "Leitura, redação Enem, língua em uso e inglês",
     shortTitle: "Linguagens: interpretação",
     description:
-      "Interpretação, cinco aulas de redação Enem, língua em uso, coesão referencial e inglês.",
+      "Interpretação, cinco aulas de redação Enem, inglês e novos recortes de coerência, gramática e leitura crítica.",
     symbol: "Aa",
     color: "purple",
     introduction:
-      "3ª série · Leitura, redação, língua em uso e inglês. Textos e exercícios autorais; não são questões oficiais de exame.",
+      "3ª série · Quinze aulas de leitura, redação, língua em uso e inglês. As cinco últimas aprofundam coerência, gramática e leitura crítica no recorte do 3º trimestre. Textos e exercícios autorais, sem questões oficiais de exame.",
     goalExamples: ["Quero justificar melhor minhas interpretações."],
     glossary: [
       {
@@ -128,11 +129,11 @@ const initialSecondaryTopics: Topic[] = [
     title: "População, regiões, mapas e sustentabilidade",
     shortTitle: "Humanas: população",
     description:
-      "População, migrações, mapas, urbanização, integração econômica e indicadores de desenvolvimento.",
+      "População, mapas e desenvolvimento; novos estudos de Rússia, Ásia Central, Oriente Médio, Ásia Meridional e Oriental, Oceania e polos.",
     symbol: "↗",
     color: "cyan",
     introduction:
-      "3ª série · Geografia. Os números desta unidade são fictícios e servem apenas à prática de interpretação.",
+      "3ª série · Quinze aulas com foco em Geografia. As cinco últimas exploram estudos regionais do 3º trimestre. Os cenários numéricos são fictícios e servem à prática de interpretação.",
     goalExamples: ["Quero entender dados populacionais."],
     glossary: [
       {
@@ -189,11 +190,11 @@ const initialSecondaryTopics: Topic[] = [
     title: "Genética, expressão gênica e biotecnologia",
     shortTitle: "Natureza: genética",
     description:
-      "Hereditariedade, ABO, modelos ligados ao X, cromossomos, expressão gênica e genoma humano.",
+      "Hereditariedade, genoma e expressão gênica; novos recortes de controle celular, fermentação, PCR e DNA recombinante.",
     symbol: "Aa",
     color: "green",
     introduction:
-      "3ª série · Biologia. Modelos de plantas fictícias ajudam a estudar herança sem fazer previsões sobre a saúde de pessoas.",
+      "3ª série · Quinze aulas com foco em Biologia. As cinco últimas exploram câncer e biotecnologia no recorte do 3º trimestre, sem diagnóstico individual ou protocolos experimentais.",
     goalExamples: ["Quero compreender os primeiros conceitos de genética."],
     glossary: [
       { term: "Alelo", meaning: "Uma versão de uma sequência de DNA em uma posição do genoma." },
@@ -258,5 +259,6 @@ export const secondaryTopics: Topic[] = initialSecondaryTopics.map((topic) => ({
     ...(secondaryExtraLessons[topic.id] ?? []),
     ...(secondaryNextLessons[topic.id] ?? []),
     ...(secondaryCompletion[topic.id] ?? []),
+    ...(secondaryThirdTerm[topic.id] ?? []),
   ],
 }));

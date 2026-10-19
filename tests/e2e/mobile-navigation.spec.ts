@@ -68,7 +68,7 @@ test("aula aparece antes da lista; seleção recolhe, foca e protege anotações
     }),
   ).toBeFocused();
   await expect(page.locator(".lesson-list")).toBeHidden();
-  await expect(toggle).toContainText("Aula 5 de 10");
+  await expect(toggle).toContainText("Aula 5 de 15");
   await page.getByLabel("Suas anotações").fill("Mediana usa os valores centrais.");
   await toggle.click();
   await page.getByRole("button", { name: /Geometria analítica: distância e ponto médio/ }).click();
