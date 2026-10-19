@@ -394,7 +394,7 @@ export default function LearningApp() {
 
   return (
     <div
-      className={`app-shell ${screen === "areas" ? "area-selection" : ""} ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""} ${studyArea === "law" && screen !== "areas" ? "law-workspace" : ""}`}
+      className={`app-shell ${screen === "areas" ? "area-selection" : ""} ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "programming" && screen !== "areas" ? "programming-workspace" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""} ${studyArea === "law" && screen !== "areas" ? "law-workspace" : ""}`}
     >
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo

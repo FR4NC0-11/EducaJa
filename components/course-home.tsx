@@ -1,4 +1,13 @@
-import { ArrowRight, BookOpen, Check, Clock3 } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  Check,
+  Clock3,
+  Braces,
+  PanelsTopLeft,
+  Database,
+  GitBranch,
+} from "lucide-react";
 import { topics, type Topic } from "@/lib/catalog";
 import type { Workspace } from "@/lib/learning";
 import { saepPractice } from "@/lib/saep-preparation";
@@ -29,15 +38,52 @@ export default function CourseHome({
   busy: boolean;
   resume: () => void;
 }) {
+  const lessonCount = topics.reduce((total, item) => total + item.lessons.length, 0);
   return (
-    <>
-      <div className="page-heading">
+    <section className="programming-home" aria-labelledby="programming-title">
+      <header className="programming-hero">
         <div>
-          <div className="eyebrow">ASSUNTOS</div>
-          <h1>O que você quer aprender?</h1>
+          <div className="eyebrow">PROGRAMAÇÃO · APRENDER FAZENDO</div>
+          <h1 id="programming-title">O que você quer aprender?</h1>
           <p>Escolha um assunto para começar. Você não precisa saber programar.</p>
+          <div className="programming-hero-actions">
+            <a className="button primary" href="#programming-subjects-title">
+              Explorar matérias <ArrowRight size={17} aria-hidden="true" />
+            </a>
+            <span>
+              {lessonCount} aulas · {topics.length} matérias
+            </span>
+          </div>
         </div>
-      </div>
+        <div className="programming-blueprint" aria-hidden="true">
+          <div className="blueprint-bar">
+            <span />
+            <span />
+            <span />
+            <strong>DA IDEIA AO PROJETO</strong>
+          </div>
+          <div className="blueprint-project">
+            <span className="blueprint-node">
+              <PanelsTopLeft size={24} />
+              <small>Interface</small>
+            </span>
+            <span className="blueprint-connector" />
+            <span className="blueprint-node blueprint-logic">
+              <Braces size={29} />
+              <small>Lógica</small>
+            </span>
+            <span className="blueprint-connector" />
+            <span className="blueprint-node">
+              <Database size={23} />
+              <small>Dados</small>
+            </span>
+          </div>
+          <div className="blueprint-caption">
+            <GitBranch size={17} />
+            <span>Entender. Experimentar. Construir.</span>
+          </div>
+        </div>
+      </header>
       {topic && (
         <section className="resume-card">
           <BookOpen size={22} />
@@ -76,7 +122,9 @@ export default function CourseHome({
       </ol>
       <section id="explore" className="explore-section" aria-label="Assuntos disponíveis">
         <div className="section-heading">
-          <h2>Escolha por onde começar</h2>
+          <h2 id="programming-subjects-title" tabIndex={-1}>
+            Escolha por onde começar
+          </h2>
           <span className="quiet-badge">{topics.length} assuntos disponíveis</span>
         </div>
         <div className="filters" aria-label="Filtrar assuntos">
@@ -99,7 +147,7 @@ export default function CourseHome({
               return (
                 <button
                   key={item.id}
-                  className="topic-card"
+                  className={`topic-card topic-${item.color}`}
                   disabled={!data || busy}
                   onClick={() => choose(item)}
                   aria-label={`Escolher ${item.shortTitle}`}
@@ -168,6 +216,6 @@ export default function CourseHome({
             : "As aulas e exercícios já estão preparados. A correção automática das respostas ainda não foi ativada neste EducaJá."}
         </p>
       </details>
-    </>
+    </section>
   );
 }

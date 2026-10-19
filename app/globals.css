@@ -4187,3 +4187,337 @@ textarea::placeholder {
     transition: none;
   }
 }
+
+/* Programação: bancada de projetos. O escopo evita contaminar as demais áreas. */
+.programming-workspace {
+  --programming-mint: #8ce5c6;
+}
+.programming-hero {
+  margin-bottom: 24px;
+}
+.programming-hero > div > p {
+  color: var(--muted);
+  max-width: 480px;
+  font-size: 14px;
+}
+.programming-hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.programming-hero-actions .button {
+  text-decoration: none;
+}
+.programming-hero-actions > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.programming-blueprint {
+  display: none;
+}
+#programming-subjects-title {
+  scroll-margin-top: 88px;
+}
+.programming-workspace .topic-card {
+  border-radius: 14px;
+  overflow: hidden;
+}
+.programming-workspace .topic-card:focus-visible {
+  outline-color: var(--programming-mint);
+}
+.programming-workspace .filters button {
+  border-radius: 8px;
+}
+.programming-workspace .resume-card {
+  border-radius: 12px;
+}
+@media (min-width: 701px) {
+  .programming-workspace .workspace {
+    background: radial-gradient(ellipse at 85% 0, #8ce5c608, transparent 50%), var(--paper);
+    min-height: 100vh;
+  }
+  .programming-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr);
+    align-items: center;
+    gap: 28px;
+    padding: 6px 0 24px;
+  }
+  .programming-hero .eyebrow {
+    color: var(--programming-mint);
+    font-size: 9px;
+    letter-spacing: 1.6px;
+  }
+  .programming-hero h1 {
+    font-size: clamp(32px, 3.2vw, 45px);
+    line-height: 1.15;
+    letter-spacing: -1.5px;
+    max-width: 530px;
+  }
+  .programming-hero > div > p {
+    margin-bottom: 20px;
+  }
+  .programming-hero-actions .button {
+    border-radius: 9px;
+    min-height: 44px;
+  }
+  .programming-blueprint {
+    display: block;
+    border: 1px solid #8ce5c626;
+    border-radius: 18px;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 70%, #8ce5c60d, transparent 80%), #222630;
+    box-shadow: 0 18px 40px #0002;
+  }
+  .blueprint-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom: 1px solid #ffffff0d;
+    padding: 14px 16px;
+    background: #ffffff02;
+  }
+  .blueprint-bar > span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #6a657d;
+  }
+  .blueprint-bar > span:nth-child(2) {
+    background: #8b78ac;
+  }
+  .blueprint-bar > span:nth-child(3) {
+    background: #71a998;
+  }
+  .blueprint-bar strong {
+    margin-left: auto;
+    font-family: Consolas, monospace;
+    font-size: 8px;
+    font-weight: 400;
+    color: #acb9be;
+    letter-spacing: 1px;
+  }
+  .blueprint-project {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 28px 15px 24px;
+  }
+  .blueprint-node {
+    flex-shrink: 0;
+    width: 66px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #b8bad4;
+    border: 1px solid #ffffff18;
+    border-radius: 12px;
+    background: #2c303c;
+  }
+  .blueprint-node small {
+    font-size: 9px;
+    color: #bfc7cf;
+  }
+  .blueprint-logic {
+    border-color: #8ce5c64d;
+    color: var(--programming-mint);
+    background: #8ce5c608;
+    transform: translateY(-6px);
+  }
+  .blueprint-connector {
+    width: 25px;
+    flex-shrink: 1;
+    min-width: 10px;
+    height: 1px;
+    background: linear-gradient(90deg, #8ce5c650, #bd93f955);
+  }
+  .blueprint-caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px 19px;
+    color: #a8c7bc;
+    font-size: 9px;
+  }
+  .programming-home .getting-started {
+    gap: 0;
+    padding: 0;
+    border: 1px solid #ffffff12;
+    background: #242731;
+    border-radius: 14px;
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+  .programming-home .getting-started li {
+    padding: 17px;
+    gap: 10px;
+  }
+  .programming-home .getting-started li + li {
+    border-left: 1px solid #ffffff0d;
+  }
+  .programming-home .getting-started li > span {
+    color: var(--programming-mint);
+    border-color: #8ce5c626;
+    border-radius: 8px;
+    background: #8ce5c607;
+  }
+  .programming-home .getting-started strong {
+    font-size: 12px;
+  }
+  .programming-home .getting-started p {
+    font-size: 11px;
+  }
+  .programming-home .section-heading > .quiet-badge {
+    border-radius: 20px;
+    border-color: #8ce5c624;
+    color: #a9d5c7;
+    padding: 5px 10px;
+  }
+  .programming-home .filters {
+    padding: 6px;
+    border: 1px solid #ffffff0d;
+    border-radius: 12px;
+    background: #242631;
+    width: fit-content;
+  }
+  .programming-home .filters button {
+    min-height: 40px;
+  }
+  .programming-home .filters button.selected {
+    background: #8ce5c611;
+    border-color: #8ce5c640;
+    color: var(--programming-mint);
+  }
+  .programming-home .topic-card {
+    --course-color: #bd93f9;
+    background: linear-gradient(135deg, #bd93f90b, transparent 65%), #2b2e3b;
+    border-color: #ffffff17;
+    transition:
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  .programming-home .topic-orange {
+    --course-color: #ffb86c;
+  }
+  .programming-home .topic-blue,
+  .programming-home .topic-cyan {
+    --course-color: #8be9fd;
+  }
+  .programming-home .topic-green {
+    --course-color: #8ce5c6;
+  }
+  .programming-home .topic-card:hover:not(:disabled),
+  .programming-home .topic-card:focus-visible {
+    border-color: var(--course-color);
+    box-shadow: 0 10px 24px #0002;
+  }
+  .programming-home .topic-symbol {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #ffffff14;
+    border-radius: 11px;
+    background: #ffffff04;
+    color: var(--course-color);
+  }
+  .programming-home .topic-card-top > .quiet-badge {
+    color: #bec7ca;
+    font-family: Consolas, monospace;
+    font-size: 10px;
+  }
+  .programming-home .topic-card-action {
+    color: var(--course-color);
+    border-color: #ffffff10;
+    background: #ffffff02;
+    min-height: 48px;
+  }
+  .programming-home .resume-card {
+    border: 1px solid #8ce5c62b;
+    border-left: 3px solid var(--programming-mint);
+    background: #8ce5c607;
+  }
+  .programming-home .resume-card > svg {
+    color: var(--programming-mint);
+  }
+  .programming-home .help-panel {
+    border: 1px solid #ffffff12;
+    border-radius: 12px;
+    background: #242631;
+    padding: 18px 20px;
+    margin-top: 18px;
+  }
+  .programming-workspace .teacher-panel,
+  .programming-workspace .question-card,
+  .programming-workspace .trail-panel,
+  .programming-workspace .evaluation-summary {
+    border-radius: 16px;
+    border: 1px solid #ffffff1c;
+  }
+  .programming-workspace .teacher-panel {
+    box-shadow: 0 12px 32px #0002;
+  }
+  .programming-workspace .teacher-header {
+    border-bottom-color: #8ce5c620;
+    background: #252b35;
+  }
+  .programming-workspace .teacher-body > .eyebrow {
+    color: var(--programming-mint);
+  }
+  .programming-workspace .lesson-nav .lesson-list > button {
+    border-radius: 8px;
+  }
+  .programming-workspace .lesson-nav .lesson-list > button.selected {
+    background: #8ce5c609;
+    border-left-color: var(--programming-mint);
+    color: #d3eee3;
+  }
+  .programming-workspace .trail-step {
+    border-bottom-color: #ffffff0e;
+  }
+  .programming-workspace .step-number {
+    border-radius: 10px;
+  }
+  .programming-workspace .study-switch button.selected {
+    color: var(--programming-mint);
+    border-color: var(--programming-mint);
+  }
+  .programming-workspace .code-example {
+    border-radius: 10px;
+  }
+}
+@media (min-width: 701px) and (max-width: 1000px) {
+  .programming-hero {
+    grid-template-columns: 1fr;
+  }
+  .programming-blueprint {
+    display: none;
+  }
+  .programming-hero > div > p {
+    max-width: 580px;
+  }
+}
+@media (max-width: 700px) {
+  .programming-hero > div > .eyebrow {
+    color: var(--programming-mint);
+  }
+  .programming-hero h1 {
+    font-size: 27px;
+  }
+  .programming-hero-actions > .button {
+    border-radius: 8px;
+    min-height: 44px;
+  }
+  .programming-hero-actions {
+    gap: 10px 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .programming-home .topic-card {
+    transition: none;
+  }
+}
