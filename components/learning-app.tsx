@@ -541,7 +541,7 @@ export default function LearningApp() {
               {collapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
             </button>
             <div className="breadcrumb">
-              EducaJá <ChevronRight size={14} />
+              <span className="breadcrumb-brand">EducaJá</span> <ChevronRight size={14} />
               <strong>
                 {screen === "areas"
                   ? "Áreas de estudo"
