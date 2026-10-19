@@ -16,6 +16,7 @@ Primeira versão do site educacional de programação, com Next.js, TypeScript e
 - Aba Simulados no Ensino Médio: 80 questões autorais ligadas às aulas, 20 por padrão, escolha de matéria/quantidade, dificuldades misturadas, correção comentada e uma tentativa salva no navegador. Diagnóstico pedagógico será uma próxima etapa; detalhes em [SIMULADOS-ENSINO-MEDIO.md](docs/SIMULADOS-ENSINO-MEDIO.md).
 - Ensino Médio da 3ª série com 40 aulas autorais, dez por matéria: Matemática, Linguagens (incluindo redação Enem e inglês), Ciências Humanas e Ciências da Natureza. Anotações e conclusão salvas; diagnóstico/IA escolares ainda não disponíveis. Recorte e fontes em [ENSINO-MEDIO-MAPA-CURRICULAR.md](docs/ENSINO-MEDIO-MAPA-CURRICULAR.md).
 - Interface escura, menu lateral recolhível e preferência salva no navegador.
+- Experiência própria no celular: navegação inferior, cabeçalho compacto, acesso direto às matérias e seletor de aulas recolhível. O computador mantém o menu lateral; detalhes em [EXPERIENCIA-CELULAR.md](docs/EXPERIENCIA-CELULAR.md).
 
 **Contas:** cadastro, login com código por e-mail e saída estão implementados. A senha aceita de 8 a 255 caracteres e pode ser mostrada/ocultada. O envio exige configuração privada de Resend e remetente autorizado; sem isso, cadastro e login permanecem bloqueados. Criar uma conta preserva o progresso de visitante. Ao entrar com a mesma conta em outros navegadores que acessam esta instalação, você recupera o mesmo histórico. Bancos locais independentes continuam separados.
 

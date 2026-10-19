@@ -68,6 +68,9 @@ export default function LearningApp() {
   const [savedNotes, setSavedNotes] = useState<Record<string, string>>({});
   const modalRef = useRef<HTMLElement>(null);
   const [lessonIndex, setLessonIndex] = useState(0);
+  const [mobileLessonsOpen, setMobileLessonsOpen] = useState(false);
+  const lessonHeading = useRef<HTMLHeadingElement>(null);
+  const focusPickedLesson = useRef(false);
   const [teacherTab, setTeacherTab] = useState<"explanation" | "analogy" | "exercise">(
     "explanation",
   );
@@ -154,8 +157,16 @@ export default function LearningApp() {
       document.getElementById("main-content")?.focus({ preventScroll: true });
       window.scrollTo({ top: 0, behavior: "instant" });
       previousScreen.current = screen;
+      setMobileLessonsOpen(false);
+      focusPickedLesson.current = false;
     }
   }, [screen]);
+  useEffect(() => {
+    if (focusPickedLesson.current) {
+      lessonHeading.current?.focus();
+      focusPickedLesson.current = false;
+    }
+  }, [lessonIndex, mobileLessonsOpen, view]);
   useEffect(() => {
     if (!unsaved) return;
     const warn = (event: BeforeUnloadEvent) => {
@@ -284,6 +295,18 @@ export default function LearningApp() {
     }
     navigate(screen === "home" || screen === "secondary" || screen === "law" ? "areas" : "home");
   }
+  function openLesson(index: number) {
+    if (busy) return;
+    if (dirtyNote) {
+      setError("Salve sua anotação antes de mudar de aula.");
+      return;
+    }
+    focusPickedLesson.current = window.matchMedia("(max-width: 700px)").matches;
+    setLessonIndex(index);
+    setTeacherTab("explanation");
+    setView("teacher");
+    setMobileLessonsOpen(false);
+  }
   function switchArea(area: StudyArea) {
     if (busy) return;
     if (unsaved) {
@@ -371,7 +394,7 @@ export default function LearningApp() {
 
   return (
     <div
-      className={`app-shell ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""} ${studyArea === "law" && screen !== "areas" ? "law-workspace" : ""}`}
+      className={`app-shell ${screen === "areas" ? "area-selection" : ""} ${collapsed ? "sidebar-collapsed" : ""} ${studyArea === "secondary" && screen !== "areas" ? "secondary-workspace" : ""} ${studyArea === "law" && screen !== "areas" ? "law-workspace" : ""}`}
     >
       <a className="skip-link" href="#main-content">
         Ir para o conteúdo
@@ -396,7 +419,10 @@ export default function LearningApp() {
           disabled={busy}
         >
           <GraduationCap size={19} />
-          <span className="nav-label">Trocar de área</span>
+          <span className="nav-label desktop-label">Trocar de área</span>
+          <span className="mobile-only" aria-hidden="true">
+            Áreas
+          </span>
         </button>
         {screen !== "areas" && (
           <>
@@ -535,12 +561,23 @@ export default function LearningApp() {
               </strong>
             </div>
           </div>
-          <button className="account-button" onClick={openAccount} disabled={loading || busy}>
+          <button
+            className="account-button"
+            aria-label={data?.user ? "Sua conta" : "Entrar ou criar conta"}
+            onClick={openAccount}
+            disabled={loading || busy}
+          >
             <UserRound size={17} />
-            {data?.user ? "Sua conta" : "Entrar ou criar conta"}
+            <span className="desktop-label">
+              {data?.user ? "Sua conta" : "Entrar ou criar conta"}
+            </span>
+            <span className="mobile-only" aria-hidden="true">
+              Conta
+            </span>
           </button>
           <button
             className="help-button"
+            aria-label="Como usar"
             aria-expanded={helpOpen}
             aria-controls="usage-help"
             onClick={() => setHelpOpen((value) => !value)}
@@ -901,14 +938,7 @@ export default function LearningApp() {
                             <h3>{item.title}</h3>
                             <p>{item.explanation.split(". ")[0]}.</p>
                           </div>
-                          <button
-                            className="button secondary"
-                            onClick={() => {
-                              setLessonIndex(index);
-                              setTeacherTab("explanation");
-                              setView("teacher");
-                            }}
-                          >
+                          <button className="button secondary" onClick={() => openLesson(index)}>
                             {session.completed_lessons.includes(item.id)
                               ? "Revisar aula"
                               : "Abrir aula"}
@@ -919,32 +949,44 @@ export default function LearningApp() {
                     </section>
                   ) : (
                     <div className="study-layout">
-                      <aside className="lesson-nav">
+                      <aside
+                        className={`lesson-nav ${mobileLessonsOpen ? "mobile-lessons-open" : ""}`}
+                      >
+                        <button
+                          className="mobile-lesson-toggle"
+                          aria-expanded={mobileLessonsOpen}
+                          aria-controls="lesson-list"
+                          onClick={() => setMobileLessonsOpen((value) => !value)}
+                        >
+                          <BookOpen size={19} aria-hidden="true" />
+                          <span>
+                            Aula {lessonIndex + 1} de {orderedLessons.length}
+                            <strong>
+                              {mobileLessonsOpen ? "Fechar lista de aulas" : "Escolher outra aula"}
+                            </strong>
+                          </span>
+                          <ArrowDown size={17} aria-hidden="true" />
+                        </button>
                         <span className="eyebrow">AULAS DO ASSUNTO</span>
-                        {orderedLessons.map((item, index) => (
-                          <button
-                            key={item.id}
-                            className={lessonIndex === index ? "selected" : ""}
-                            onClick={() => {
-                              if (dirtyNote) {
-                                setError("Salve sua anotação antes de mudar de aula.");
-                                return;
-                              }
-                              setLessonIndex(index);
-                              setTeacherTab("explanation");
-                            }}
-                          >
-                            {session.completed_lessons.includes(item.id) ? (
-                              <CheckCircle2 size={17} />
-                            ) : (
-                              <Circle size={17} />
-                            )}
-                            <span>
-                              {item.title}
-                              <small>{item.minutes} min de estudo</small>
-                            </span>
-                          </button>
-                        ))}
+                        <div className="lesson-list" id="lesson-list">
+                          {orderedLessons.map((item, index) => (
+                            <button
+                              key={item.id}
+                              className={lessonIndex === index ? "selected" : ""}
+                              onClick={() => openLesson(index)}
+                            >
+                              {session.completed_lessons.includes(item.id) ? (
+                                <CheckCircle2 size={17} />
+                              ) : (
+                                <Circle size={17} />
+                              )}
+                              <span>
+                                {item.title}
+                                <small>{item.minutes} min de estudo</small>
+                              </span>
+                            </button>
+                          ))}
+                        </div>
                         <div className="info-note">
                           <BookOpen size={19} />
                           <p>
@@ -968,7 +1010,9 @@ export default function LearningApp() {
                           <span className="eyebrow">
                             AULA {lessonIndex + 1} DE {topic.lessons.length}
                           </span>
-                          <h2>{lesson.title}</h2>
+                          <h2 ref={lessonHeading} tabIndex={-1}>
+                            {lesson.title}
+                          </h2>
                           <p className="lesson-meta">
                             {lesson.level} · {lesson.minutes} minutos estimados, incluindo a prática
                           </p>
@@ -1221,10 +1265,7 @@ export default function LearningApp() {
                               <button
                                 className="button next-lesson"
                                 disabled={busy || dirtyNote}
-                                onClick={() => {
-                                  setLessonIndex(lessonIndex + 1);
-                                  setTeacherTab("explanation");
-                                }}
+                                onClick={() => openLesson(lessonIndex + 1)}
                               >
                                 Próxima aula: {orderedLessons[lessonIndex + 1].title}
                                 <ArrowRight size={17} />

@@ -17,6 +17,10 @@
   background: var(--paper);
   color: var(--ink);
 }
+.mobile-only,
+.mobile-lesson-toggle {
+  display: none;
+}
 * {
   box-sizing: border-box;
 }
@@ -943,7 +947,7 @@ textarea::placeholder {
 .lesson-nav > .eyebrow {
   color: #9da6c5;
 }
-.lesson-nav > button {
+.lesson-nav .lesson-list > button {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -959,12 +963,12 @@ textarea::placeholder {
   color: #b8bfd5;
   line-height: 1.6;
 }
-.lesson-nav > button.selected {
+.lesson-nav .lesson-list > button.selected {
   border-left-color: var(--accent);
   background: #bd93f90d;
   color: #dcc7fa;
 }
-.lesson-nav > button small {
+.lesson-nav .lesson-list > button small {
   display: block;
   margin-top: 5px;
   font-size: 11px;
@@ -1364,11 +1368,11 @@ textarea::placeholder {
   .lesson-nav > .info-note {
     display: none;
   }
-  .lesson-nav > button {
+  .lesson-nav .lesson-list > button {
     padding: 9px 12px;
     min-height: 44px;
   }
-  .lesson-nav > button small {
+  .lesson-nav .lesson-list > button small {
     display: none;
   }
   .diagnostic-layout {
@@ -3233,5 +3237,551 @@ textarea::placeholder {
   }
   .school-footnote .text-button {
     margin-left: 33px;
+  }
+}
+
+/* Phone layout: compact header, thumb navigation and reading-first lessons. */
+@media (max-width: 700px) {
+  .mobile-only {
+    display: block;
+  }
+  .desktop-only,
+  .desktop-label {
+    display: none !important;
+  }
+  .app-shell {
+    --mobile-nav-height: 76px;
+  }
+  .sidebar,
+  .sidebar-collapsed .sidebar {
+    position: fixed;
+    inset: auto 0 0;
+    width: 100%;
+    height: auto;
+    min-height: var(--mobile-nav-height);
+    z-index: 30;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+    padding: 4px 8px calc(8px + env(safe-area-inset-bottom));
+    background: var(--sidebar);
+  }
+  .sidebar .brand,
+  .sidebar-label,
+  .sidebar-bottom {
+    display: none;
+  }
+  .sidebar > .sidebar-help {
+    display: flex;
+    flex: 0 0 20%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    min-height: 60px;
+    margin: 0;
+    padding: 8px 3px;
+    font-size: 11px;
+    border: 0;
+    border-radius: 8px;
+  }
+  .sidebar > .sidebar-help svg {
+    width: 20px;
+    height: 20px;
+  }
+  .main-nav,
+  .sidebar-collapsed .main-nav {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    gap: 2px;
+    margin: 0;
+    min-width: 0;
+  }
+  .main-nav > button,
+  .sidebar-collapsed .main-nav > button {
+    flex: 1;
+    min-width: 0;
+    min-height: 60px;
+    gap: 5px;
+    padding: 8px 2px;
+    font-size: 10px;
+    line-height: 1.3;
+    border: 0;
+    border-radius: 8px;
+  }
+  .sidebar-collapsed .main-nav .nav-label {
+    display: inline;
+  }
+  .main-nav > button svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .main-nav > button.active {
+    background: #bd93f926;
+    box-shadow: inset 0 2px var(--accent);
+    border: 0;
+  }
+  .law-workspace .sidebar > .sidebar-help,
+  .law-workspace .main-nav {
+    flex: 1;
+  }
+  .law-workspace .main-nav > button.active {
+    background: #2c3329;
+    box-shadow: inset 0 2px #d4b57b;
+    border: 0;
+  }
+  .area-selection .sidebar {
+    display: none;
+  }
+  .workspace {
+    margin-left: 0;
+    padding-bottom: calc(var(--mobile-nav-height) + 16px + env(safe-area-inset-bottom));
+  }
+  .area-selection .workspace {
+    padding-bottom: 0;
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    min-height: 64px;
+    flex-wrap: nowrap;
+    padding: 8px 16px;
+    gap: 8px;
+    background: var(--paper);
+  }
+  .topbar-left {
+    flex: 1;
+    min-width: 0;
+  }
+  .sidebar-toggle {
+    display: none;
+  }
+  .breadcrumb {
+    display: block;
+    min-width: 0;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .breadcrumb strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: normal;
+  }
+  .account-button {
+    min-width: 64px;
+    min-height: 44px;
+    padding: 8px;
+    font-size: 11px;
+    gap: 5px;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .account-button svg {
+    width: 19px;
+    height: 19px;
+  }
+  .help-button {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 8px;
+  }
+  main {
+    padding: 18px 16px 22px;
+    scroll-margin-top: 80px;
+  }
+  main h1 {
+    font-size: 26px;
+  }
+  .back-navigation {
+    min-height: 44px;
+    margin-bottom: 18px;
+    padding: 8px 12px;
+  }
+  .page-heading {
+    margin-bottom: 16px;
+  }
+  .page-heading p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .study-area-grid {
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .study-area-card {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 8px 14px;
+    padding: 20px;
+  }
+  .study-area-card > svg {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 30px;
+    margin-top: 2px;
+  }
+  .study-area-card > .eyebrow {
+    display: none;
+  }
+  .study-area-card h2 {
+    grid-column: 2;
+    font-size: 23px;
+    line-height: 1.25;
+  }
+  .study-area-card p,
+  .study-area-card > .quiet-badge {
+    grid-column: 2;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .study-area-card > .button {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 46px;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .getting-started {
+    display: none;
+  }
+  .filters {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .filters button {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .topic-card {
+    padding: 18px;
+  }
+  .topic-card-top {
+    margin-bottom: 14px;
+  }
+  .topic-card-top .quiet-badge {
+    display: none;
+  }
+  .topic-card-action {
+    min-height: 44px;
+  }
+  .resume-card {
+    padding: 18px;
+    gap: 12px;
+  }
+  .resume-card .button {
+    min-height: 44px;
+    width: 100%;
+    justify-content: center;
+  }
+  .school-hero {
+    gap: 12px;
+    padding: 0 0 18px;
+  }
+  .school-hero h1 {
+    margin: 10px 0;
+    font-size: 28px;
+  }
+  .school-hero .school-lead {
+    font-size: 20px;
+    line-height: 1.4;
+    margin: 0;
+  }
+  .school-hero > div:first-child > p:last-child {
+    display: none;
+  }
+  .school-edition {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .school-edition > svg {
+    width: 22px;
+  }
+  .school-edition strong {
+    font-size: 24px;
+  }
+  .school-edition > span {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .school-edition div {
+    margin: 0 0 0 auto;
+    font-size: 11px;
+  }
+  .mobile-matter-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 48px;
+    padding: 14px 16px;
+    margin: 18px 0;
+    background: #303b48;
+    color: #a8eeff;
+    border: 1px solid #657a88;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  #school-subjects-title {
+    scroll-margin-top: 84px;
+  }
+  .essay-feature {
+    padding: 18px;
+    gap: 12px;
+    margin: 18px 0 26px;
+    grid-template-columns: 24px minmax(0, 1fr);
+  }
+  .essay-feature h2 {
+    font-size: 20px;
+    line-height: 1.35;
+  }
+  .essay-feature p {
+    font-size: 12px;
+  }
+  .essay-feature .button {
+    min-height: 44px;
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .school-section-heading {
+    margin-bottom: 16px;
+  }
+  .school-section-heading h2 {
+    font-size: 23px;
+  }
+  .school-subjects {
+    gap: 14px;
+  }
+  .school-subject {
+    padding: 20px;
+  }
+  .school-subject-top,
+  .school-preview {
+    display: none;
+  }
+  .school-subject-caption {
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .school-subject h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .school-subject h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .school-subject > p {
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .school-subject-bottom {
+    padding-top: 10px;
+    gap: 12px;
+  }
+  .school-subject-bottom .button {
+    min-height: 46px;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .school-footnote {
+    margin-top: 18px;
+  }
+  .study-layout {
+    gap: 16px;
+  }
+  .lesson-nav {
+    padding: 0;
+    max-height: none;
+    overflow: visible;
+    border-left: 0 !important;
+  }
+  .lesson-nav > .eyebrow {
+    display: none;
+  }
+  .mobile-lesson-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 64px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--sidebar);
+    text-align: left;
+    color: var(--ink);
+  }
+  .mobile-lesson-toggle > span {
+    flex: 1;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .mobile-lesson-toggle strong {
+    display: block;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .lesson-nav .lesson-list {
+    display: none;
+  }
+  .lesson-nav.mobile-lessons-open .lesson-list {
+    display: block;
+    max-height: 45dvh;
+    overflow-y: auto;
+    padding: 8px;
+    margin-top: 6px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--sidebar);
+  }
+  .lesson-nav .lesson-list > button {
+    min-height: 48px;
+  }
+  .teacher-header {
+    padding: 18px 16px;
+  }
+  .teacher-body > h2 {
+    font-size: 23px;
+    line-height: 1.4;
+    scroll-margin-top: 82px;
+  }
+  .teacher-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 12px;
+  }
+  .teacher-tabs button {
+    min-height: 48px;
+    padding: 8px 4px;
+    font-size: 11px;
+    line-height: 1.4;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .lesson-content {
+    padding: 18px 16px;
+    font-size: 15px;
+    line-height: 1.85;
+  }
+  .lesson-content p {
+    line-height: 1.85;
+  }
+  .law-hero {
+    padding-bottom: 20px;
+  }
+  .law-hero h1 {
+    font-size: 54px;
+    margin: 14px 0;
+  }
+  .law-lead {
+    font-size: 23px;
+  }
+  .law-intro {
+    font-size: 13px;
+  }
+  .law-edition-line,
+  .law-reading-note {
+    display: none;
+  }
+  .law-subject-section {
+    padding-top: 18px;
+  }
+  .law-section-heading h2 {
+    font-size: 25px;
+  }
+  .law-subject {
+    padding: 14px 10px;
+    grid-template-columns: 30px minmax(0, 1fr) 18px;
+    gap: 10px;
+  }
+  .law-subject-copy strong {
+    font-size: 18px;
+  }
+  .law-subject-section,
+  #law-subjects-title,
+  .law-preview h3 {
+    scroll-margin-top: 84px;
+  }
+  .exam-page h1 {
+    font-size: 28px;
+  }
+  .exam-page h2 {
+    scroll-margin-top: 82px;
+  }
+  .exam-setup,
+  .exam-attempt,
+  .exam-results {
+    margin-top: 20px;
+    padding: 18px 14px;
+  }
+  .exam-storage {
+    font-size: 12px;
+  }
+  .exam-setup select,
+  .exam-setup input {
+    min-height: 48px;
+    font-size: 16px;
+  }
+  .exam-controls .button {
+    min-height: 46px;
+    flex: 1 1 130px;
+  }
+  .exam-map {
+    gap: 6px;
+  }
+  .exam-option {
+    padding: 14px 10px;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  .page-footer {
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .study-switch {
+    display: none;
+  }
+  .mobile-lessons-open .mobile-lesson-toggle > svg:last-child {
+    transform: rotate(180deg);
+  }
+}
+@media (max-width: 700px) {
+  .teacher-body {
+    padding: 18px 16px;
+  }
+  .lesson-content {
+    padding: 0;
+  }
+  .question-map {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .question-map button,
+  .button,
+  .text-button {
+    min-height: 44px;
+  }
+  .close-button {
+    min-width: 44px;
+    min-height: 44px;
   }
 }

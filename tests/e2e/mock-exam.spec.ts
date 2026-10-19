@@ -61,6 +61,15 @@ test("quantidade por matéria, correção embaralhada, branco e finalização pe
   }
   await page.getByLabel("Quantidade de questões").fill("3");
   await page.getByRole("button", { name: "Iniciar simulado", exact: true }).click();
+  const questionHeading = page.getByRole("heading", { name: "Questão 1 de 3", exact: true });
+  await expect(questionHeading).toBeFocused();
+  expect(
+    await questionHeading.evaluate(
+      (el) =>
+        el.getBoundingClientRect().top >=
+        document.querySelector(".topbar")!.getBoundingClientRect().bottom,
+    ),
+  ).toBe(true);
   await expect(page.getByText("Resposta correta:", { exact: true })).toHaveCount(0);
   for (let index = 0; index < 2; index++) {
     const prompt = await page.locator(".exam-options legend").innerText();
