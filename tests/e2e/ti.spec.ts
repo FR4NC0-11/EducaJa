@@ -40,6 +40,7 @@ test("T.I. oferece Git Bash guiado, imagem real e progresso independente", async
   );
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole("button", { name: /Escolher outra aula/ }).click();
   await page.getByRole("button", { name: /Commits que explicam uma mudança/ }).click();
   await expect(terminal.locator("pre")).toContainText("git commit");
   await expect(

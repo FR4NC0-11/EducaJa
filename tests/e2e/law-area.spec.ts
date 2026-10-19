@@ -80,7 +80,7 @@ test("Direito mantém identidade escura, teclado e leitura sem estouro no celula
       .evaluate(
         (el) =>
           el.getBoundingClientRect().top >=
-          document.querySelector(".sidebar")!.getBoundingClientRect().bottom,
+          document.querySelector(".topbar")!.getBoundingClientRect().bottom,
       ),
   ).toBe(true);
 });

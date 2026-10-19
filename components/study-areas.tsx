@@ -62,6 +62,9 @@ export default function StudyAreas({
           </div>
         </div>
       </header>
+      <a className="mobile-only mobile-matter-link" href="#school-subjects-title">
+        Escolher uma matéria <ArrowRight size={18} aria-hidden="true" />
+      </a>
       <section className="essay-feature" aria-labelledby="essay-feature-title">
         <div className="essay-feature-icon">
           <PenLine size={26} aria-hidden="true" />
@@ -85,7 +88,9 @@ export default function StudyAreas({
       <div className="school-section-heading">
         <div>
           <span className="eyebrow">QUATRO MANEIRAS DE EXPLORAR</span>
-          <h2>Escolha sua área de estudo</h2>
+          <h2 id="school-subjects-title" tabIndex={-1}>
+            Escolha sua área de estudo
+          </h2>
         </div>
         <span className="quiet-badge">No seu ritmo</span>
       </div>
@@ -172,10 +177,11 @@ export function StudyAreaEntry({
           <Code2 size={32} aria-hidden="true" />
           <span className="eyebrow">IDEIAS QUE VIRAM PROJETOS</span>
           <h2>Programação</h2>
-          <p>
+          <p className="desktop-only">
             Aprenda com aulas, exemplos e exercícios de Java, Web, PostgreSQL, Internet das Coisas e
             T.I. com Git/GitHub.
           </p>
+          <p className="mobile-only">Crie programas e sites. Aprenda Git e banco de dados.</p>
           <button className="button primary" onClick={onProgramming}>
             Acessar Programação <ArrowRight size={18} aria-hidden="true" />
           </button>
@@ -184,7 +190,10 @@ export function StudyAreaEntry({
           <GraduationCap size={32} aria-hidden="true" />
           <span className="eyebrow">CONHECIMENTO PARA IR ALÉM</span>
           <h2>Ensino Médio</h2>
-          <p>Matemática, Linguagens, Ciências Humanas e Ciências da Natureza.</p>
+          <p className="desktop-only">
+            Matemática, Linguagens, Ciências Humanas e Ciências da Natureza.
+          </p>
+          <p className="mobile-only">Quatro matérias da 3ª série, redação Enem e simulados.</p>
           <span className="quiet-badge">3ª série · Redação Enem e mais</span>
           <button className="button secondary" onClick={onSecondary}>
             Acessar Ensino Médio <ArrowRight size={18} aria-hidden="true" />
@@ -194,7 +203,10 @@ export function StudyAreaEntry({
           <Scale size={32} strokeWidth={1.3} aria-hidden="true" />
           <span className="eyebrow">LEITURA, CONTEXTO E ARGUMENTAÇÃO</span>
           <h2>Direito</h2>
-          <p>Conheça o novo espaço de Direito brasileiro e explore a organização das matérias.</p>
+          <p className="desktop-only">
+            Conheça o novo espaço de Direito brasileiro e explore a organização das matérias.
+          </p>
+          <p className="mobile-only">Explore os temas de Direito brasileiro.</p>
           <span className="quiet-badge">Novo espaço · Aulas em preparação</span>
           <button className="button secondary" onClick={onLaw}>
             Acessar Direito <ArrowRight size={18} aria-hidden="true" />
