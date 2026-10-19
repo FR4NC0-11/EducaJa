@@ -1,5 +1,7 @@
 # EducaJá
 
+A entrada no computador apresenta os três caminhos de estudo com identidade própria, recursos disponíveis e acesso direto; o celular mantém sua organização compacta. Detalhes em [ENTRADA-COMPUTADOR.md](docs/ENTRADA-COMPUTADOR.md).
+
 Primeira versão do site educacional de programação, com Next.js, TypeScript e PostgreSQL, sem Supabase.
 
 ## O que já funciona

@@ -1,5 +1,6 @@
 import { secondaryTopics } from "@/lib/secondary-curriculum";
 import type { Topic } from "@/lib/catalog";
+import { topics } from "@/lib/catalog";
 import type { Workspace } from "@/lib/learning";
 import {
   ArrowRight,
@@ -11,6 +12,9 @@ import {
   Dna,
   PenLine,
   Scale,
+  Compass,
+  Sparkles,
+  Layers3,
 } from "lucide-react";
 
 const subjectIcons = [Sigma, PenLine, Globe2, Dna];
@@ -163,17 +167,52 @@ export function StudyAreaEntry({
   onSecondary: () => void;
   onLaw: () => void;
 }) {
+  const programmingLessons = topics.reduce((sum, topic) => sum + topic.lessons.length, 0);
+  const schoolLessons = secondaryTopics.reduce((sum, topic) => sum + topic.lessons.length, 0);
   return (
-    <section aria-labelledby="areas-title">
-      <div className="page-heading">
-        <div>
+    <section className="entry-home" aria-labelledby="areas-title">
+      <header className="entry-hero">
+        <div className="entry-intro">
           <div className="eyebrow">BEM-VINDO AO EDUCAJÁ</div>
           <h1 id="areas-title">Qual área você quer acessar?</h1>
           <p>Escolha seu espaço de estudo. Você pode trocar de área pelo menu.</p>
         </div>
+        <div className="entry-desktop-only entry-art" aria-hidden="true">
+          <div className="entry-art-grid" />
+          <span className="entry-art-caption">CADA DESCOBERTA ABRE UM CAMINHO</span>
+          <div className="entry-orbit orbit-one" />
+          <div className="entry-orbit orbit-two" />
+          <div className="entry-book">
+            <BookOpen size={86} strokeWidth={1} />
+            <span>
+              O próximo capítulo
+              <br />
+              <strong>é seu.</strong>
+            </span>
+          </div>
+          <span className="entry-satellite satellite-code">
+            <Code2 size={25} />
+          </span>
+          <span className="entry-satellite satellite-school">
+            <GraduationCap size={27} />
+          </span>
+          <span className="entry-satellite satellite-law">
+            <Scale size={25} strokeWidth={1.3} />
+          </span>
+          <Sparkles className="entry-spark" size={22} strokeWidth={1} />
+        </div>
+      </header>
+      <div className="entry-desktop-only entry-section-label">
+        <span>
+          <Compass size={18} aria-hidden="true" /> Explore seus caminhos
+        </span>
+        <span>Três espaços. Novas possibilidades.</span>
       </div>
       <div className="study-area-grid">
         <article className="study-area-card entry-programming">
+          <span className="entry-desktop-only entry-card-number" aria-hidden="true">
+            01
+          </span>
           <Code2 size={32} aria-hidden="true" />
           <span className="eyebrow">IDEIAS QUE VIRAM PROJETOS</span>
           <h2>Programação</h2>
@@ -182,24 +221,37 @@ export function StudyAreaEntry({
             T.I. com Git/GitHub.
           </p>
           <p className="mobile-only">Crie programas e sites. Aprenda Git e banco de dados.</p>
+          <span className="entry-desktop-only entry-availability">
+            {programmingLessons} aulas · {topics.length} matérias
+          </span>
           <button className="button primary" onClick={onProgramming}>
             Acessar Programação <ArrowRight size={18} aria-hidden="true" />
           </button>
         </article>
         <article className="study-area-card entry-secondary">
+          <span className="entry-desktop-only entry-card-number" aria-hidden="true">
+            02
+          </span>
           <GraduationCap size={32} aria-hidden="true" />
           <span className="eyebrow">CONHECIMENTO PARA IR ALÉM</span>
           <h2>Ensino Médio</h2>
           <p className="desktop-only">
-            Matemática, Linguagens, Ciências Humanas e Ciências da Natureza.
+            Matemática, Linguagens, Ciências Humanas e Ciências da Natureza. Redação Enem e
+            simulados.
           </p>
           <p className="mobile-only">Quatro matérias da 3ª série, redação Enem e simulados.</p>
           <span className="quiet-badge">3ª série · Redação Enem e mais</span>
+          <span className="entry-desktop-only entry-availability">
+            {schoolLessons} aulas · {secondaryTopics.length} matérias
+          </span>
           <button className="button secondary" onClick={onSecondary}>
             Acessar Ensino Médio <ArrowRight size={18} aria-hidden="true" />
           </button>
         </article>
         <article className="study-area-card entry-law">
+          <span className="entry-desktop-only entry-card-number" aria-hidden="true">
+            03
+          </span>
           <Scale size={32} strokeWidth={1.3} aria-hidden="true" />
           <span className="eyebrow">LEITURA, CONTEXTO E ARGUMENTAÇÃO</span>
           <h2>Direito</h2>
@@ -208,11 +260,24 @@ export function StudyAreaEntry({
           </p>
           <p className="mobile-only">Explore os temas de Direito brasileiro.</p>
           <span className="quiet-badge">Novo espaço · Aulas em preparação</span>
+          <span className="entry-desktop-only entry-availability">
+            Explore as prévias · aulas em preparação
+          </span>
           <button className="button secondary" onClick={onLaw}>
             Acessar Direito <ArrowRight size={18} aria-hidden="true" />
           </button>
         </article>
       </div>
+      <aside className="entry-desktop-only entry-guide" aria-label="Como começar a estudar">
+        <div className="entry-guide-title">
+          <Layers3 size={23} aria-hidden="true" />
+          <strong>Um passo de cada vez.</strong>
+        </div>
+        <p>
+          Entre em uma área, escolha um assunto e comece pela aula. Em Programação e Ensino Médio,
+          use as anotações para organizar o que aprendeu.
+        </p>
+      </aside>
     </section>
   );
 }
