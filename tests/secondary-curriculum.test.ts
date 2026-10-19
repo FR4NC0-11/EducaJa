@@ -6,8 +6,9 @@ import { actionSchema, validateLesson } from "../lib/learning";
 import { teacherAction } from "../lib/teacher-contract";
 import { secondaryNextLessons } from "../lib/secondary-next-lessons";
 import { secondaryCompletion } from "../lib/secondary-completion";
+import { secondaryThirdTerm } from "../lib/secondary-third-term";
 
-test("cada matéria tem dez aulas com as 26 anteriores preservadas e novos IDs isolados", () => {
+test("ampliação preserva as 26 anteriores e os 14 IDs da segunda expansão", () => {
   assert.deepEqual(
     Object.keys(secondaryCompletion).sort(),
     secondaryTopics.map((t) => t.id).sort(),
@@ -16,14 +17,14 @@ test("cada matéria tem dez aulas com as 26 anteriores preservadas e novos IDs i
   let count = 0;
   secondaryTopics.forEach((topic, index) => {
     const added = secondaryCompletion[topic.id];
-    assert.equal(topic.lessons.length, 10);
+    assert.equal(topic.lessons.length, 15);
     assert.equal(added.length, 10 - earlierLengths[index]);
     assert.deepEqual(
       topic.lessons.slice(earlierLengths[index] - 2, earlierLengths[index]).map((l) => l.id),
       secondaryNextLessons[topic.id].map((l) => l.id),
     );
     assert.deepEqual(
-      topic.lessons.slice(earlierLengths[index]).map((l) => l.id),
+      topic.lessons.slice(earlierLengths[index], 10).map((l) => l.id),
       added.map((l) => l.id),
     );
     for (const item of added) {
@@ -161,10 +162,10 @@ test("API não aceita diagnóstico ou professor de programação para unidades d
   );
 });
 
-test("ampliação preserva primeiras aulas e redação em 40 aulas com prática", () => {
+test("ampliação preserva primeiras aulas e redação em 60 aulas com prática", () => {
   assert.deepEqual(
     secondaryTopics.map((t) => t.lessons.length),
-    [10, 10, 10, 10],
+    [15, 15, 15, 15],
   );
   assert.deepEqual(
     secondaryTopics.map((t) => t.lessons[0].id),
@@ -176,12 +177,50 @@ test("ampliação preserva primeiras aulas e redação em 40 aulas com prática"
     ],
   );
   const ids = secondaryTopics.flatMap((t) => t.lessons.map((l) => l.id));
-  assert.equal(new Set(ids).size, 40);
+  assert.equal(new Set(ids).size, 60);
   const writing = secondaryTopics[1].lessons.slice(1, 6);
   assert.equal(writing.length, 5);
   assert.equal(writing.at(-1)?.id, "em3-redacao-oficina");
   for (const item of writing) {
     assert.ok(item.resources?.some((r) => r.url.startsWith("https://www.gov.br/inep/")));
     assert.ok(item.lab?.expected);
+  }
+});
+
+test("cinco recortes novos por matéria são anexados e aceitam notas sem misturar áreas", () => {
+  assert.deepEqual(Object.keys(secondaryThirdTerm).sort(), secondaryTopics.map((t) => t.id).sort());
+  const added = Object.values(secondaryThirdTerm).flat();
+  assert.equal(added.length, 20);
+  assert.equal(new Set(added.map((l) => l.id)).size, 20);
+  for (const topic of secondaryTopics) {
+    assert.deepEqual(topic.lessons.slice(10), secondaryThirdTerm[topic.id]);
+    for (const item of secondaryThirdTerm[topic.id]) {
+      assert.equal(
+        topic.lessons.slice(0, 10).some((l) => l.id === item.id),
+        false,
+      );
+      assert.equal(validateLesson(topic.id, item.id), true);
+      assert.ok(item.objectives!.length >= 2 && item.sections!.length >= 3);
+      assert.ok(item.exercise && item.hint && item.lab!.expected && item.resources!.length);
+      assert.ok(
+        actionSchema.safeParse({
+          kind: "note",
+          topicId: topic.id,
+          lessonId: item.id,
+          text: "Tentativa do 3º trimestre",
+        }).success,
+      );
+      for (const other of [...topics, ...secondaryTopics].filter((t) => t.id !== topic.id))
+        assert.equal(validateLesson(other.id, item.id), false);
+      assert.equal(
+        teacherAction.safeParse({
+          kind: "chat",
+          topicId: topic.id,
+          lessonId: item.id,
+          text: "Dúvida",
+        }).success,
+        false,
+      );
+    }
   }
 });

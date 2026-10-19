@@ -17,7 +17,7 @@ function rng(seed: number) {
   };
 }
 
-test("80 questões autorais ligam as 40 aulas a cinco alternativas e uma resposta válida", () => {
+test("80 questões autorais mantêm cobertura das 40 aulas iniciais e referências válidas", () => {
   assert.equal(examBank.length, 80);
   assert.equal(new Set(examBank.map((q) => q.id)).size, 80);
   assert.equal(new Set(examBank.map((q) => q.prompt)).size, 80);
@@ -25,8 +25,10 @@ test("80 questões autorais ligam as 40 aulas a cinco alternativas e uma respost
     const pool = examBank.filter((q) => q.topicId === topic.id);
     assert.equal(pool.length, 20);
     assert.deepEqual([...new Set(pool.map((q) => q.difficulty))].sort(), [...difficulties].sort());
-    for (const lesson of topic.lessons)
+    for (const lesson of topic.lessons.slice(0, 10))
       assert.equal(pool.filter((q) => q.lessonId === lesson.id).length, 2);
+    for (const lesson of topic.lessons.slice(10))
+      assert.equal(pool.filter((q) => q.lessonId === lesson.id).length, 0);
   }
   for (const q of examBank) {
     assert.ok(

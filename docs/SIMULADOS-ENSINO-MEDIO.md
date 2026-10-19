@@ -1,5 +1,7 @@
 # Simulados do Ensino Médio — primeira etapa
 
+Atualização de 19/10/2026: o catálogo passou a 60 aulas; o banco mantém 80 questões referentes às 40 aulas iniciais, duas por aula. As vinte aulas adicionais do recorte de 3º trimestre têm exercícios próprios, mas ainda não integram o sorteio. Esse limite também é informado na tela de Simulados. Tentativas existentes não são alteradas. As seções abaixo registram a entrega original.
+
 18/10/2026. Aba disponível apenas no Ensino Médio, separada do teste inicial de Programação. Foco autorizado nesta entrega: realizar o simulado; diagnóstico pedagógico posterior fica para a próxima etapa.
 
 ## Conteúdo e configuração
