@@ -2737,6 +2737,7 @@ textarea::placeholder {
   line-height: 1.75;
 }
 .exam-storage,
+.exam-coverage,
 .exam-meta {
   color: var(--muted);
   font-size: 13px;
@@ -3730,7 +3731,8 @@ textarea::placeholder {
     margin-top: 20px;
     padding: 18px 14px;
   }
-  .exam-storage {
+  .exam-storage,
+  .exam-coverage {
     font-size: 12px;
   }
   .exam-setup select,
