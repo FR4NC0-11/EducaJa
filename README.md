@@ -63,6 +63,8 @@ As migrações SQL ficam em `migrations/`. O comando `npm run db:migrate` aplica
 
 ## Documentação
 
+- [Preparar o EducaJá no Claude Desktop e na nuvem](docs/AMBIENTE-CLAUDE.md)
+
 - [Contexto completo para continuar com outra IA e próximas tarefas](docs/CONTEXTO-PARA-CONTINUAR.md)
 - [Aulas e laboratórios por categoria](docs/AULAS-E-LABORATORIOS.md)
 - [Senha e confirmação por e-mail](docs/CONFIRMACAO-EMAIL.md)

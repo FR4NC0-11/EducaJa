@@ -1,0 +1,25 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "EducaJa - desenvolvimento",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "node_modules/next/dist/bin/next",
+        "dev",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        "3011"
+      ],
+      "port": 3011,
+      "autoPort": false,
+      "env": {
+        "AI_ENABLED": "false",
+        "COOKIE_SECURE": "false",
+        "APP_ORIGIN": "http://127.0.0.1:3011",
+        "NEXT_TELEMETRY_DISABLED": "1"
+      }
+    }
+  ]
+}
